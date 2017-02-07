@@ -1,0 +1,7 @@
+.navbar-brand { font-weight: bolder; }
+.navbar-brand img { display: inline; margin-top: -5px; margin-right: 5px; }
+.navbar { margin-bottom: 0; }
+.navbar-form { margin-top: 5px; }
+label, .control-label { font-weight: bold; font-size: 15px; }
+.groups-table thead > tr > th:last-child { width: 100px; }
+.groups-table > tbody > tr:nth-child(2n) > td  { padding: 0 30px 10px 30px; }

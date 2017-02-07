@@ -1,0 +1,113 @@
+<div class="jumbotron">
+      <div class="container">
+        <h1>Hello, world!</h1>
+        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+       </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8">
+          <h2 id="signup">Regisztráció</h2>
+          <form class="form-horizontal" method="post" action="/signup">
+            <div class="form-group <% if (flash.has('username_error')) { %> has-error<% } %>">
+              <label for="reg-user" class="col-sm-3 control-label"> Felhasználónév </label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="reg-user" name="username"
+                  <% if (flash.has('username')) { %>
+                    value="<%= flash.get('username')[0] %>"
+                  <% } %>
+                >
+                <% if (flash.has('username_error')) { %>
+                  <span class="help-block"><%= flash.get('username_error')[0] %></span>
+                <% } %>
+              </div>
+            </div>
+            <div class="form-group <% if (flash.has('password_error')) { %> has-error<% } %>">
+              <label for="reg-pwd" class="col-sm-3 control-label"> Jelszó </label>
+              <div class="col-sm-9">
+                <input type="password" class="form-control" id="reg-pwd" name="password">
+                <% if (flash.has('password_error')) { %>
+                  <span class="help-block"><%= flash.get('password_error')[0] %></span>
+                <% } %>
+              </div>
+            </div>
+            <div class="form-group <% if (flash.has('password2_error')) { %> has-error<% } %>">
+              <label for="reg-pwd2" class="col-sm-3 control-label"> Jelszó újra </label>
+              <div class="col-sm-9">
+                <input type="password" class="form-control" id="reg-pwd2" name="password2">
+                <% if (flash.has('password2_error')) { %>
+                  <span class="help-block"><%= flash.get('password2_error')[0] %></span>
+                <% } %>
+              </div>
+            </div>
+            <div class="form-group <% if (flash.has('fullname_error')) { %> has-error<% } %>">
+              <label for="reg-name" class="col-sm-3 control-label"> Teljes név </label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="reg-name" name="fullname"
+                  <% if (flash.has('fullname')) { %>
+                    value="<%= flash.get('fullname')[0] %>"
+                  <% } %>
+                >
+                <% if (flash.has('fullname_error')) { %>
+                  <span class="help-block"><%= flash.get('fullname_error')[0] %></span>
+                <% } %>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-success">Regisztráció</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-4">
+          <h2 id="login">Bejelentkezés</h2>
+          <form method="post" action="/login" <% if (flash.has('login-error')) { %> class="has-error"<% } %>>
+            <div class="form-group">
+              <label for="login-user"> Felhasználónév: </label>
+              <input type="text" id ="login-user" class="form-control" name="username"
+                <% if (flash.has('login-username')) { %>
+                  value="<%= flash.get('login-username')[0] %>"
+                <% } %>
+              >
+            </div>
+            <div class="form-group">
+              <label for="login-pwd"> Jelszó: </label>
+              <input type="password" id="login-pwd" class="form-control" name="password">
+            </div>
+            <% flash.get('login-error').forEach(function (message) { %>
+              <span class="help-block">
+                <%= message %>
+              </span>
+            <% }) %>
+            <button type="submit" class="btn btn-success"> Bejelentkezés </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Impresszum</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+        </div>
+      </div>
