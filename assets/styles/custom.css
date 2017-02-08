@@ -6,3 +6,6 @@ label, .control-label { font-weight: bold; font-size: 15px; }
 .groups-table { margin-bottom: 0; }
 .groups-table thead > tr > th:last-child { width: 100px; }
 .groups-table > tbody > tr:nth-child(2n) > td  { padding: 0 30px 10px 30px; }
+
+.error-page { text-align: center; max-width: 800px; }
+.error-page .jumbotron { background-color: #eee; margin-top: 30px; }

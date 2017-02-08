@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><%=typeof title == 'undefined' ? '' : title + " |"%> Prezenter - online prezentációs alkalmazás</title>
+    <title><%=typeof title === 'undefined' ? '' : title + " |"%> Prezenter - online prezentációs alkalmazás</title>
 
     <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
@@ -22,7 +22,7 @@
 
   <body>
   <% if (typeof loggedin !== 'undefined' && loggedin) { %>
-    <%- partial('menu_internal.ejs', {current_page: current_page}) %>
+    <%- partial('menu_internal.ejs', {current_page: typeof current_page === 'undefined' ? '' : current_page}) %>
   <% } else { %>
     <%- partial('menu_login.ejs') %>
   <% } %>
