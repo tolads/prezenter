@@ -1,5 +1,5 @@
 /**
-* User.js
+* Users.js
 *
 * @description :: model for storing users
 */
@@ -8,8 +8,6 @@ var bcrypt = require('bcryptjs');
 var SALT_WORK_FACTOR = 10;
 
 module.exports = {
-  tableName: 'users',
-
   attributes: {
     username: {
       type: 'string',
@@ -38,7 +36,7 @@ module.exports = {
    */
   signup: function (inputs, cb) {
     bcrypt.hash(inputs.password, SALT_WORK_FACTOR, function(err, hash) {
-      User.create({
+      Users.create({
         username: inputs.username,
         fullname: inputs.fullname,
         password: hash
@@ -58,7 +56,7 @@ module.exports = {
    */
   attemptLogin: function (inputs, cb) {
     // Create a user
-    User.findOne({
+    Users.findOne({
       username: inputs.username
     })
     .exec(function (err, user) {

@@ -20,10 +20,10 @@ module.exports = {
   },
 
   /**
-   * `HomeController.users()`
+   * `HomeController.groups()`
    */
   groups: function (req, res) {
-    User.find({}).exec(function(err, users) {
+    Users.find({}).exec(function(err, users) {
       const user_list = [];
       for (const user in users) {
         user_list.push({

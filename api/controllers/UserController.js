@@ -85,7 +85,7 @@ module.exports = {
       return res.redirect('\#signup');
     }
 
-    User.findOne({
+    Users.findOne({
       username: req.param('username')
     }).exec(function (err, user) {
       if (err) return res.negotiate(err);
@@ -98,7 +98,7 @@ module.exports = {
       }
 
       // Attempt to signup a user using the provided parameters
-      User.signup({
+      Users.signup({
         username: req.param('username'),
         password: req.param('password'),
         fullname: req.param('fullname')

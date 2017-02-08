@@ -11,7 +11,7 @@ module.exports = {
       required: true,
     },
     owner: {
-      model: 'User',
+      model: 'Users',
       required: true
     }
   },

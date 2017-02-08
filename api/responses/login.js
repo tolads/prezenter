@@ -15,7 +15,7 @@ module.exports = function login(inputs) {
   var res = this.res;
 
   // Look up the user
-  User.attemptLogin({
+  Users.attemptLogin({
     username: inputs.username,
     password: inputs.password
   }, function (err, user) {
