@@ -24,10 +24,15 @@ module.exports.routes = {
 
   // HTML Views
   '/': 'HomeController.index',
-  '/users': 'HomeController.users',
+  '/groups': 'HomeController.groups',
 
   // Endpoints
   'post /login': 'UserController.login',
   'post /signup': 'UserController.signup',
   '/logout': 'UserController.logout',
+
+  'post /groups/new': 'GroupController.new',
+  'post /groups/add': 'GroupController.add',
+  'get /groups/delete/group/:gid/member/:uid': 'GroupController.deleteMember',
+  'get /groups/delete/group/:id': 'GroupController.deleteGroup'
 };

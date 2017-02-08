@@ -1,0 +1,145 @@
+<div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2 id="new"> Új csoport létrehozása </h2>
+          <form method="post" action="/groups/new" class="form-inline
+            <% if (flash.has('new-group-name-error')) { %> has-error <% } %>
+            <% if (flash.has('new-group-name-success')) { %> has-success <% } %>">
+            <div class="form-group">
+              <label for="new-group-name"> Csoport neve: </label>
+              <input type="text" class="form-control" id="new-group-name" name="new-group-name"
+                <% if (flash.has('new-group-name')) { %>
+                  value="<%= flash.get('new-group-name')[0] %>"
+                <% } %>>
+            </div>
+            <button type="submit" class="btn btn-success"> Létrehoz </button>
+            <% if (flash.has('new-group-name-error')) { %>
+              <span class="help-block"><%= flash.get('new-group-name-error')[0] %></span>
+            <% } %>
+            <% if (flash.has('new-group-name-success')) { %>
+              <span class="help-block"><%= flash.get('new-group-name-success')[0] %></span>
+            <% } %>
+          </form>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <h2 id="groups"> Csoportjaim </h2>
+          <% if (flash.has('group-delete-success')) { %>
+            <span class="has-success">
+              <span class="help-block"><%= flash.get('group-delete-success')[0] %></span>
+            </span>
+          <% } %>
+          <table class="table groups-table">
+            <thead>
+              <tr>
+                <th> Név </th>
+                <th> Törlés </th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (const group_id in group_list) {
+                var group = group_list[group_id]; %>
+                <tr>
+                  <td> <%= group.name %> </td>
+                  <td>
+                    <a href="/groups/delete/group/<%= group.id %>" class="btn btn-danger"> Töröl </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th> ID </th>
+                          <th> Felhasználónév </th>
+                          <th> Teljes név </th>
+                          <th> Regisztráció </th>
+                          <th> Törlés </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <% for (const user_id in group.members) {
+                        var user = group.members[user_id];
+                        var datestr = user.date.getFullYear() + "." +
+                                      (user.date.getMonth() < 10 ? "0" : "") +
+                                      user.date.getMonth() + "." +
+                                      (user.date.getDate() < 10 ? "0" : "") +
+                                      user.date.getDate() + ". " +
+                                      user.date.getHours() + ":" +
+                                      (user.date.getMinutes() < 10 ? "0" : "") +
+                                      user.date.getMinutes();
+                      %>
+                        <tr>
+                          <td> <%= user.id %> </td>
+                          <td> <%= user.username %> </td>
+                          <td> <%= user.fullname %> </td>
+                          <td> <%= datestr %> </td>
+                          <td>
+                            <a href="/groups/delete/group/<%= group.id %>/member/<%= user.id %>" class="btn btn-danger"> Töröl </a>
+                          </td>
+                        </tr>
+                      <% } %>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <h2 id="users"> Felhasználók </h2>
+          <form method="post" action="/groups/add">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th> Hozzáadás </th>
+                  <th> ID </th>
+                  <th> Felhasználónév </th>
+                  <th> Teljes név </th>
+                  <th> Regisztráció </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for (const user in user_list) {
+                   var datestr = user_list[user].date.getFullYear() + "." +
+                                 (user_list[user].date.getMonth() < 10 ? "0" : "") +
+                                 user_list[user].date.getMonth() + "." +
+                                 (user_list[user].date.getDate() < 10 ? "0" : "") +
+                                 user_list[user].date.getDate() + ". " +
+                                 user_list[user].date.getHours() + ":" +
+                                 (user_list[user].date.getMinutes() < 10 ? "0" : "") +
+                                 user_list[user].date.getMinutes();
+                %>
+                <tr>
+                  <td><input type="checkbox" value="<%= user_list[user].id %>" name="user_ids[]"></td>
+                  <td> <%= user_list[user].id %> </td>
+                  <td> <%= user_list[user].username %> </td>
+                  <td> <%= user_list[user].fullname %> </td>
+                  <td> <%= datestr %> </td>
+                </tr>
+                <% } %>
+              </tbody>
+            </table>
+            <div class="form-inline">
+              <div class="form-group <% if (flash.has('add-to-group-success')) { %> has-success <% } %>">
+                <label for="add-to-group-select"> Hozzáad csoporthoz: </label>
+                <select class="form-control" id="add-to-group-select" name="add-to-group">
+                <% for (const group in group_list) { %>
+                <option value="<%= group_list[group].id %>"><%= group_list[group].name %></option>
+                <% } %>
+              </select>
+                <button type="submit" class="btn btn-success"> Hozzáad </button>
+                <% if (flash.has('add-to-group-success')) { %>
+                  <span class="help-block"><%= flash.get('add-to-group-success')[0] %></span>
+                <% } %>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>

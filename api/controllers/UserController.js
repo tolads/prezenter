@@ -80,9 +80,9 @@ module.exports = {
     }
 
     if (error) {
-        req.addFlash('username', req.param('username'));
-        req.addFlash('fullname', req.param('fullname'));
-        return res.redirect('\#signup');
+      req.addFlash('username', req.param('username'));
+      req.addFlash('fullname', req.param('fullname'));
+      return res.redirect('\#signup');
     }
 
     User.findOne({
