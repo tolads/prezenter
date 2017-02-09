@@ -65,12 +65,15 @@ module.exports = function notFound (data, options) {
   // Otherwise try to guess an appropriate view, or if that doesn't
   // work, just send JSON.
   if (options.view) {
-    return res.view(options.view, { data: viewData, title: 'Az oldal nem található', loggedin: req.session.me ? true : false });
+    return res.view(options.view,
+      { data: viewData, title: 'Az oldal nem található', loggedin: !!req.session.me });
   }
 
   // If no second argument provided, try to serve the default view,
   // but fall back to sending JSON(P) if any errors occur.
-  else return res.view('404', { data: viewData, title: 'Az oldal nem található', loggedin: req.session.me ? true : false }, function (err, html) {
+  return res.view('404',
+    { data: viewData, title: 'Az oldal nem található', loggedin: !!req.session.me },
+    function (err, html) {
 
     // If a view error occured, fall back to JSON(P).
     if (err) {
@@ -89,6 +92,4 @@ module.exports = function notFound (data, options) {
 
     return res.send(html);
   });
-
 };
-

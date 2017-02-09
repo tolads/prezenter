@@ -34,5 +34,5 @@ module.exports.routes = {
   'post /groups/new': 'GroupController.new',
   'post /groups/add': 'GroupController.add',
   'get /groups/delete/group/:gid/member/:uid': 'GroupController.deleteMember',
-  'get /groups/delete/group/:id': 'GroupController.deleteGroup'
+  'get /groups/delete/group/:id': 'GroupController.deleteGroup',
 };

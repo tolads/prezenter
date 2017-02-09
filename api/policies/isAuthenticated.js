@@ -3,10 +3,9 @@
  *
  * @module      :: Policy
  * @description :: Simple policy to allow any authenticated user
- *                 Assumes that your login action in one of your controllers sets `req.session.authenticated = true;`
  */
 
-module.exports = function(req, res, next) {
+module.exports = (req, res, next) => {
   // If `req.session.me` exists, that means the user is logged in.
   if (req.session.me) return next();
 

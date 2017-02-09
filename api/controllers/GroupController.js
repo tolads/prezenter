@@ -8,7 +8,7 @@ module.exports = {
   /**
    * `GroupController.new()`
    */
-  new: function (req, res) {
+  new: (req, res) => {
     if (req.param('new-group-name') === '') {
       req.addFlash('new-group-name', req.param('new-group-name'));
       req.addFlash('new-group-name-error', 'Csoportnév megadása kötelező.');
@@ -17,8 +17,8 @@ module.exports = {
 
     Groups.findOne({
       name: req.param('new-group-name'),
-      owner: req.session.me
-    }).exec(function (err, group) {
+      owner: req.session.me,
+    }).exec((err, group) => {
       if (err) return res.negotiate(err);
 
       if (group !== undefined) {
@@ -29,8 +29,8 @@ module.exports = {
 
       Groups.create({
         name: req.param('new-group-name'),
-        owner: req.session.me
-      }, function (err, group) {
+        owner: req.session.me,
+      }, (err, group) => {
         if (err) return res.negotiate(err);
 
         req.addFlash('new-group-name', req.param('new-group-name'));
@@ -44,36 +44,36 @@ module.exports = {
   /**
    * `GroupController.add()`
    */
-  add: function (req, res) {
+  add: (req, res) => {
     if (req.param('user_ids') === undefined) {
       return res.redirect('/groups#users');
     }
 
     Groups.findOne({
       id: req.param('add-to-group'),
-      owner: req.session.me
-    }).exec(function (err, group) {
+      owner: req.session.me,
+    }).exec((err, group) => {
       if (err) return res.negotiate(err);
 
       if (group === undefined) {
         return res.redirect('/groups#users');
       }
 
-      const user_count = req.param("user_ids").length;
+      const userCount = req.param('user_ids').length;
       let counter = 0;
-      for (const user_id in req.param("user_ids")) {
+      req.param('user_ids').forEach((userId) => {
         counter++;
 
         Members.findOne({
           group: req.param('add-to-group'),
-          user: req.param('user_ids')[user_id]
-        }).exec(function (err, member) {
+          user: userId,
+        }).exec((err, member) => {
           if (!err && !member) {
             Members.create({
               group: req.param('add-to-group'),
-              user: req.param('user_ids')[user_id]
-            }).exec(function (err, member) {
-              if (counter === user_count) {
+              user: userId,
+            }).exec((err, member) => {
+              if (counter === userCount) {
                 counter++;
                 req.addFlash('add-to-group-success', 'Sikeres hozzáadás a csoporthoz.');
 
@@ -82,25 +82,25 @@ module.exports = {
             });
           }
 
-          if (counter === user_count) {
+          if (counter === userCount) {
             counter++;
             req.addFlash('add-to-group-success', 'Sikeres hozzáadás a csoporthoz.');
 
             return res.redirect('/groups#users');
           }
         });
-      }
+      });
     });
   },
 
   /**
    * `GroupController.deleteGroup()`
    */
-  deleteGroup: function (req, res) {
+  deleteGroup: (req, res) => {
     Groups.findOne({
       id: req.params.id,
-      owner: req.session.me
-    }).exec(function (err, group) {
+      owner: req.session.me,
+    }).exec((err, group) => {
       if (err) return res.negotiate(err);
 
       if (group === undefined) {
@@ -108,14 +108,14 @@ module.exports = {
       }
 
       Members.destroy({
-        group: req.params.id
-      }).exec(function (err, members) {
+        group: req.params.id,
+      }).exec((err, members) => {
         if (err) return res.negotiate(err);
 
         Groups.destroy({
           id: req.params.id,
-          owner: req.session.me
-        }).exec(function (err, group) {
+          owner: req.session.me,
+        }).exec((err, group) => {
           if (err) return res.negotiate(err);
 
           req.addFlash('group-delete-success', 'Csoport törölve.');
@@ -129,11 +129,11 @@ module.exports = {
   /**
    * `GroupController.deleteMember()`
    */
-  deleteMember: function (req, res) {
+  deleteMember: (req, res) => {
     Groups.findOne({
       id: req.params.gid,
-      owner: req.session.me
-    }).exec(function (err, group) {
+      owner: req.session.me,
+    }).exec((err, group) => {
       if (err) return res.negotiate(err);
 
       if (group === undefined) {
@@ -142,8 +142,8 @@ module.exports = {
 
       Members.destroy({
         group: req.params.gid,
-        user: req.params.uid
-      }).exec(function (err, members) {
+        user: req.params.uid,
+      }).exec((err, members) => {
         if (err) return res.negotiate(err);
 
         req.addFlash('group-delete-success', 'Felhasználó törölve a csoportból.');
@@ -151,5 +151,5 @@ module.exports = {
         return res.redirect('/groups#groups');
       });
     });
-  }
+  },
 };

@@ -10,6 +10,6 @@ module.exports = {
    ***************************************************************************/
   models: {
     // connection: 'localDiskDb'
-    connection: 'herokuPostgresqlServer'
+    connection: 'herokuPostgresqlServer',
   }
 };

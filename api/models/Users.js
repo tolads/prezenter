@@ -4,24 +4,25 @@
 * @description :: model for storing users
 */
 
-var bcrypt = require('bcryptjs');
-var SALT_WORK_FACTOR = 10;
+const bcrypt = require('bcryptjs');
+
+const SALT_WORK_FACTOR = 10;
 
 module.exports = {
   attributes: {
     username: {
       type: 'string',
       required: true,
-      unique: true
+      unique: true,
     },
     fullname: {
       type: 'string',
-      required: true
+      required: true,
     },
     password: {
       type: 'string',
-      required: true
-    }
+      required: true,
+    },
   },
 
 
@@ -34,12 +35,12 @@ module.exports = {
    *                     • password {String}
    * @param  {Function} cb
    */
-  signup: function (inputs, cb) {
-    bcrypt.hash(inputs.password, SALT_WORK_FACTOR, function(err, hash) {
+  signup: (inputs, cb) => {
+    bcrypt.hash(inputs.password, SALT_WORK_FACTOR, (err, hash) => {
       Users.create({
         username: inputs.username,
         fullname: inputs.fullname,
-        password: hash
+        password: hash,
       })
       .exec(cb);
     });
@@ -54,16 +55,16 @@ module.exports = {
    *                     • password {String}
    * @param  {Function} cb
    */
-  attemptLogin: function (inputs, cb) {
+  attemptLogin: (inputs, cb) => {
     // Create a user
     Users.findOne({
-      username: inputs.username
+      username: inputs.username,
     })
-    .exec(function (err, user) {
+    .exec((err, user) => {
       if (user && !bcrypt.compareSync(inputs.password, user.password)) {
         user = undefined;
       }
       cb(err, user);
     });
-  }
+  },
 };

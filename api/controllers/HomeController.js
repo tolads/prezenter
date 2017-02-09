@@ -9,11 +9,11 @@ module.exports = {
   /**
    * `HomeController.index()`
    */
-  index: function (req, res) {
+  index: (req, res) => {
     if (req.session.me) {
       return res.view('index_user', {
         loggedin: true,
-        current_page: 'index'
+        current_page: 'index',
       });
     }
     return res.view('homepage');
@@ -22,52 +22,52 @@ module.exports = {
   /**
    * `HomeController.groups()`
    */
-  groups: function (req, res) {
-    Users.find({}).exec(function(err, users) {
-      const user_list = [];
-      for (const user in users) {
-        user_list.push({
-          id: users[user].id,
-          username: users[user].username,
-          fullname: users[user].fullname,
-          date: users[user].createdAt
-        })
-      }
+  groups: (req, res) => {
+    Users.find({}).exec((err, users) => {
+      const userList = [];
+      users.forEach((user) => {
+        userList.push({
+          id: user.id,
+          username: user.username,
+          fullname: user.fullname,
+          date: user.createdAt,
+        });
+      });
 
       Groups.find({
-        owner: req.session.me
-      }).exec(function(err, groups) {
-        const group_list = [];
-        for (const group in groups) {
-          group_list.push({
-            id: groups[group].id,
-            name: groups[group].name,
-            members: []
-          })
-        }
+        owner: req.session.me,
+      }).exec((err, groups) => {
+        const groupList = [];
+        groups.forEach((group) => {
+          groupList.push({
+            id: group.id,
+            name: group.name,
+            members: [],
+          });
+        });
 
-        Members.find({}).populate('user').exec(function(err, members) {
-          for (const member in members) {
-            const group = group_list.find(e => e.id === members[member].group)
+        Members.find({}).populate('user').exec((err, members) => {
+          members.forEach((member) => {
+            const group = groupList.find(e => e.id === member.group);
             if (group) {
-              const user = members[member].user;
+              const user = member.user;
               group.members.push({
                 id: user.id,
                 username: user.username,
                 fullname: user.fullname,
-                date: user.createdAt
+                date: user.createdAt,
               });
             }
-          }
+          });
 
           return res.view('groups', {
             loggedin: true,
             current_page: 'groups',
-            user_list,
-            group_list
+            userList,
+            groupList,
           });
         });
       });
     });
-  }
+  },
 };

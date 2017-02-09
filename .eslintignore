@@ -1,0 +1,9 @@
+.tmp/*
+node_modules/*
+assets/*
+tasks/*
+api/responses/badRequest.js
+api/responses/created.js
+api/responses/ok.js
+app.js
+Gruntfile.js

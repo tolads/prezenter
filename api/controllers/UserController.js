@@ -9,13 +9,13 @@ module.exports = {
   /**
    * `UserController.login()`
    */
-  login: function (req, res) {
+  login: (req, res) => {
     // See `api/responses/login.js`
     return res.login({
       username: req.param('username'),
       password: req.param('password'),
       successRedirect: '/',
-      invalidRedirect: '/#login'
+      invalidRedirect: '/#login',
     });
   },
 
@@ -23,8 +23,7 @@ module.exports = {
   /**
    * `UserController.logout()`
    */
-  logout: function (req, res) {
-
+  logout: (req, res) => {
     // "Forget" the user from the session.
     // Subsequent requests from this user agent will NOT have `req.session.me`.
     req.session.me = null;
@@ -44,7 +43,7 @@ module.exports = {
   /**
    * `UserController.signup()`
    */
-  signup: function (req, res) {
+  signup: (req, res) => {
     let error = false;
 
     if (req.param('username') === '') {
@@ -73,7 +72,7 @@ module.exports = {
     } else if (req.param('fullname').length > 127) {
       error = true;
       req.addFlash('fullname_error', 'A név túl hosszú.');
-    } else if (!/^[a-zA-Z0-9áéíóöőúüűÁÉÍÓÖŐÚÜŰäÄôÔýÝčČďĎĺĹňŇšŠťŤ_ ,\.\-\/()]+$/
+    } else if (!/^[a-zA-Z0-9áéíóöőúüűÁÉÍÓÖŐÚÜŰäÄôÔýÝčČďĎĺĹňŇšŠťŤ_ ,.\-/()]+$/
       .test(req.param('fullname'))) {
       error = true;
       req.addFlash('fullname_error', 'A név nem megengedett karaktert tartalmaz.');
@@ -82,27 +81,27 @@ module.exports = {
     if (error) {
       req.addFlash('username', req.param('username'));
       req.addFlash('fullname', req.param('fullname'));
-      return res.redirect('\#signup');
+      return res.redirect('/#signup');
     }
 
     Users.findOne({
-      username: req.param('username')
-    }).exec(function (err, user) {
+      username: req.param('username'),
+    }).exec((err, user) => {
       if (err) return res.negotiate(err);
 
       if (user !== undefined) {
         req.addFlash('username', req.param('username'));
         req.addFlash('fullname', req.param('fullname'));
         req.addFlash('username_error', 'A felhasználónév foglalt.');
-        return res.redirect('\#signup');
+        return res.redirect('/#signup');
       }
 
       // Attempt to signup a user using the provided parameters
       Users.signup({
         username: req.param('username'),
         password: req.param('password'),
-        fullname: req.param('fullname')
-      }, function (err, user) {
+        fullname: req.param('fullname'),
+      }, (err, user) => {
         // res.negotiate() will determine if this is a validation error
         // or some kind of unexpected server error, then call `res.badRequest()`
         // or `res.serverError()` accordingly.
@@ -123,6 +122,5 @@ module.exports = {
         return res.redirect('/');
       });
     });
-  }
+  },
 };
-

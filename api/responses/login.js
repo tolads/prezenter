@@ -11,15 +11,14 @@ module.exports = function login(inputs) {
   inputs = inputs || {};
 
   // Get access to `req` and `res`
-  var req = this.req;
-  var res = this.res;
+  const req = this.req;
+  const res = this.res;
 
   // Look up the user
   Users.attemptLogin({
     username: inputs.username,
-    password: inputs.password
-  }, function (err, user) {
-
+    password: inputs.password,
+  }, (err, user) => {
     if (err) return res.negotiate(err);
     if (!user) {
       // If this is not an HTML-wanting browser, e.g. AJAX/sockets/cURL/etc.,
@@ -47,5 +46,4 @@ module.exports = function login(inputs) {
     // Otherwise if this is an HTML-wanting browser, redirect to /.
     return res.redirect(inputs.successRedirect);
   });
-
 };

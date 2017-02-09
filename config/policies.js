@@ -31,14 +31,14 @@ module.exports.policies = {
 
   HomeController: {
     index: true,
-    groups: 'isAuthenticated'
+    groups: 'isAuthenticated',
   },
 
   UserController: {
-    '*': true
+    '*': true,
   },
 
   GroupController: {
-    '*': 'isAuthenticated'
-  }
+    '*': 'isAuthenticated',
+  },
 };

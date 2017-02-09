@@ -39,8 +39,8 @@
               </tr>
             </thead>
             <tbody>
-              <% for (const group_id in group_list) {
-                var group = group_list[group_id]; %>
+              <% for (const group_id in groupList) {
+                var group = groupList[group_id]; %>
                 <tr>
                   <td> <%= group.name %> </td>
                   <td>
@@ -106,21 +106,21 @@
                 </tr>
               </thead>
               <tbody>
-                <% for (const user in user_list) {
-                   var datestr = user_list[user].date.getFullYear() + "." +
-                                 (user_list[user].date.getMonth() < 10 ? "0" : "") +
-                                 user_list[user].date.getMonth() + "." +
-                                 (user_list[user].date.getDate() < 10 ? "0" : "") +
-                                 user_list[user].date.getDate() + ". " +
-                                 user_list[user].date.getHours() + ":" +
-                                 (user_list[user].date.getMinutes() < 10 ? "0" : "") +
-                                 user_list[user].date.getMinutes();
+                <% for (const user in userList) {
+                   var datestr = userList[user].date.getFullYear() + "." +
+                                 (userList[user].date.getMonth() < 10 ? "0" : "") +
+                                 userList[user].date.getMonth() + "." +
+                                 (userList[user].date.getDate() < 10 ? "0" : "") +
+                                 userList[user].date.getDate() + ". " +
+                                 userList[user].date.getHours() + ":" +
+                                 (userList[user].date.getMinutes() < 10 ? "0" : "") +
+                                 userList[user].date.getMinutes();
                 %>
                 <tr>
-                  <td><input type="checkbox" value="<%= user_list[user].id %>" name="user_ids[]"></td>
-                  <td> <%= user_list[user].id %> </td>
-                  <td> <%= user_list[user].username %> </td>
-                  <td> <%= user_list[user].fullname %> </td>
+                  <td><input type="checkbox" value="<%= userList[user].id %>" name="user_ids[]"></td>
+                  <td> <%= userList[user].id %> </td>
+                  <td> <%= userList[user].username %> </td>
+                  <td> <%= userList[user].fullname %> </td>
                   <td> <%= datestr %> </td>
                 </tr>
                 <% } %>
@@ -130,8 +130,8 @@
               <div class="form-group <% if (flash.has('add-to-group-success')) { %> has-success <% } %>">
                 <label for="add-to-group-select"> Hozzáad csoporthoz: </label>
                 <select class="form-control" id="add-to-group-select" name="add-to-group">
-                <% for (const group in group_list) { %>
-                <option value="<%= group_list[group].id %>"><%= group_list[group].name %></option>
+                <% for (const group in groupList) { %>
+                <option value="<%= groupList[group].id %>"><%= groupList[group].name %></option>
                 <% } %>
               </select>
                 <button type="submit" class="btn btn-success"> Hozzáad </button>
