@@ -7,37 +7,11 @@ export default class MyGroups extends React.Component {
     super(props);
 
     this.state = {
-      groups: [],
       success: '',
     };
 
-    this.getGroups = this.getGroups.bind(this);
     this.deleteGroup = this.deleteGroup.bind(this);
     this.deleteMember = this.deleteMember.bind(this);
-  }
-
-  componentWillMount() {
-    this.getGroups();
-  }
-
-  getGroups() {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', '/grouplist');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        // success
-
-        this.setState({
-          groups: xhr.response,
-        });
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();
   }
 
   deleteGroup(e) {
@@ -54,6 +28,7 @@ export default class MyGroups extends React.Component {
         this.setState({
           success: xhr.response.success,
         });
+        this.props.getGroups();
       } else if (xhr.status === 401) {
         this.props.auth.logout();
       }
@@ -76,6 +51,7 @@ export default class MyGroups extends React.Component {
         this.setState({
           success: xhr.response.success,
         });
+        this.props.getGroups();
       } else if (xhr.status === 401) {
         this.props.auth.logout();
       }
@@ -85,7 +61,7 @@ export default class MyGroups extends React.Component {
 
   render() {
     const groups = [];
-    this.state.groups.forEach((group) => {
+    this.props.groups.forEach((group) => {
       groups.push(
         <tr key={`${group.id}_1`}>
           <td>{group.name}</td>
@@ -158,4 +134,5 @@ export default class MyGroups extends React.Component {
 
 MyGroups.propTypes = {
   auth: React.PropTypes.object.isRequired,
+  getGroups: React.PropTypes.func.isRequired,
 };

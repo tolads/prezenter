@@ -10,7 +10,6 @@ export default class ListUsers extends React.Component {
     this.state = {
       addToGroup: 0,
       users: [],
-      groups: [],
       success: '',
     };
     this.selectedCheckboxes = new Set();
@@ -19,12 +18,10 @@ export default class ListUsers extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getUsers = this.getUsers.bind(this);
-    this.getGroups = this.getGroups.bind(this);
   }
 
   componentWillMount() {
     this.getUsers();
-    this.getGroups();
   }
 
   toggleCheckbox(label) {
@@ -47,27 +44,6 @@ export default class ListUsers extends React.Component {
 
         this.setState({
           users: xhr.response,
-        });
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();
-  }
-
-  getGroups() {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', '/grouplist');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        // success
-
-        this.setState({
-          groups: xhr.response,
-          addToGroup: xhr.response[0] && xhr.response[0].id,
         });
       } else if (xhr.status === 401) {
         this.props.auth.logout();
@@ -99,10 +75,10 @@ export default class ListUsers extends React.Component {
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
         // success
-        console.log(xhr.response.success);
         this.setState({
           success: xhr.response.success,
         });
+        this.props.getGroups();
       } else if (xhr.status === 401) {
         this.props.auth.logout();
       }
@@ -121,7 +97,7 @@ export default class ListUsers extends React.Component {
       </tr>
     ));
 
-    const groupList = this.state.groups.map(group => (
+    const groupList = this.props.groups.map(group => (
       <option key={group.id} value={group.id}>{group.name}</option>
     ));
 
@@ -170,4 +146,5 @@ export default class ListUsers extends React.Component {
 
 ListUsers.propTypes = {
   auth: React.PropTypes.object.isRequired,
+  getGroups: React.PropTypes.func.isRequired,
 };

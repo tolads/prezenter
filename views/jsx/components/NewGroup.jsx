@@ -50,6 +50,7 @@ export default class NewGroup extends React.Component {
         this.setState({
           success: 'Csoport sikeresen létrehozva.',
         });
+        this.props.getGroups();
       } else if (xhr.status === 401) {
         this.props.auth.logout();
       } else {
@@ -96,4 +97,5 @@ export default class NewGroup extends React.Component {
 
 NewGroup.propTypes = {
   auth: React.PropTypes.object.isRequired,
+  getGroups: React.PropTypes.func.isRequired,
 };
