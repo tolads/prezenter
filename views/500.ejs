@@ -1,6 +1,5 @@
 <!--
 
-
 555555555555555555      000000000          000000000
 5::::::::::::::::5    00:::::::::00      00:::::::::00
 5::::::::::::::::5  00:::::::::::::00  00:::::::::::::00
@@ -18,21 +17,10 @@
    55:::::::::55      00:::::::::00      00:::::::::00
      555555555          000000000          000000000
 
-
-  User agents that don't "Accept" HTML will see a JSON version instead.
-  You can customize the control logic for your needs in `config/500.js`
-
-  Sails considers a request in a "500: Server Error" state when
-  your app throws a catchable error (not inside of an asynchronous callback).
-
-  You can also trigger this response from one of your controllers or policies with:
-  `return res.serverError( e );`
-  (where `e` is an optional message, error, or array of errors to include in the response)
-
 -->
-<div class="container error-page">
-  <div class="jumbotron">
-    <h1>500</h1>
-    <h2>Belső szerverhiba történt, kérlek látogass vissza később</h2>
-    <p><a class="btn btn-lg btn-primary" href="#" role="button">Vissza a kezdőlapra >></a></p>
-  </div>
+    <div class="container error-page">
+      <div class="jumbotron">
+        <h1> 500 </h1>
+        <h2> Belső szerverhiba történt, kérlek látogass vissza később </h2>
+        <p><a class="btn btn-lg btn-primary" href="/" role="button"> Vissza a kezdőlapra >> </a></p>
+      </div>

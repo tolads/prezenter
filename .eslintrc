@@ -9,14 +9,6 @@
   },
 
   "rules": {
-    /*"semi": [2, "never"],
-    "comma-dangle": [2, "never"],
-    "arrow-parens": [2, "as-needed"],
-    "space-before-function-paren": [2, "always"],
-    "no-underscore-dangle": [2, { "allowAfterThis": true }],
-    "linebreak-style": 0,
-    "no-use-before-define": "off",
-    "no-param-reassign": "off",*/
     "no-console": "off"
   }
 }
