@@ -23,6 +23,10 @@ module.exports = {
       type: 'string',
       required: true,
     },
+    memberof: {
+      collection: 'Groups',
+      via: 'members',
+    },
   },
 
 

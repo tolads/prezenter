@@ -14,6 +14,11 @@ module.exports = {
       model: 'Users',
       required: true,
     },
+    members: {
+      collection: 'Users',
+      via: 'memberof',
+      dominant: true,
+    },
   },
 
 };

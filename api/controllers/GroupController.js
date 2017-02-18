@@ -9,11 +9,7 @@ module.exports = {
    * `GroupController.new()`
    */
   new: (req, res) => {
-    req.wantsJSON = true;
-    let hasError = false;
-    const errors = {};
-
-    if (req.param('newGroupName') === undefined || req.param('newGroupName') === '') {
+    if (!req.param('newGroupName')) {
       return res.badRequest({
         success: false,
         errors: 'Csoportnév megadása kötelező.',
@@ -48,10 +44,8 @@ module.exports = {
    * `GroupController.add()`
    */
   add: (req, res) => {
-    req.wantsJSON = true;
-
-    if (req.param('addToGroup') === undefined ||
-        req.param('userIDs') === undefined) {
+    if (!req.param('addToGroup') ||
+        !req.param('userIDs')) {
       return res.badRequest({
         success: false,
       });
@@ -79,30 +73,23 @@ module.exports = {
       userIDs.forEach((userId) => {
         counter++;
 
-        Members.findOne({
-          group: req.param('addToGroup'),
-          user: userId,
-        }).exec((err, member) => {
-          if (!err && !member) {
-            Members.create({
-              group: req.param('addToGroup'),
-              user: userId,
-            }).exec((err, member) => {
-              if (counter === userCount) {
-                counter++;
-                return res.ok({
-                  success: 'Sikeres hozzáadás a csoporthoz.',
-                });
-              }
-            });
-          }
+        Users.findOne({
+          id: userId,
+        }).exec((err, user) => {
+          if (err) return res.negotiate(err);
 
-          if (counter === userCount) {
-            counter++;
-            return res.ok({
-              success: 'Sikeres hozzáadás a csoporthoz.',
-            });
-          }
+          if (!user) return;
+
+          group.members.add(user.id);
+
+          group.save((err) => {
+            if (counter === userCount) {
+              counter++;
+              return res.ok({
+                success: 'Sikeres hozzáadás a csoporthoz.',
+              });
+            }
+          });
         });
       });
     });
@@ -112,10 +99,14 @@ module.exports = {
    * `GroupController.deleteGroup()`
    */
   deleteGroup: (req, res) => {
-    req.wantsJSON = true;
+    if (!req.param('id')) {
+      return res.badRequest({
+        success: false,
+      });
+    }
 
     Groups.findOne({
-      id: req.params.id,
+      id: req.param('id'),
       owner: req.session.me,
     }).exec((err, group) => {
       if (err) return res.negotiate(err);
@@ -126,19 +117,13 @@ module.exports = {
         });
       }
 
-      Members.destroy({
-        group: req.params.id,
-      }).exec((err, members) => {
+      Groups.destroy({
+        id: req.param('id'),
+        owner: req.session.me,
+      }).exec((err, group) => {
         if (err) return res.negotiate(err);
 
-        Groups.destroy({
-          id: req.params.id,
-          owner: req.session.me,
-        }).exec((err, group) => {
-          if (err) return res.negotiate(err);
-
-          return res.ok({ success: 'Csoport törölve.' });
-        });
+        return res.ok({ success: 'Csoport törölve.' });
       });
     });
   },
@@ -147,7 +132,11 @@ module.exports = {
    * `GroupController.deleteMember()`
    */
   deleteMember: (req, res) => {
-    req.wantsJSON = true;
+    if (!req.param('gid') || !req.param('uid')) {
+      return res.badRequest({
+        success: false,
+      });
+    }
 
     Groups.findOne({
       id: req.params.gid,
@@ -161,10 +150,9 @@ module.exports = {
         });
       }
 
-      Members.destroy({
-        group: req.params.gid,
-        user: req.params.uid,
-      }).exec((err, members) => {
+      group.members.remove(req.params.uid);
+
+      group.save((err) => {
         if (err) return res.negotiate(err);
 
         return res.ok({ success: 'Tag törölve.' });
@@ -176,36 +164,31 @@ module.exports = {
    * `GroupController.list()`
    */
   list: (req, res) => {
-    req.wantsJSON = true;
-
     Groups.find({
       owner: req.session.me,
-    }).exec((err, groups) => {
+    }).populate('members').exec((err, groups) => {
       const groupList = [];
+
       groups.forEach((group) => {
-        groupList.push({
+        const newGroup = {
           id: group.id,
           name: group.name,
           members: [],
-        });
-      });
+        };
 
-      Members.find({}).populate('user').exec((err, members) => {
-        members.forEach((member) => {
-          const group = groupList.find(e => e.id === member.group);
-          if (group) {
-            const user = member.user;
-            group.members.push({
-              id: user.id,
-              username: user.username,
-              fullname: user.fullname,
-              date: user.createdAt,
-            });
-          }
+        group.members.forEach((member) => {
+          newGroup.members.push({
+            id: member.id,
+            username: member.username,
+            fullname: member.fullname,
+            date: member.createdAt,
+          });
         });
 
-        return res.ok(groupList);
+        groupList.push(newGroup);
       });
+
+      return res.ok(groupList);
     });
   },
 };

@@ -10,7 +10,6 @@ module.exports = {
    * `UserController.isLoggedId()`
    */
   isLoggedIn: (req, res) => {
-    req.wantsJSON = true;
     return res.ok({
       loggedin: !!req.session.me,
     });
@@ -20,7 +19,6 @@ module.exports = {
    * `UserController.login()`
    */
   login: (req, res) => {
-    req.wantsJSON = true;
     if (!req.param('username') || !req.param('password')) {
       return res.badRequest({
         success: false,
@@ -45,7 +43,7 @@ module.exports = {
 
     // send a simple response letting the user agent know they were logged out
     // successfully.
-    return res.ok('Logged out successfully!');
+    return res.ok('Sikeres kijelentkezés.');
   },
 
 
@@ -53,7 +51,6 @@ module.exports = {
    * `UserController.signup()`
    */
   signup: (req, res) => {
-    req.wantsJSON = true;
     let hasError = false;
     const errors = {};
 
@@ -133,8 +130,6 @@ module.exports = {
    * `UserController.list()`
    */
   list: (req, res) => {
-    req.wantsJSON = true;
-
     Users.find({}).exec((err, users) => {
       if (err) return res.negotiate(err);
 
