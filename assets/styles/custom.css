@@ -2,10 +2,13 @@
 .navbar-brand img { display: inline; margin-top: -5px; margin-right: 5px; }
 .navbar { margin-bottom: 0; }
 .navbar-form { margin-top: 5px; }
+.navbar-form input { margin-right: 3px; }
+.navbar .btn { padding-top: 5px; padding-bottom: 5px; }
 label, .control-label { font-weight: bold; font-size: 15px; }
 .groups-table { margin-bottom: 0; }
 .groups-table thead > tr > th:last-child { width: 100px; }
 .groups-table > tbody > tr:nth-child(2n) > td  { padding: 0 30px 10px 30px; }
+.groups-page input, .groups-page select { margin-left: 5px; margin-right: 5px; }
 
 .error-page { text-align: center; max-width: 800px; }
 .error-page .jumbotron { background-color: #eee; margin-top: 30px; }

@@ -22,17 +22,21 @@
 
 module.exports.routes = {
 
-  // HTML Views
-  '/': 'HomeController.index',
-  '/groups': 'HomeController.groups',
+  'GET /isloggedin': 'UserController.isLoggedIn',
+  'GET /logout': 'UserController.logout',
+  'GET /users': 'UserController.list',
+  'GET /grouplist': 'GroupController.list',
+  'GET /groups/delete/group/:id': 'GroupController.deleteGroup',
+  'GET /groups/delete/group/:gid/member/:uid': 'GroupController.deleteMember',
 
-  // Endpoints
-  'post /login': 'UserController.login',
-  'post /signup': 'UserController.signup',
-  '/logout': 'UserController.logout',
+  'GET /*': {
+    controller: 'HomeController',
+    action: 'index',
+    skipAssets: true,
+  },
+  'POST /login': 'UserController.login',
+  'POST /signup': 'UserController.signup',
+  'POST /groups/new': 'GroupController.new',
+  'POST /groups/add': 'GroupController.add',
 
-  'post /groups/new': 'GroupController.new',
-  'post /groups/add': 'GroupController.add',
-  'get /groups/delete/group/:gid/member/:uid': 'GroupController.deleteMember',
-  'get /groups/delete/group/:id': 'GroupController.deleteGroup',
 };
