@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><%=typeof title === 'undefined' ? '' : title + " |"%> Prezenter - online prezentációs alkalmazás</title>
+    <title>Prezenter - online prezentációs alkalmazás</title>
 
     <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
@@ -14,17 +14,17 @@
     <meta name="theme-color" content="#ffffff">
 
     <!-- styles -->
-    <link rel="stylesheet" href="/min/production.min.css">
+    <link rel="stylesheet" href="/styles/bootstrap.css">
+    <link rel="stylesheet" href="/styles/custom.css">
   </head>
   <body>
 
-    <%- body %>
-      <hr>
+    <noscript>Az oldal megtekintéséhez engedélyezd a JavaScript-et a böngésződben.</noscript>
+    <div id="root"></div>
 
-      <footer>
-        <p> &copy; 2017 László Tamás </p>
-      </footer>
-    </div> <!-- /container -->
-
+    <!-- scripts -->
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/bundle.js"></script>
   </body>
 </html>
+

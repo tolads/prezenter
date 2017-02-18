@@ -9,34 +9,37 @@ module.exports = {
    * `GroupController.new()`
    */
   new: (req, res) => {
-    if (req.param('new-group-name') === '') {
-      req.addFlash('new-group-name', req.param('new-group-name'));
-      req.addFlash('new-group-name-error', 'Csoportnév megadása kötelező.');
-      return res.redirect('/groups#new');
+    req.wantsJSON = true;
+    let hasError = false;
+    const errors = {};
+
+    if (req.param('newGroupName') === undefined || req.param('newGroupName') === '') {
+      return res.badRequest({
+        success: false,
+        errors: 'Csoportnév megadása kötelező.',
+      });
     }
 
     Groups.findOne({
-      name: req.param('new-group-name'),
+      name: req.param('newGroupName'),
       owner: req.session.me,
     }).exec((err, group) => {
       if (err) return res.negotiate(err);
 
       if (group !== undefined) {
-        req.addFlash('new-group-name', req.param('new-group-name'));
-        req.addFlash('new-group-name-error', 'Ilyen nevű csoportod már van.');
-        return res.redirect('/groups#new');
+        return res.badRequest({
+          success: false,
+          errors: 'Ilyen nevű csoportod már van.',
+        });
       }
 
       Groups.create({
-        name: req.param('new-group-name'),
+        name: req.param('newGroupName'),
         owner: req.session.me,
       }, (err, group) => {
         if (err) return res.negotiate(err);
 
-        req.addFlash('new-group-name', req.param('new-group-name'));
-        req.addFlash('new-group-name-success', 'Csoport sikeresen létrehozva.');
-
-        return res.redirect('/groups#new');
+        return res.ok('Csoport sikeresen létrehozva.');
       });
     });
   },
@@ -45,48 +48,60 @@ module.exports = {
    * `GroupController.add()`
    */
   add: (req, res) => {
-    if (req.param('user_ids') === undefined) {
-      return res.redirect('/groups#users');
+    req.wantsJSON = true;
+
+    if (req.param('addToGroup') === undefined ||
+        req.param('userIDs') === undefined) {
+      return res.badRequest({
+        success: false,
+      });
+    }
+
+    let userIDs = req.param('userIDs');
+    if (typeof userIDs === 'string') {
+      userIDs = [userIDs];
     }
 
     Groups.findOne({
-      id: req.param('add-to-group'),
+      id: req.param('addToGroup'),
       owner: req.session.me,
     }).exec((err, group) => {
       if (err) return res.negotiate(err);
 
       if (group === undefined) {
-        return res.redirect('/groups#users');
+        return res.badRequest({
+          success: false,
+        });
       }
 
-      const userCount = req.param('user_ids').length;
+      const userCount = userIDs.length;
       let counter = 0;
-      req.param('user_ids').forEach((userId) => {
+      userIDs.forEach((userId) => {
         counter++;
 
         Members.findOne({
-          group: req.param('add-to-group'),
+          group: req.param('addToGroup'),
           user: userId,
         }).exec((err, member) => {
           if (!err && !member) {
             Members.create({
-              group: req.param('add-to-group'),
+              group: req.param('addToGroup'),
               user: userId,
             }).exec((err, member) => {
               if (counter === userCount) {
                 counter++;
-                req.addFlash('add-to-group-success', 'Sikeres hozzáadás a csoporthoz.');
-
-                return res.redirect('/groups#users');
+                return res.ok({
+                  success: 'Sikeres hozzáadás a csoporthoz.',
+                });
               }
             });
           }
 
           if (counter === userCount) {
             counter++;
-            req.addFlash('add-to-group-success', 'Sikeres hozzáadás a csoporthoz.');
-
-            return res.redirect('/groups#users');
+            return res.ok({
+              success: 'Sikeres hozzáadás a csoporthoz.',
+            });
           }
         });
       });
@@ -97,6 +112,8 @@ module.exports = {
    * `GroupController.deleteGroup()`
    */
   deleteGroup: (req, res) => {
+    req.wantsJSON = true;
+
     Groups.findOne({
       id: req.params.id,
       owner: req.session.me,
@@ -104,7 +121,9 @@ module.exports = {
       if (err) return res.negotiate(err);
 
       if (group === undefined) {
-        return res.redirect('/groups#groups');
+        return res.badRequest({
+          success: false,
+        });
       }
 
       Members.destroy({
@@ -118,9 +137,7 @@ module.exports = {
         }).exec((err, group) => {
           if (err) return res.negotiate(err);
 
-          req.addFlash('group-delete-success', 'Csoport törölve.');
-
-          return res.redirect('/groups#groups');
+          return res.ok({ success: 'Csoport törölve.' });
         });
       });
     });
@@ -130,6 +147,8 @@ module.exports = {
    * `GroupController.deleteMember()`
    */
   deleteMember: (req, res) => {
+    req.wantsJSON = true;
+
     Groups.findOne({
       id: req.params.gid,
       owner: req.session.me,
@@ -137,7 +156,9 @@ module.exports = {
       if (err) return res.negotiate(err);
 
       if (group === undefined) {
-        return res.redirect('/groups#groups');
+        return res.badRequest({
+          success: false,
+        });
       }
 
       Members.destroy({
@@ -146,9 +167,44 @@ module.exports = {
       }).exec((err, members) => {
         if (err) return res.negotiate(err);
 
-        req.addFlash('group-delete-success', 'Felhasználó törölve a csoportból.');
+        return res.ok({ success: 'Tag törölve.' });
+      });
+    });
+  },
 
-        return res.redirect('/groups#groups');
+  /**
+   * `GroupController.list()`
+   */
+  list: (req, res) => {
+    req.wantsJSON = true;
+
+    Groups.find({
+      owner: req.session.me,
+    }).exec((err, groups) => {
+      const groupList = [];
+      groups.forEach((group) => {
+        groupList.push({
+          id: group.id,
+          name: group.name,
+          members: [],
+        });
+      });
+
+      Members.find({}).populate('user').exec((err, members) => {
+        members.forEach((member) => {
+          const group = groupList.find(e => e.id === member.group);
+          if (group) {
+            const user = member.user;
+            group.members.push({
+              id: user.id,
+              username: user.username,
+              fullname: user.fullname,
+              date: user.createdAt,
+            });
+          }
+        });
+
+        return res.ok(groupList);
       });
     });
   },

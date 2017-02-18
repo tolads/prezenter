@@ -35,7 +35,12 @@ module.exports.policies = {
   },
 
   UserController: {
-    '*': true,
+    isLoggedIn: true,
+    login: true,
+    signup: true,
+    logout: 'isAuthenticated',
+    list: 'isAuthenticated',
+
   },
 
   GroupController: {
