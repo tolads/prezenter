@@ -134,5 +134,6 @@ export default class MyGroups extends React.Component {
 
 MyGroups.propTypes = {
   auth: React.PropTypes.object.isRequired,
+  groups: React.PropTypes.array.isRequired,
   getGroups: React.PropTypes.func.isRequired,
 };

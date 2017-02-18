@@ -24,6 +24,12 @@ export default class ListUsers extends React.Component {
     this.getUsers();
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      addToGroup: nextProps.groups[0] && nextProps.groups[0].id,
+    })
+  }
+
   toggleCheckbox(label) {
     if (this.selectedCheckboxes.has(label)) {
       this.selectedCheckboxes.delete(label);
@@ -146,5 +152,6 @@ export default class ListUsers extends React.Component {
 
 ListUsers.propTypes = {
   auth: React.PropTypes.object.isRequired,
+  groups: React.PropTypes.array.isRequired,
   getGroups: React.PropTypes.func.isRequired,
 };
