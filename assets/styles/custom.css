@@ -1,9 +1,13 @@
+* { transition: all .5s; }
+
 .navbar-brand { font-weight: bolder; }
 .navbar-brand img { display: inline; margin-top: -5px; margin-right: 5px; }
 .navbar { margin-bottom: 0; }
 .navbar-form { margin-top: 5px; }
 .navbar-form input { margin-right: 3px; }
 .navbar .btn { padding-top: 5px; padding-bottom: 5px; }
+.navbar-inverse .navbar-nav > li > a .glyphicon-user { font-size: 1.3em; padding-right: 3px; top: 2px; color: rgba(255,255,255,0.7); }
+.navbar-inverse .navbar-nav > li > a:hover .glyphicon-user { color: #fff; }
 label, .control-label { font-weight: bold; font-size: 15px; }
 .groups-table { margin-bottom: 0; }
 .groups-table thead > tr > th:last-child { width: 100px; }
@@ -12,3 +16,7 @@ label, .control-label { font-weight: bold; font-size: 15px; }
 
 .error-page { text-align: center; max-width: 800px; }
 .error-page .jumbotron { background-color: #eee; margin-top: 30px; }
+
+@media (min-width: 768px) {
+  .navbar-nav > li.dropdown > a { padding-bottom: 10px; }
+}

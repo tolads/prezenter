@@ -18,6 +18,9 @@ export default class Application extends React.Component {
       if (xhr.status === 200) {
         // success
         if (xhr.response.loggedin) {
+          this.setState({
+            username: xhr.response.loggedin,
+          });
           this.handleLogin();
         } else {
           this.handleLogout();
@@ -30,6 +33,7 @@ export default class Application extends React.Component {
     xhr.send();
 
     this.state = {
+      username: undefined,
       loggedin: this.isLoggedIn(),
       loginError: '',
     };
@@ -74,6 +78,9 @@ export default class Application extends React.Component {
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
         // success
+        this.setState({
+          username: xhr.response.loggedin,
+        });
         this.handleLogin();
         browserHistory.push('/');
         window.scroll(0, 0);
@@ -99,7 +106,7 @@ export default class Application extends React.Component {
 
     return (
       <div>
-        <Navbar auth={loginObj} />
+        <Navbar auth={loginObj} username={this.state.username} />
         {React.cloneElement(this.props.children, { auth: loginObj })}
         <Footer />
       </div>

@@ -23,6 +23,7 @@
 module.exports.routes = {
 
   'GET /isloggedin': 'UserController.isLoggedIn',
+  'GET /me': 'UserController.me',
   'GET /logout': 'UserController.logout',
   'GET /users': 'UserController.list',
   'GET /grouplist': 'GroupController.list',

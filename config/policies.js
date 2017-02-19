@@ -40,7 +40,7 @@ module.exports.policies = {
     signup: true,
     logout: 'isAuthenticated',
     list: 'isAuthenticated',
-
+    me: 'isAuthenticated',
   },
 
   GroupController: {

@@ -79,14 +79,24 @@ export default class Navbar extends React.Component {
       );
     } else {
       // menu
-      navbarContent = (
-        <ul className="nav navbar-nav navbar-right">
+      navbarContent = [
+        (<ul key="0" className="nav navbar-nav">
           <li><Link to="/"> Kezdőlap </Link></li>
           <li><Link to="/groups"> Csoportok </Link></li>
           <li><Link to="/presentations"> Prezentációk </Link></li>
-          <li><a href="" onClick={this.handleLogout}> Kijelentkezés </a></li>
-        </ul>
-      );
+        </ul>),
+        (<ul key="1" className="nav navbar-nav navbar-right">
+          <li className="dropdown">
+            <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <span className="glyphicon glyphicon-user" /> Bejelentkezve, mint <b>{this.props.username}</b> <span className="caret" />
+            </a>
+            <ul className="dropdown-menu">
+              <li><Link to="/profile"> Adataim </Link></li>
+              <li><a href="" onClick={this.handleLogout}> Kijelentkezés </a></li>
+            </ul>
+          </li>
+        </ul>),
+      ];
     }
 
     return (
@@ -122,4 +132,5 @@ export default class Navbar extends React.Component {
 
 Navbar.propTypes = {
   auth: React.PropTypes.object.isRequired,
+  username: React.PropTypes.string,
 };

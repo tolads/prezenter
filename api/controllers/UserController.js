@@ -10,8 +10,26 @@ module.exports = {
    * `UserController.isLoggedId()`
    */
   isLoggedIn: (req, res) => {
-    return res.ok({
-      loggedin: !!req.session.me,
+    if (!req.session.me) {
+      return res.ok({
+        loggedin: false,
+      });
+    }
+
+    Users.findOne({
+      id: req.session.me,
+    }).exec((err, user) => {
+      if (err) return res.negotiate(err);
+
+      if (user === undefined) {
+        return res.ok({
+          loggedin: false,
+        });
+      }
+
+      return res.ok({
+        loggedin: user.username,
+      });
     });
   },
 
@@ -144,6 +162,23 @@ module.exports = {
       });
 
       return res.ok(userList);
+    });
+  },
+
+  /**
+   * `UserController.me()`
+   */
+  me: (req, res) => {
+    Users.findOne({
+      id: req.session.me,
+    }).exec((err, user) => {
+      if (err) return res.negotiate(err);
+console.log(user);
+      return res.ok({
+        username: user.username,
+        fullname: user.fullname,
+        date: user.createdAt,
+      });
     });
   },
 };

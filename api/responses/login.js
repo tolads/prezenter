@@ -30,6 +30,8 @@ module.exports = function login(inputs) {
     // Subsequent requests from this user agent will have `req.session.me` set.
     req.session.me = user.id;
 
-    return res.ok();
+    return res.ok({
+      loggedin: inputs.username,
+    });
   });
 };

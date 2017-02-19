@@ -4,6 +4,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 import Application from './Application';
 import Home from './Home';
+import Profile from './Profile';
 import Groups from './Groups';
 import NotFound from './NotFound';
 
@@ -11,6 +12,7 @@ ReactDOM.render(
   <Router history={browserHistory}>
     <Route path="/" component={Application}>
       <IndexRoute component={Home} />
+      <Route path="profile" component={Profile} />
       <Route path="groups" component={Groups} />
     </Route>
     <Route path="*" component={NotFound} />
