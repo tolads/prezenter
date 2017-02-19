@@ -173,7 +173,7 @@ module.exports = {
       id: req.session.me,
     }).exec((err, user) => {
       if (err) return res.negotiate(err);
-console.log(user);
+
       return res.ok({
         username: user.username,
         fullname: user.fullname,

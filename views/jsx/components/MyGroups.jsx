@@ -88,7 +88,7 @@ export default class MyGroups extends React.Component {
       groups.push(
         <tr key={`${group.id}_2`}>
           <td colSpan="2">
-            <table className="table table-hover">
+            <table className="table table-hover table-members">
               <thead>
                 <tr>
                   <th> ID </th>
