@@ -1,9 +1,13 @@
 * { transition: all .5s; }
+h1 { border-bottom: 1px dashed #aaa; }
+.jumbotron h1 { border-bottom: none; }
+
 .pagination { margin: 0; }
 .pagination > li > a { background-color: rgba(0, 140, 186, 0.6); color: #fff; font-weight: bolder; }
-.pagination > li > a:hover { background-color: rgba(0, 140, 186, 0.8); color: #fff; font-weight: bolder; }
-.pagination > li > a.active { background-color: rgba(0, 140, 186, 1); color: #fff; font-weight: bolder; }
+.pagination > li > a:hover { background-color: rgba(0, 140, 186, 0.8); color: #fff; }
+.pagination > li > a.active { background-color: rgba(0, 140, 186, 1); color: #fff; cursor: default; }
 
+.navbar-inverse .navbar-nav a.active { background-color: #006687; }
 .navbar-brand { font-weight: bolder; }
 .navbar-brand img { display: inline; margin-top: -5px; margin-right: 5px; }
 .navbar { margin-bottom: 0; }
@@ -12,12 +16,13 @@
 .navbar .btn { padding-top: 5px; padding-bottom: 5px; }
 .navbar-inverse .navbar-nav > li > a .glyphicon-user { font-size: 1.3em; padding-right: 3px; top: 2px; color: rgba(255,255,255,0.7); }
 .navbar-inverse .navbar-nav > li > a:hover .glyphicon-user { color: #fff; }
-label, .control-label { font-weight: bold; font-size: 15px; }
+label, .control-label { font-weight: bold; font-size: 1em; }
 .groups-table { margin-bottom: 0; }
 .groups-table > tbody > tr > td { vertical-align: middle; }
 .groups-table thead > tr > th:last-child { width: 100px; }
 .groups-table > tbody > tr:nth-child(2n) > td  { padding: 0 30px 10px 30px; }
 .groups-page input, .groups-page select { margin-left: 5px; margin-right: 5px; }
+.groups-page .btn { margin: 5px; }
 .groups-table .btn { padding-top: 4px; padding-bottom: 4px; }
 .groups-page .table-members button { padding-top: 1px; padding-bottom: 1px; }
 .groups-page .table-members td { padding: 4px; }
@@ -28,4 +33,7 @@ label, .control-label { font-weight: bold; font-size: 15px; }
 
 @media (min-width: 768px) {
   .navbar-nav > li.dropdown > a { padding-bottom: 10px; }
+}
+@media (max-width: 500px) {
+  .btn { width: 100%; display: block; }
 }

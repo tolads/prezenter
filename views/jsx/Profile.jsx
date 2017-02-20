@@ -24,6 +24,10 @@ export default class Profile extends React.Component {
     }
   }
 
+  componentDidMount() {
+    document.title = `Adataim | ${this.props.route.title}`;
+  }
+
   componentWillReceiveProps(nextProps) {
     if (!nextProps.auth.isLoggedIn) {
       browserHistory.push('/');
@@ -39,7 +43,7 @@ export default class Profile extends React.Component {
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
         // success
-console.log(1);
+
         this.setState({
           username: xhr.response.username,
           fullname: xhr.response.fullname,
@@ -79,4 +83,5 @@ console.log(1);
 
 Profile.propTypes = {
   auth: React.PropTypes.object,
+  route: React.PropTypes.object,
 };

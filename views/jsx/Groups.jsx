@@ -23,6 +23,10 @@ export default class Groups extends React.Component {
     }
   }
 
+  componentDidMount() {
+    document.title = `Csoportok | ${this.props.route.title}`;
+  }
+
   componentWillReceiveProps(nextProps) {
     if (!nextProps.auth.isLoggedIn) {
       browserHistory.push('/');
@@ -52,6 +56,8 @@ export default class Groups extends React.Component {
   render() {
     return (
       <div className="container groups-page">
+        <h1> Csoportok </h1>
+
         <NewGroup auth={this.props.auth}getGroups={this.getGroups} />
 
         <MyGroups auth={this.props.auth} groups={this.state.groups} getGroups={this.getGroups} />
@@ -64,4 +70,5 @@ export default class Groups extends React.Component {
 
 Groups.propTypes = {
   auth: React.PropTypes.object,
+  route: React.PropTypes.object,
 };

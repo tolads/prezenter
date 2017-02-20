@@ -82,8 +82,8 @@ export default class NewGroup extends React.Component {
                 value={this.state.username}
                 onChange={this.handleInputChange}
               />
+              <button type="submit" className="btn btn-success"> Létrehoz </button>
             </div>
-            <button type="submit" className="btn btn-success"> Létrehoz </button>
             {this.state.error &&
               <span className="help-block">{this.state.error}</span>}
             {this.state.success &&
