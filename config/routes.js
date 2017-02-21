@@ -29,6 +29,8 @@ module.exports.routes = {
   'GET /grouplist': 'GroupController.list',
   'GET /groups/delete/group/:id': 'GroupController.deleteGroup',
   'GET /groups/delete/group/:gid/member/:uid': 'GroupController.deleteMember',
+  'GET /presentations/list': 'PresentationController.list',
+  'GET /presentations/delete/:id': 'PresentationController.delete',
 
   'GET /*': {
     controller: 'HomeController',
@@ -39,5 +41,5 @@ module.exports.routes = {
   'POST /signup': 'UserController.signup',
   'POST /groups/new': 'GroupController.new',
   'POST /groups/add': 'GroupController.add',
-
+  'POST /presentations/new': 'PresentationController.new',
 };

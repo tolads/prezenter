@@ -27,6 +27,10 @@ module.exports = {
       collection: 'Groups',
       via: 'members',
     },
+    presentations: {
+      collection: 'presentations',
+      via: 'owner',
+    },
   },
 
 

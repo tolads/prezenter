@@ -6,6 +6,7 @@ import Application from './Application';
 import Home from './Home';
 import Profile from './Profile';
 import Groups from './Groups';
+import PresentationsOwn from './PresentationsOwn';
 import NotFound from './NotFound';
 
 const title = document.title;
@@ -16,6 +17,7 @@ ReactDOM.render(
       <IndexRoute component={Home} title={title} />
       <Route path="profile" component={Profile} title={title} />
       <Route path="groups" component={Groups} title={title} />
+      <Route path="presentations/own" component={PresentationsOwn} title={title} />
     </Route>
     <Route path="*" component={NotFound} title={title} />
   </Router>,

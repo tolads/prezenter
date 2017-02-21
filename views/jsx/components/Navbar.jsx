@@ -83,12 +83,22 @@ export default class Navbar extends React.Component {
         (<ul key="0" className="nav navbar-nav">
           <li><Link to="/"> Kezdőlap </Link></li>
           <li><Link to="/groups" activeClassName="active"> Csoportok </Link></li>
-          <li><Link to="/presentations" activeClassName="active"> Prezentációk </Link></li>
+          <li className="dropdown">
+            <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+               Prezentációk <span className="caret" />
+            </a>
+            <ul className="dropdown-menu">
+              <li><Link to="/presentations/active" activeClassName="active"> Becsatlakozás vetítésbe </Link></li>
+              <li><Link to="/presentations/own" activeClassName="active"> Saját diasorok </Link></li>
+            </ul>
+          </li>
         </ul>),
         (<ul key="1" className="nav navbar-nav navbar-right">
           <li className="dropdown">
             <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <span className="glyphicon glyphicon-user" /> Bejelentkezve, mint <b>{this.props.username}</b> <span className="caret" />
+              <span className="glyphicon glyphicon-user" />
+              Bejelentkezve, mint <b>{this.props.username}</b>
+              <span className="caret" />
             </a>
             <ul className="dropdown-menu">
               <li><Link to="/profile" activeClassName="active"> Adataim </Link></li>
