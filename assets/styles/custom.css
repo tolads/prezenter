@@ -21,12 +21,12 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 .groups-table > tbody > tr > td { vertical-align: middle; }
 .groups-table thead > tr > th:last-child { width: 100px; }
 .groups-table > tbody > tr:nth-child(2n) > td  { padding: 0 30px 10px 30px; }
-.groups-page input, .groups-page select { margin-left: 5px; margin-right: 5px; }
-.groups-page .btn { margin: 5px; }
+.inner-page input, .inner-page select, .inner-page textarea { margin-left: 5px; margin-right: 5px; }
+.inner-page .btn { margin: 5px; }
 .groups-table .btn { padding-top: 4px; padding-bottom: 4px; }
-.groups-page .table-members button { padding-top: 1px; padding-bottom: 1px; }
-.groups-page .table-members td { padding: 4px; }
-.groups-page .table-users { margin-bottom: 0; }
+.inner-page .table-members button { padding-top: 1px; padding-bottom: 1px; }
+.inner-page .table-members td { padding: 4px; }
+.inner-page .table-users { margin-bottom: 0; }
 
 .error-page { text-align: center; max-width: 800px; }
 .error-page .jumbotron { background-color: #eee; margin-top: 30px; }

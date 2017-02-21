@@ -1,9 +1,9 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
-import NewGroup from './components/NewGroup';
-import MyGroups from './components/MyGroups';
-import ListUsers from './components/ListUsers';
+import NewGroup from './components/groups/NewGroup';
+import MyGroups from './components/groups/MyGroups';
+import ListUsers from './components/groups/ListUsers';
 
 export default class Groups extends React.Component {
   constructor(props) {
@@ -55,10 +55,10 @@ export default class Groups extends React.Component {
 
   render() {
     return (
-      <div className="container groups-page">
+      <div className="container inner-page">
         <h1> Csoportok </h1>
 
-        <NewGroup auth={this.props.auth}getGroups={this.getGroups} />
+        <NewGroup auth={this.props.auth} getGroups={this.getGroups} />
 
         <MyGroups auth={this.props.auth} groups={this.state.groups} getGroups={this.getGroups} />
 

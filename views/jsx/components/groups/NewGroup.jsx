@@ -71,7 +71,10 @@ export default class NewGroup extends React.Component {
       <div className="row">
         <div className="col-md-12">
           <h2 id="new"> Új csoport létrehozása </h2>
-          <form className={this.state.error ? 'form-inline has-error' : this.state.success ? 'form-inline has-success' : 'form-inline'} onSubmit={this.handleSubmit}>
+          <form
+            className={this.state.error ? 'form-inline has-error' : this.state.success ? 'form-inline has-success' : 'form-inline'}
+            onSubmit={this.handleSubmit}
+          >
             <div className="form-group">
               <label htmlFor="newGroupName"> Csoport neve: </label>
               <input

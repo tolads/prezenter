@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Checkbox from './Checkbox';
-import { formatDate } from '../utils';
+import { formatDate } from '../../utils';
 
 export default class ListUsers extends React.Component {
   constructor(props) {
