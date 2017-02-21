@@ -86,7 +86,7 @@ export default class Register extends React.Component {
             fullname_error: '',
           });
 
-          this.props.auth.login();
+          this.props.auth.login(username);
         } else {
           // failure
 

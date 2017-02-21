@@ -48,7 +48,12 @@ export default class Application extends React.Component {
     return !!localStorage.getItem('loggedin');
   }
 
-  handleLogin() {
+  handleLogin(username) {
+    if (username) {
+      this.setState({
+        username,
+      });
+    }
     localStorage.setItem('loggedin', 'true');
     this.setState({ loggedin: this.isLoggedIn() });
   }
