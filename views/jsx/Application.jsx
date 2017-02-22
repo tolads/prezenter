@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import Modal from './components/Modal';
 
 export default class Application extends React.Component {
   constructor(props) {
@@ -42,6 +43,7 @@ export default class Application extends React.Component {
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.loginSubmit = this.loginSubmit.bind(this);
+    this.callModal = this.callModal.bind(this);
   }
 
   isLoggedIn() {
@@ -100,6 +102,12 @@ export default class Application extends React.Component {
     xhr.send(formData);
   }
 
+  callModal(modalData) {
+    this.setState({
+      modalData,
+    });
+  }
+
   render() {
     const loginObj = {
       isLoggedIn: this.state.loggedin,
@@ -112,8 +120,9 @@ export default class Application extends React.Component {
     return (
       <div>
         <Navbar auth={loginObj} username={this.state.username} />
-        {React.cloneElement(this.props.children, { auth: loginObj })}
+        {React.cloneElement(this.props.children, { auth: loginObj, modal: this.callModal })}
         <Footer />
+        <Modal data={this.state.modalData} />
       </div>
     );
   }

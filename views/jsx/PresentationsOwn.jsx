@@ -64,6 +64,7 @@ export default class PresentationsOwn extends React.Component {
           auth={this.props.auth}
           presentations={this.state.presentations}
           getPresentations={this.getPresentations}
+          modal={this.props.modal}
         />
       </div>
     );
@@ -73,4 +74,5 @@ export default class PresentationsOwn extends React.Component {
 PresentationsOwn.propTypes = {
   auth: React.PropTypes.object,
   route: React.PropTypes.object,
+  modal: React.PropTypes.func,
 };

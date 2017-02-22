@@ -10,16 +10,29 @@ export default class MyGroups extends React.Component {
       success: '',
     };
 
+    this.shouldDeleteGroup = this.shouldDeleteGroup.bind(this);
+    this.shouldDeleteMember = this.shouldDeleteMember.bind(this);
+    this.shouldRenameGroup = this.shouldRenameGroup.bind(this);
     this.deleteGroup = this.deleteGroup.bind(this);
     this.deleteMember = this.deleteMember.bind(this);
+    this.renameGroup = this.renameGroup.bind(this);
   }
 
-  deleteGroup(e) {
-    const id = encodeURIComponent(e.target.value);
+  shouldDeleteGroup(e) {
+    const value = e.target.value || e.target.parentElement.value;
+    const id = encodeURIComponent(value);
+    this.props.modal({
+      title: 'Biztosan törölni szeretnéd a csoportot?',
+      args: { id },
+      handleSubmit: this.deleteGroup,
+    });
+    $('#modal').modal();
+  }
 
+  deleteGroup(args) {
     // create an AJAX request
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `/groups/delete/group/${id}`);
+    xhr.open('GET', `/groups/delete/group/${args.id}`);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.responseType = 'json';
     xhr.addEventListener('load', () => {
@@ -36,13 +49,22 @@ export default class MyGroups extends React.Component {
     xhr.send();
   }
 
-  deleteMember(e) {
-    const gid = encodeURIComponent(e.target.value.split('_')[0]);
-    const uid = encodeURIComponent(e.target.value.split('_')[1]);
+  shouldDeleteMember(e) {
+    const value = e.target.value || e.target.parentElement.value;
+    const gid = encodeURIComponent(value.split('_')[0]);
+    const uid = encodeURIComponent(value.split('_')[1]);
+    this.props.modal({
+      title: 'Biztosan törölni szeretnéd a tagot?',
+      args: { gid, uid },
+      handleSubmit: this.deleteMember,
+    });
+    $('#modal').modal();
+  }
 
+  deleteMember(args) {
     // create an AJAX request
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `/groups/delete/group/${gid}/member/${uid}`);
+    xhr.open('GET', `/groups/delete/group/${args.gid}/member/${args.uid}`);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.responseType = 'json';
     xhr.addEventListener('load', () => {
@@ -57,6 +79,45 @@ export default class MyGroups extends React.Component {
       }
     });
     xhr.send();
+  }
+
+  shouldRenameGroup(e) {
+    const value = e.target.value || e.target.parentElement.value;
+    const id = encodeURIComponent(value);
+    this.props.modal({
+      title: 'Csoport új neve',
+      hasInput: true,
+      acceptText: 'Átnevez',
+      args: { id },
+      handleSubmit: this.renameGroup,
+    });
+    $('#modal').modal();
+  }
+
+  renameGroup(args) {
+    const newName = encodeURIComponent(args.input);
+
+    if (!newName) return;
+
+    const formData = `id=${args.id}&name=${newName}`;
+
+    // create an AJAX request
+    const xhr = new XMLHttpRequest();
+    xhr.open('post', '/groups/rename');
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.responseType = 'json';
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        // success
+        this.setState({
+          success: xhr.response.success,
+        });
+        this.props.getGroups();
+      } else if (xhr.status === 401) {
+        this.props.auth.logout();
+      }
+    });
+    xhr.send(formData);
   }
 
   render() {
@@ -66,8 +127,13 @@ export default class MyGroups extends React.Component {
         <tr key={`${group.id}_1`}>
           <td>{group.name}</td>
           <td>
-            <button className="btn btn-danger" value={group.id} onClick={this.deleteGroup}>
-              Töröl
+            <button className="btn btn-warning" value={group.id} onClick={this.shouldRenameGroup}>
+              <span className="glyphicon glyphicon-wrench" />
+            </button>
+          </td>
+          <td>
+            <button className="btn btn-danger" value={group.id} onClick={this.shouldDeleteGroup}>
+              <span className="glyphicon glyphicon-remove" />
             </button>
           </td>
         </tr>
@@ -79,19 +145,23 @@ export default class MyGroups extends React.Component {
           <td> {user.fullname} </td>
           <td> {formatDate(new Date(user.date))} </td>
           <td>
-            <button className="btn btn-danger" value={`${group.id}_${user.id}`} onClick={this.deleteMember}>
-              Töröl
+            <button
+              className="btn btn-danger"
+              value={`${group.id}_${user.id}`}
+              onClick={this.shouldDeleteMember}
+            >
+              <span className="glyphicon glyphicon-remove" />
             </button>
           </td>
         </tr>
       ));
       groups.push(
         <tr key={`${group.id}_2`}>
-          <td colSpan="2">
+          <td colSpan="3">
             <table className="table table-hover table-members">
               <thead>
                 <tr>
-                  <th> ID </th>
+                  <th> # </th>
                   <th> Felhasználónév </th>
                   <th> Teljes név </th>
                   <th> Regisztráció </th>
@@ -119,6 +189,7 @@ export default class MyGroups extends React.Component {
             <thead>
               <tr>
                 <th> Név </th>
+                <th> Átnevezés </th>
                 <th> Törlés </th>
               </tr>
             </thead>
@@ -136,4 +207,5 @@ MyGroups.propTypes = {
   auth: React.PropTypes.object.isRequired,
   groups: React.PropTypes.array.isRequired,
   getGroups: React.PropTypes.func.isRequired,
+  modal: React.PropTypes.func.isRequired,
 };

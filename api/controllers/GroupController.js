@@ -191,4 +191,39 @@ module.exports = {
       return res.ok(groupList);
     });
   },
+
+  /**
+   * `GroupController.rename()`
+   */
+  rename: (req, res) => {
+    if (!req.param('id') || !req.param('name')) {
+      return res.badRequest({
+        success: false,
+        errors: 'Csoport azonosítójának és új nevének megadása kötelező.',
+      });
+    }
+
+    Groups.findOne({
+      id: req.param('id'),
+      owner: req.session.me,
+    }).exec((err, group) => {
+      if (err) return res.negotiate(err);
+
+      if (group === undefined) {
+        return res.badRequest({
+          success: false,
+          errors: 'A csoport nem létezik.',
+        });
+      }
+
+      Groups.update(
+        { id: req.param('id') },
+        { name: req.param('name') }
+      ).exec((err, group) => {
+        if (err) return res.negotiate(err);
+
+        return res.ok({ success: 'Csoport sikeresen átnevezve.' });
+      });
+    });
+  },
 };

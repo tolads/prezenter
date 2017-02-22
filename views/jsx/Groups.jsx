@@ -15,6 +15,7 @@ export default class Groups extends React.Component {
 
     this.getGroups = this.getGroups.bind(this);
   }
+
   componentWillMount() {
     if (!this.props.auth.isLoggedIn) {
       browserHistory.push('/');
@@ -60,7 +61,12 @@ export default class Groups extends React.Component {
 
         <NewGroup auth={this.props.auth} getGroups={this.getGroups} />
 
-        <MyGroups auth={this.props.auth} groups={this.state.groups} getGroups={this.getGroups} />
+        <MyGroups
+          auth={this.props.auth}
+          groups={this.state.groups}
+          getGroups={this.getGroups}
+          modal={this.props.modal}
+        />
 
         <ListUsers auth={this.props.auth} groups={this.state.groups} getGroups={this.getGroups} />
       </div>
@@ -71,4 +77,5 @@ export default class Groups extends React.Component {
 Groups.propTypes = {
   auth: React.PropTypes.object,
   route: React.PropTypes.object,
+  modal: React.PropTypes.func,
 };

@@ -1,4 +1,5 @@
 * { transition: all .5s; }
+body { transition: none; }
 h1 { border-bottom: 1px dashed #aaa; }
 .jumbotron h1 { border-bottom: none; }
 
@@ -31,10 +32,16 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 .table > tbody > tr > .presentation-desc { background-color: #f6f6f6; border-top: none; }
 .table-presentations tr > :last-child:not(.presentation-desc),
 .table-presentations tr > :nth-last-child(2),
-.table-presentations tr > :nth-last-child(3) { text-align: center; width: 85px; }
+.table-presentations tr > :nth-last-child(3),
+.groups-table > thead > tr > th:last-child,
+.groups-table > thead > tr > :nth-last-child(2),
+.groups-table > tbody > tr > :last-child,
+.groups-table > tbody > tr > :nth-last-child(2) { text-align: center; width: 70px; padding-left: 0; padding-right: 0; }
 
 .error-page { text-align: center; max-width: 800px; }
 .error-page .jumbotron { background-color: #eee; margin-top: 30px; }
+
+.modal-footer .btn + .btn { margin-left: 0; }
 
 @media (min-width: 768px) {
   .navbar-nav > li.dropdown > a { padding-bottom: 10px; }
@@ -42,4 +49,13 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 @media (max-width: 500px) {
   .btn { width: 100%; display: block; }
   table .btn { display: inline-block; width: auto; }
+}
+@media (min-width: 500px) {
+  .modal-dialog { width: 400px; margin-left: auto; margin-right: auto; }
+}
+@media (min-height: 400px) {
+  .modal-dialog { margin-top: 70px; }
+}
+@media (max-height: 400px) {
+  .modal-header, .modal-body, .modal-footer { padding-top: 10px; padding-bottom: 10px; }
 }

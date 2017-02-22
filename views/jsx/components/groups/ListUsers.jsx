@@ -136,7 +136,7 @@ export default class ListUsers extends React.Component {
               <thead>
                 <tr>
                   <th> Hozzáadás </th>
-                  <th> ID </th>
+                  <th> # </th>
                   <th> Felhasználónév </th>
                   <th> Teljes név </th>
                   <th> Regisztráció </th>

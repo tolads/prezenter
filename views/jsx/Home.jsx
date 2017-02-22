@@ -5,7 +5,7 @@ import Login from './components/Login';
 
 export default class Home extends React.Component {
   componentDidMount() {
-    document.title = this.props.route.title;console.log(this.props);
+    document.title = this.props.route.title;
   }
 
   render() {

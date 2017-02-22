@@ -12,16 +12,25 @@ export default class NewPresentation extends React.Component {
       success: '',
     };
 
+    this.shouldDeletePresentation = this.shouldDeletePresentation.bind(this);
     this.deletePresentation = this.deletePresentation.bind(this);
   }
 
-  deletePresentation(e) {
+  shouldDeletePresentation(e) {
     const value = e.target.value || e.target.parentElement.value;
     const id = encodeURIComponent(value);
+    this.props.modal({
+      title: 'Biztosan törölni szeretnéd a prezentációt?',
+      args: { id },
+      handleSubmit: this.deletePresentation,
+    });
+    $('#modal').modal();
+  }
 
+  deletePresentation(args) {
     // create an AJAX request
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `/presentations/delete/${id}`);
+    xhr.open('GET', `/presentations/delete/${args.id}`);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.responseType = 'json';
     xhr.addEventListener('load', () => {
@@ -62,7 +71,7 @@ export default class NewPresentation extends React.Component {
             <button
               className="btn btn-danger"
               value={presentation.id}
-              onClick={this.deletePresentation}
+              onClick={this.shouldDeletePresentation}
             >
               <span className="glyphicon glyphicon-remove" />
             </button>
@@ -112,4 +121,5 @@ NewPresentation.propTypes = {
   auth: React.PropTypes.object.isRequired,
   presentations: React.PropTypes.array.isRequired,
   getPresentations: React.PropTypes.func.isRequired,
+  modal: React.PropTypes.func.isRequired,
 };
