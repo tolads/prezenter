@@ -5,6 +5,7 @@ export default class Register extends React.Component {
     super(props);
 
     this.state = {
+      asdfgh: '',
       username: '',
       password: '',
       password2: '',
@@ -34,6 +35,8 @@ export default class Register extends React.Component {
       password2_error: '',
       fullname_error: '',
     });
+
+    if (this.state.asdfgh !== '') return;
 
     if (this.state.username === '') {
       this.setState({ username_error: 'Felhasználónév megadása kötelező.' });
@@ -177,6 +180,7 @@ export default class Register extends React.Component {
           <div className="form-group">
             <div className="col-sm-offset-3 col-sm-9">
               <button type="submit" className="btn btn-success"> Regisztráció </button>
+              <input name="asdfgh" value={this.state.asdfgh} onChange={this.handleInputChange} />
             </div>
           </div>
 

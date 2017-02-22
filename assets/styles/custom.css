@@ -3,6 +3,10 @@ body { transition: none; }
 h1 { border-bottom: 1px dashed #aaa; }
 .jumbotron h1 { border-bottom: none; }
 
+.screenreader { text-indent: -9999px; position: absolute; }
+
+#signup ~ form button ~ input { display: none; }
+
 .pagination { margin: 0; }
 .pagination > li > a { background-color: rgba(0, 140, 186, 0.6); color: #fff; font-weight: bolder; }
 .pagination > li > a:hover { background-color: rgba(0, 140, 186, 0.8); color: #fff; }

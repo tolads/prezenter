@@ -119,8 +119,17 @@ export default class Application extends React.Component {
 
     return (
       <div>
+        <div className="screenreader">
+          <ul>
+            <li><a href="#navbar">Ugrás a navigációhoz</a></li>
+            <li><a href="#main">Ugrás a tartalomhoz</a></li>
+          </ul>
+        </div>
+
         <Navbar auth={loginObj} username={this.state.username} />
-        {React.cloneElement(this.props.children, { auth: loginObj, modal: this.callModal })}
+        <div id="main">
+          {React.cloneElement(this.props.children, { auth: loginObj, modal: this.callModal })}
+        </div>
         <Footer />
         <Modal data={this.state.modalData} />
       </div>
