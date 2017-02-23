@@ -78,7 +78,7 @@ export default class NewPresentation extends React.Component {
               <label htmlFor="newPresentationName" className="col-sm-3 control-label">
                 Prezentáció neve:
               </label>
-              <div className="col-sm-9">
+              <div className="col-sm-6">
                 <input
                   type="text"
                   className="form-control"
@@ -94,9 +94,9 @@ export default class NewPresentation extends React.Component {
               <label htmlFor="newPresentationDesc" className="col-sm-3 control-label">
                 Rövid leírás:
               </label>
-              <div className="col-sm-9">
+              <div className="col-sm-6">
                 <textarea
-                  className="form-control col-sm-9"
+                  className="form-control"
                   id="newPresentationDesc"
                   name="newPresentationDesc"
                   value={this.state.username}

@@ -39,7 +39,7 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 .table-presentations tr > :nth-last-child(3),
 .groups-table > thead > tr > th:last-child,
 .groups-table > thead > tr > :nth-last-child(2),
-.groups-table > tbody > tr > :last-child,
+.groups-table > tbody > tr > :last-child:not(:first-child),
 .groups-table > tbody > tr > :nth-last-child(2) { text-align: center; width: 70px; padding-left: 0; padding-right: 0; }
 
 .error-page { text-align: center; max-width: 800px; }

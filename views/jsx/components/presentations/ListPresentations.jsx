@@ -58,12 +58,12 @@ export default class NewPresentation extends React.Component {
           <td>{formatDate(new Date(presentation.date))}</td>
           <td>{formatDate(new Date(presentation.modified))}</td>
           <td>
-            <button className="btn btn-success" value={presentation.id}>
+            <button className="btn btn-success" value={presentation.id} title="Lejátszás">
               <span className="glyphicon glyphicon-play" />
             </button>
           </td>
           <td>
-            <button className="btn btn-warning" value={presentation.id}>
+            <button className="btn btn-warning" value={presentation.id} title="Szerkesztés">
               <span className="glyphicon glyphicon-wrench" />
             </button>
           </td>
@@ -72,6 +72,7 @@ export default class NewPresentation extends React.Component {
               className="btn btn-danger"
               value={presentation.id}
               onClick={this.shouldDeletePresentation}
+              title="Törlés"
             >
               <span className="glyphicon glyphicon-remove" />
             </button>

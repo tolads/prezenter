@@ -127,12 +127,22 @@ export default class MyGroups extends React.Component {
         <tr key={`${group.id}_1`}>
           <td>{group.name}</td>
           <td>
-            <button className="btn btn-warning" value={group.id} onClick={this.shouldRenameGroup}>
+            <button
+              className="btn btn-warning"
+              value={group.id}
+              onClick={this.shouldRenameGroup}
+              title="Átnevezés"
+            >
               <span className="glyphicon glyphicon-wrench" />
             </button>
           </td>
           <td>
-            <button className="btn btn-danger" value={group.id} onClick={this.shouldDeleteGroup}>
+            <button
+              className="btn btn-danger"
+              value={group.id}
+              onClick={this.shouldDeleteGroup}
+              title="Törlés"
+            >
               <span className="glyphicon glyphicon-remove" />
             </button>
           </td>
@@ -149,6 +159,7 @@ export default class MyGroups extends React.Component {
               className="btn btn-danger"
               value={`${group.id}_${user.id}`}
               onClick={this.shouldDeleteMember}
+              title="Törlés"
             >
               <span className="glyphicon glyphicon-remove" />
             </button>
