@@ -43,16 +43,19 @@ module.exports = {
    *                     • password {String}
    * @param  {Function} cb
    */
-  signup: (inputs, cb) => {
-    bcrypt.hash(inputs.password, SALT_WORK_FACTOR, (err, hash) => {
-      Users.create({
-        username: inputs.username,
-        fullname: inputs.fullname,
-        password: hash,
-      })
-      .exec(cb);
-    });
-  },
+  signup: inputs => (
+    new Promise((resolve, reject) => {
+      bcrypt.hash(inputs.password, SALT_WORK_FACTOR, (err, hash) => {
+        Users.create({
+          username: inputs.username,
+          fullname: inputs.fullname,
+          password: hash,
+        })
+          .then(resolve)
+          .catch(reject);
+      });
+    })
+  ),
 
 
   /**
@@ -63,16 +66,19 @@ module.exports = {
    *                     • password {String}
    * @param  {Function} cb
    */
-  attemptLogin: (inputs, cb) => {
+  attemptLogin: inputs => (
     // Create a user
-    Users.findOne({
-      username: inputs.username,
+    new Promise((resolve, reject) => {
+      Users.findOne({
+        username: inputs.username,
+      })
+        .then((user) => {
+          if (user && !bcrypt.compareSync(inputs.password, user.password)) {
+            resolve();
+          }
+          resolve(user);
+        })
+        .catch(reject);
     })
-    .exec((err, user) => {
-      if (user && !bcrypt.compareSync(inputs.password, user.password)) {
-        user = undefined;
-      }
-      cb(err, user);
-    });
-  },
+  ),
 };

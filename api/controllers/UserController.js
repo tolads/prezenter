@@ -18,36 +18,30 @@ module.exports = {
 
     Users.findOne({
       id: req.session.me,
-    }).exec((err, user) => {
-      if (err) return res.negotiate(err);
-
-      if (user === undefined) {
-        return res.ok({
-          loggedin: false,
-        });
-      }
-
-      return res.ok({
-        loggedin: user.username,
-      });
-    });
+    })
+      .then(user => (
+        res.ok({
+          loggedin: user ? user.username : false,
+        })
+      ))
+      .catch(err => res.negotiate(err));
   },
 
   /**
    * `UserController.login()`
    */
   login: (req, res) => {
-    if (!req.param('username') || !req.param('password')) {
+    const username = req.param('username');
+    const password = req.param('password');
+
+    if (!username || !password) {
       return res.badRequest({
         success: false,
         errors: 'Felhasználónév és jelszó megadása kötelező.',
       });
     }
     // See `api/responses/login.js`
-    return res.login({
-      username: req.param('username'),
-      password: req.param('password'),
-    });
+    return res.login({ username, password });
   },
 
 
@@ -69,36 +63,40 @@ module.exports = {
    * `UserController.signup()`
    */
   signup: (req, res) => {
-    let hasError = false;
     const errors = {};
+    const username = req.param('username');
+    const password = req.param('password');
+    const password2 = req.param('password2');
+    const fullname = req.param('fullname');
+    let hasError = false;
 
-    if (!req.param('username')) {
+    if (!username) {
       hasError = true;
       errors.username_error = 'Felhasználónév megadása kötelező.';
-    } else if (req.param('username').length > 63) {
+    } else if (username.length > 63) {
       hasError = true;
       errors.username_error = 'A felhasználónév túl hosszú.';
-    } else if (!/^[a-zA-Z0-9_]+$/.test(req.param('username'))) {
+    } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
       hasError = true;
       errors.username_error = 'A felhasználónév csak az angol ABC kis- és nagybetűit, számokat és aláhúzásjelet tartalmazhat.';
     }
 
-    if (!req.param('password')) {
+    if (!password) {
       hasError = true;
       errors.password_error = 'Jelszó megadása kötelező.';
-    } else if (req.param('password2') !== req.param('password')) {
+    } else if (password2 !== password) {
       hasError = true;
       errors.password2_error = 'A megadott jelszavak nem egyeznek.';
     }
 
-    if (!req.param('fullname')) {
+    if (!fullname) {
       hasError = true;
       errors.fullname_error = 'Teljes név megadása kötelező.';
-    } else if (req.param('fullname').length > 127) {
+    } else if (fullname.length > 127) {
       hasError = true;
       errors.fullname_error = 'A név túl hosszú.';
     } else if (!/^[a-zA-Z0-9áéíóöőúüűÁÉÍÓÖŐÚÜŰäÄôÔýÝčČďĎĺĹňŇšŠťŤ_ ,.\-/()]+$/
-      .test(req.param('fullname'))) {
+      .test(fullname)) {
       hasError = true;
       errors.fullname_error = 'A név nem megengedett karaktert tartalmaz.';
     }
@@ -111,58 +109,45 @@ module.exports = {
     }
 
     Users.findOne({
-      username: req.param('username'),
-    }).exec((err, user) => {
-      if (err) return res.negotiate(err);
+      username,
+    })
+      .then((user) => {
+        if (user !== undefined) {
+          errors.username_error = 'A felhasználónév foglalt.';
+          return res.badRequest({
+            success: false,
+            errors,
+          });
+        }
 
-      if (user !== undefined) {
-        errors.username_error = 'A felhasználónév foglalt.';
-        return res.badRequest({
-          success: false,
-          errors,
-        });
-      }
+        // Attempt to signup a user using the provided parameters
+        Users.signup({ username, password, fullname })
+          .then((user) => {
+            req.session.me = user.id;
 
-      // Attempt to signup a user using the provided parameters
-      Users.signup({
-        username: req.param('username'),
-        password: req.param('password'),
-        fullname: req.param('fullname'),
-      }, (err, user) => {
-        // res.negotiate() will determine if this is a validation error
-        // or some kind of unexpected server error, then call `res.badRequest()`
-        // or `res.serverError()` accordingly.
-        if (err) return res.negotiate(err);
-
-        // Go ahead and log this user in as well.
-        // We do this by "remembering" the user in the session.
-        // Subsequent requests from this user agent will have `req.session.me` set.
-        req.session.me = user.id;
-
-        return res.ok('Signup successful!');
-      });
-    });
+            return res.ok('Signup successful!');
+          })
+          .catch(err => res.negotiate(err));
+      })
+      .catch(err => res.negotiate(err));
   },
 
   /**
    * `UserController.list()`
    */
   list: (req, res) => {
-    Users.find({}).exec((err, users) => {
-      if (err) return res.negotiate(err);
-
-      const userList = [];
-      users.forEach((user) => {
-        userList.push({
+    Users.find()
+      .then((users) => {
+        const userList = users.map(user => ({
           id: user.id,
           username: user.username,
           fullname: user.fullname,
           date: user.createdAt,
-        });
-      });
+        }));
 
-      return res.ok(userList);
-    });
+        return res.ok(userList);
+      })
+      .catch(err => res.negotiate(err));
   },
 
   /**
@@ -171,14 +156,14 @@ module.exports = {
   me: (req, res) => {
     Users.findOne({
       id: req.session.me,
-    }).exec((err, user) => {
-      if (err) return res.negotiate(err);
-
-      return res.ok({
-        username: user.username,
-        fullname: user.fullname,
-        date: user.createdAt,
-      });
-    });
+    })
+      .then(user => (
+        res.ok({
+          username: user.username,
+          fullname: user.fullname,
+          date: user.createdAt,
+        })
+      ))
+      .catch(err => res.negotiate(err));
   },
 };

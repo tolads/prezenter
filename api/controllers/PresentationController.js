@@ -9,7 +9,9 @@ module.exports = {
    * `PresentationController.new()`
    */
   new: (req, res) => {
-    if (!req.param('newPresentationName')) {
+    const name = req.param('newPresentationName');
+
+    if (!name) {
       return res.badRequest({
         success: false,
         errors: 'Prezentáció nevének megadása kötelező.',
@@ -17,63 +19,59 @@ module.exports = {
     }
 
     Presentations.findOne({
-      name: req.param('newPresentationName'),
+      name,
       owner: req.session.me,
-    }).exec((err, presentation) => {
-      if (err) return res.negotiate(err);
+    })
+      .then((presentation) => {
+        if (presentation !== undefined) {
+          return res.badRequest({
+            success: false,
+            errors: 'Ilyen nevű prezentációd már van.',
+          });
+        }
 
-      if (presentation !== undefined) {
-        return res.badRequest({
-          success: false,
-          errors: 'Ilyen nevű prezentációd már van.',
-        });
-      }
-
-      const desc = req.param('newPresentationDesc') || '';
-
-      Presentations.create({
-        name: req.param('newPresentationName'),
-        desc,
-        owner: req.session.me,
-      }, (err, presentation) => {
-        if (err) return res.negotiate(err);
-
-        return res.ok('Prezentáció sikeresen létrehozva.');
-      });
-    });
+        Presentations.create({
+          name,
+          desc: req.param('newPresentationDesc') || '',
+          owner: req.session.me,
+        })
+          .then(() => res.ok('Prezentáció sikeresen létrehozva.'))
+          .catch(err => res.negotiate(err));
+      })
+      .catch(err => res.negotiate(err));
   },
 
   /**
    * `PresentationController.delete()`
    */
   delete: (req, res) => {
-    if (!req.param('id')) {
+    const id = req.param('id');
+
+    if (!id) {
       return res.badRequest({
         success: false,
       });
     }
 
     Presentations.findOne({
-      id: req.param('id'),
+      id,
       owner: req.session.me,
-    }).exec((err, presentation) => {
-      if (err) return res.negotiate(err);
+    })
+      .then((presentation) => {
+        if (presentation === undefined) {
+          return res.badRequest({
+            success: false,
+          });
+        }
 
-      if (presentation === undefined) {
-        return res.badRequest({
-          success: false,
-        });
-      }
-
-      Presentations.destroy({
-        id: req.param('id'),
-        owner: req.session.me,
-      }).exec((err, group) => {
-        if (err) return res.negotiate(err);
-
-        return res.ok({ success: 'Prezentáció törölve.' });
-      });
-    });
+        Presentations.destroy({
+          id,
+          owner: req.session.me,
+        })
+          .then(() => res.ok({ success: 'Prezentáció törölve.' }))
+          .catch(err => res.negotiate(err));
+      })
+      .catch(err => res.negotiate(err));
   },
 
   /**
@@ -82,22 +80,18 @@ module.exports = {
   list: (req, res) => {
     Presentations.find({
       owner: req.session.me,
-    }).exec((err, presentations) => {
-      const presentationList = [];
-
-      presentations.forEach((presentation) => {
-        const newPresentation = {
+    })
+      .then((presentations) => {
+        const presentationList = presentations.map(presentation => ({
           id: presentation.id,
           name: presentation.name,
           desc: presentation.desc,
           date: presentation.createdAt,
           modified: presentation.createdAt,
-        };
+        }));
 
-        presentationList.push(newPresentation);
-      });
-
-      return res.ok(presentationList);
-    });
+        return res.ok(presentationList);
+      })
+      .catch(err => res.negotiate(err));
   },
 };

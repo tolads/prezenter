@@ -9,7 +9,9 @@ module.exports = {
    * `GroupController.new()`
    */
   new: (req, res) => {
-    if (!req.param('newGroupName')) {
+    const name = req.param('newGroupName');
+
+    if (!name) {
       return res.badRequest({
         success: false,
         errors: 'Csoportnév megadása kötelező.',
@@ -17,147 +19,142 @@ module.exports = {
     }
 
     Groups.findOne({
-      name: req.param('newGroupName'),
+      name,
       owner: req.session.me,
-    }).exec((err, group) => {
-      if (err) return res.negotiate(err);
+    })
+      .then((group) => {
+        if (group !== undefined) {
+          return res.badRequest({
+            success: false,
+            errors: 'Ilyen nevű csoportod már van.',
+          });
+        }
 
-      if (group !== undefined) {
-        return res.badRequest({
-          success: false,
-          errors: 'Ilyen nevű csoportod már van.',
-        });
-      }
-
-      Groups.create({
-        name: req.param('newGroupName'),
-        owner: req.session.me,
-      }, (err, group) => {
-        if (err) return res.negotiate(err);
-
-        return res.ok('Csoport sikeresen létrehozva.');
-      });
-    });
+        Groups.create({
+          name,
+          owner: req.session.me,
+        })
+          .then(() => res.ok('Csoport sikeresen létrehozva.'))
+          .catch(err => res.negotiate(err));
+      })
+      .catch(err => res.negotiate(err));
   },
 
   /**
    * `GroupController.add()`
    */
   add: (req, res) => {
-    if (!req.param('addToGroup') ||
-        !req.param('userIDs')) {
+    const addToGroup = req.param('addToGroup');
+    const paramUserIDs = req.param('userIDs');
+    const userIDs = typeof paramUserIDs === 'string' ? [paramUserIDs] : paramUserIDs;
+
+    if (!addToGroup || !paramUserIDs) {
       return res.badRequest({
         success: false,
       });
     }
 
-    let userIDs = req.param('userIDs');
-    if (typeof userIDs === 'string') {
-      userIDs = [userIDs];
-    }
-
     Groups.findOne({
-      id: req.param('addToGroup'),
+      id: addToGroup,
       owner: req.session.me,
-    }).exec((err, group) => {
-      if (err) return res.negotiate(err);
-
-      if (group === undefined) {
-        return res.badRequest({
-          success: false,
-        });
-      }
-
-      const userCount = userIDs.length;
-      let counter = 0;
-      userIDs.forEach((userId) => {
-        counter++;
-
-        Users.findOne({
-          id: userId,
-        }).exec((err, user) => {
-          if (err) return res.negotiate(err);
-
-          if (!user) return;
-
-          group.members.add(user.id);
-
-          group.save((err) => {
-            if (counter === userCount) {
-              counter++;
-              return res.ok({
-                success: 'Sikeres hozzáadás a csoporthoz.',
-              });
-            }
+    })
+      .then((group) => {
+        if (group === undefined) {
+          return res.badRequest({
+            success: false,
           });
-        });
-      });
-    });
+        }
+
+        const memberAddings = userIDs.map((userID) => (
+          new Promise((resolve, reject) => {
+            Users.findOne({
+              id: userID,
+            })
+              .then((user) => {
+                if (!user) return resolve();
+
+                group.members.add(user.id);
+
+                resolve();
+              })
+              .catch(err => reject(err));
+          })
+        ));
+        Promise.all(memberAddings)
+          .then(() => {
+            group.save()
+              .then(() => res.ok({ success: 'Sikeres hozzáadás a csoporthoz.' }))
+              .catch(err => res.negotiate(err));
+          })
+          .catch(err => res.negotiate(err));
+      })
+      .catch(err => res.negotiate(err));
   },
 
   /**
    * `GroupController.deleteGroup()`
    */
   deleteGroup: (req, res) => {
-    if (!req.param('id')) {
+    const groupID = req.param('id');
+
+    if (!groupID) {
       return res.badRequest({
         success: false,
       });
     }
 
     Groups.findOne({
-      id: req.param('id'),
+      id: groupID,
       owner: req.session.me,
-    }).exec((err, group) => {
-      if (err) return res.negotiate(err);
+    })
+      .then((group) => {
+        if (group === undefined) {
+          return res.badRequest({
+            success: false,
+          });
+        }
 
-      if (group === undefined) {
-        return res.badRequest({
-          success: false,
-        });
-      }
-
-      Groups.destroy({
-        id: req.param('id'),
-        owner: req.session.me,
-      }).exec((err, group) => {
-        if (err) return res.negotiate(err);
-
-        return res.ok({ success: 'Csoport törölve.' });
-      });
-    });
+        Groups.destroy({
+          id: groupID,
+          owner: req.session.me,
+        })
+          .then(() => res.ok({ success: 'Csoport törölve.' }))
+          .catch(err => res.negotiate(err));
+      })
+      .catch(err => res.negotiate(err));
   },
 
   /**
    * `GroupController.deleteMember()`
    */
   deleteMember: (req, res) => {
-    if (!req.param('gid') || !req.param('uid')) {
+    const gid = req.param('gid');
+    const uid = req.param('uid');
+
+    if (!gid || !uid) {
       return res.badRequest({
         success: false,
       });
     }
 
     Groups.findOne({
-      id: req.params.gid,
+      id: gid,
       owner: req.session.me,
-    }).exec((err, group) => {
-      if (err) return res.negotiate(err);
+    })
+      .then((group) => {
+        if (group === undefined) {
+          return res.badRequest({
+            success: false,
+          });
+        }
 
-      if (group === undefined) {
-        return res.badRequest({
-          success: false,
-        });
-      }
+        group.members.remove(uid);
 
-      group.members.remove(req.params.uid);
-
-      group.save((err) => {
-        if (err) return res.negotiate(err);
-
-        return res.ok({ success: 'Tag törölve.' });
-      });
-    });
+        group.save()
+          .then(() => res.ok({ success: 'Tag törölve.' }))
+          .catch(err => res.negotiate(err));
+      })
+      .catch(err => res.negotiate(err));
   },
 
   /**
@@ -166,37 +163,32 @@ module.exports = {
   list: (req, res) => {
     Groups.find({
       owner: req.session.me,
-    }).populate('members').exec((err, groups) => {
-      const groupList = [];
-
-      groups.forEach((group) => {
-        const newGroup = {
+    }).populate('members')
+      .then((groups) => {
+        const groupList = groups.map(group => ({
           id: group.id,
           name: group.name,
-          members: [],
-        };
-
-        group.members.forEach((member) => {
-          newGroup.members.push({
+          members: group.members.map(member => ({
             id: member.id,
             username: member.username,
             fullname: member.fullname,
             date: member.createdAt,
-          });
-        });
+          })),
+        }));
 
-        groupList.push(newGroup);
-      });
-
-      return res.ok(groupList);
-    });
+        return res.ok(groupList);
+      })
+      .catch(err => res.negotiate(err));
   },
 
   /**
    * `GroupController.rename()`
    */
   rename: (req, res) => {
-    if (!req.param('id') || !req.param('name')) {
+    const groupID = req.param('id');
+    const groupName = req.param('name');
+
+    if (!groupID || !groupName) {
       return res.badRequest({
         success: false,
         errors: 'Csoport azonosítójának és új nevének megadása kötelező.',
@@ -204,26 +196,23 @@ module.exports = {
     }
 
     Groups.findOne({
-      id: req.param('id'),
+      id: groupID,
       owner: req.session.me,
-    }).exec((err, group) => {
-      if (err) return res.negotiate(err);
+    })
+      .then((group) => {
+        if (group === undefined) {
+          return res.badRequest({
+            success: false,
+            errors: 'A csoport nem létezik.',
+          });
+        }
 
-      if (group === undefined) {
-        return res.badRequest({
-          success: false,
-          errors: 'A csoport nem létezik.',
-        });
-      }
-
-      Groups.update(
-        { id: req.param('id') },
-        { name: req.param('name') }
-      ).exec((err, group) => {
-        if (err) return res.negotiate(err);
-
-        return res.ok({ success: 'Csoport sikeresen átnevezve.' });
-      });
-    });
+        Groups.update(
+          { id: groupID },
+          { name: groupName }
+        ).then(() => res.ok({ success: 'Csoport sikeresen átnevezve.' }))
+         .catch(err => res.negotiate(err));
+      })
+      .catch(err => res.negotiate(err));
   },
 };
