@@ -156,14 +156,42 @@ module.exports = {
   me: (req, res) => {
     Users.findOne({
       id: req.session.me,
-    })
+    }).populate('groups').populate('presentations')
       .then(user => (
         res.ok({
           username: user.username,
           fullname: user.fullname,
           date: user.createdAt,
+          groups: user.groups.length,
+          presentations: user.presentations.length,
         })
       ))
+      .catch(err => res.negotiate(err));
+  },
+
+  /**
+   * `UserController.delete()`
+   */
+  delete: (req, res) => {
+    Users.findOne({
+      id: req.session.me,
+    })
+      .then((user) => {
+        if (user === undefined) {
+          return res.badRequest({
+            success: false,
+          });
+        }
+
+        Users.destroy({
+          id: req.session.me,
+        })
+          .then(() => {
+            req.session.me = null;
+            res.ok({ success: 'Felhasználó törölve.' })
+          })
+          .catch(err => res.negotiate(err));
+      })
       .catch(err => res.negotiate(err));
   },
 };

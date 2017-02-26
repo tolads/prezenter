@@ -41,6 +41,7 @@ module.exports.policies = {
     logout: 'isAuthenticated',
     list: 'isAuthenticated',
     me: 'isAuthenticated',
+    delete: 'isAuthenticated',
   },
 
   GroupController: {

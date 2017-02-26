@@ -27,6 +27,7 @@ module.exports.routes = {
   'GET /logout': 'UserController.logout',
   'GET /users': 'UserController.list',
   'GET /grouplist': 'GroupController.list',
+  'GET /delete': 'UserController.delete',
   'GET /groups/delete/group/:id': 'GroupController.deleteGroup',
   'GET /groups/delete/group/:gid/member/:uid': 'GroupController.deleteMember',
   'GET /presentations/list': 'PresentationController.list',

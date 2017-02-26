@@ -23,6 +23,10 @@ module.exports = {
       type: 'string',
       required: true,
     },
+    groups: {
+      collection: 'Groups',
+      via: 'owner',
+    },
     memberof: {
       collection: 'Groups',
       via: 'members',
@@ -31,6 +35,33 @@ module.exports = {
       collection: 'presentations',
       via: 'owner',
     },
+  },
+
+
+  afterDestroy: (deletedRecords, cb) => {
+    const deleteGroups = deletedRecords.map(user => (
+      new Promise((resolve, reject) => {
+        Groups.destroy({
+          owner: user.id,
+        })
+          .then(resolve)
+          .catch(reject);
+      })
+    ));
+
+    const deletePresentations = deletedRecords.map(user => (
+      new Promise((resolve, reject) => {
+        Presentations.destroy({
+          owner: user.id,
+        })
+          .then(resolve)
+          .catch(reject);
+      })
+    ));
+
+    Promise.all([...deleteGroups, ...deletePresentations])
+      .then(() => cb())
+      .catch(() => cb());
   },
 
 
