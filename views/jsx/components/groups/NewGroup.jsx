@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Form for creating a new group
+ */
 export default class NewGroup extends React.Component {
   constructor(props) {
     super(props);

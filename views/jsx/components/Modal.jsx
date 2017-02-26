@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Modal dialog
+ */
 export default class Modal extends React.Component {
   constructor(props) {
     super(props);
@@ -46,7 +49,7 @@ export default class Modal extends React.Component {
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true"> &times; </span>
               </button>
-              <h4 className="modal-title">{data.title || ''}</h4>
+              <h4 className="modal-title"> {data.title || ''} </h4>
             </div>
             <form onSubmit={this.handleSubmit}>
               {data.hasInput &&

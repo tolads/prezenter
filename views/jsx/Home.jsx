@@ -3,7 +3,13 @@ import React from 'react';
 import Register from './components/Register';
 import Login from './components/Login';
 
+/**
+ * Home page
+ */
 export default class Home extends React.Component {
+  /**
+   * Set <title>
+   */
   componentDidMount() {
     document.title = this.props.route.title;
   }

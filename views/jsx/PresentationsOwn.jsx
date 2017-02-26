@@ -4,6 +4,9 @@ import { browserHistory } from 'react-router';
 import NewPresentation from './components/presentations/NewPresentation';
 import ListPresentations from './components/presentations/ListPresentations';
 
+/**
+ * Page for managing presentations
+ */
 export default class PresentationsOwn extends React.Component {
   constructor(props) {
     super(props);
@@ -15,6 +18,9 @@ export default class PresentationsOwn extends React.Component {
     this.getPresentations = this.getPresentations.bind(this);
   }
 
+  /**
+   * Check if logged in, load presentations
+   */
   componentWillMount() {
     if (!this.props.auth.isLoggedIn) {
       browserHistory.push('/');
@@ -23,16 +29,25 @@ export default class PresentationsOwn extends React.Component {
     }
   }
 
+  /**
+   * Set <title>
+   */
   componentDidMount() {
     document.title = `Saját diasorok | ${this.props.route.title}`;
   }
 
+  /**
+   * Check if logged ins
+   */
   componentWillReceiveProps(nextProps) {
     if (!nextProps.auth.isLoggedIn) {
       browserHistory.push('/');
     }
   }
 
+  /**
+   * Get list of presentations
+   */
   getPresentations() {
     // create an AJAX request
     const xhr = new XMLHttpRequest();
@@ -42,7 +57,6 @@ export default class PresentationsOwn extends React.Component {
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
         // success
-
         this.setState({
           presentations: xhr.response,
         });

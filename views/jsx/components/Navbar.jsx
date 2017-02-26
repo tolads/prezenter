@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+/**
+ * Navigation bar
+ */
 export default class Navbar extends React.Component {
   constructor(props) {
     super(props);

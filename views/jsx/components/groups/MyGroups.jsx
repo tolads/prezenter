@@ -2,6 +2,9 @@ import React from 'react';
 
 import { formatDate } from '../../utils';
 
+/**
+ * List groups of current user
+ */
 export default class MyGroups extends React.Component {
   constructor(props) {
     super(props);

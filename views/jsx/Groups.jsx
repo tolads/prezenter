@@ -5,6 +5,9 @@ import NewGroup from './components/groups/NewGroup';
 import MyGroups from './components/groups/MyGroups';
 import ListUsers from './components/groups/ListUsers';
 
+/**
+ * Page for managing groups
+ */
 export default class Groups extends React.Component {
   constructor(props) {
     super(props);
@@ -16,6 +19,9 @@ export default class Groups extends React.Component {
     this.getGroups = this.getGroups.bind(this);
   }
 
+  /**
+   * Check if logged in, load groups
+   */
   componentWillMount() {
     if (!this.props.auth.isLoggedIn) {
       browserHistory.push('/');
@@ -24,16 +30,25 @@ export default class Groups extends React.Component {
     }
   }
 
+  /**
+   * Set <title>
+   */
   componentDidMount() {
     document.title = `Csoportok | ${this.props.route.title}`;
   }
 
+  /**
+   * Check if logged ins
+   */
   componentWillReceiveProps(nextProps) {
     if (!nextProps.auth.isLoggedIn) {
       browserHistory.push('/');
     }
   }
 
+  /**
+   * Get list of groups
+   */
   getGroups() {
     // create an AJAX request
     const xhr = new XMLHttpRequest();
@@ -43,7 +58,6 @@ export default class Groups extends React.Component {
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
         // success
-
         this.setState({
           groups: xhr.response,
         });

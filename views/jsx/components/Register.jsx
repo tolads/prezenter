@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Registration form
+ */
 export default class Register extends React.Component {
   constructor(props) {
     super(props);

@@ -1,12 +1,14 @@
 /**
  * PresentationController
- *
- * @description :: Server-side logic for managing presentations
+ * @description Server-side logic for managing presentations
  */
 
 module.exports = {
   /**
-   * `PresentationController.new()`
+   * Create new presentation
+   * @event POST /presentations/new
+   *   {String} newPresentationName
+   *   {String} newPresentationDesc
    */
   new: (req, res) => {
     const name = req.param('newPresentationName');
@@ -36,21 +38,20 @@ module.exports = {
           owner: req.session.me,
         })
           .then(() => res.ok('Prezentáció sikeresen létrehozva.'))
-          .catch(err => res.negotiate(err));
+          .catch(res.negotiate);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 
   /**
-   * `PresentationController.delete()`
+   * Delete presentation
+   * @event GET /presentations/delete/:id
    */
   delete: (req, res) => {
     const id = req.param('id');
 
     if (!id) {
-      return res.badRequest({
-        success: false,
-      });
+      return res.badRequest({ success: false });
     }
 
     Presentations.findOne({
@@ -59,9 +60,7 @@ module.exports = {
     })
       .then((presentation) => {
         if (presentation === undefined) {
-          return res.badRequest({
-            success: false,
-          });
+          return res.badRequest({ success: false });
         }
 
         Presentations.destroy({
@@ -69,13 +68,14 @@ module.exports = {
           owner: req.session.me,
         })
           .then(() => res.ok({ success: 'Prezentáció törölve.' }))
-          .catch(err => res.negotiate(err));
+          .catch(res.negotiate);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 
   /**
-   * `PresentationController.list()`
+   * List presentations of current user
+   * @event GET /presentations/list
    */
   list: (req, res) => {
     Presentations.find({
@@ -92,6 +92,6 @@ module.exports = {
 
         return res.ok(presentationList);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 };

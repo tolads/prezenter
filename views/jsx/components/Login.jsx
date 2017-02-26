@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Login form
+ */
 export default class Login extends React.Component {
   constructor(props) {
     super(props);

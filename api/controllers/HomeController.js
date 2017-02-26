@@ -1,15 +1,12 @@
 /**
  * HomeController
- *
- * @description :: Server-side logic for managing homes
+ * @description Server-side logic for managing homes
  */
 
 module.exports = {
-
   /**
-   * `HomeController.index()`
+   * Send index.html file
+   * @event GET /
    */
-  index: (req, res) => {
-    return res.sendfile('.tmp/public/index.html');
-  },
+  index: (req, res) => (res.sendfile('.tmp/public/index.html')),
 };

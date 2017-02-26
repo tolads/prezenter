@@ -1,8 +1,7 @@
 /**
- * isAuthenticated
- *
- * @module      :: Policy
- * @description :: Simple policy to allow any authenticated user
+ * isAuthenticate
+ * @module      Policy
+ * @description Simple policy to allow any authenticated user
  */
 
 module.exports = (req, res, next) => {

@@ -1,7 +1,6 @@
 /**
 * Groups.js
-*
-* @description :: model for storing user groups
+* @description Model for storing user groups
 */
 
 module.exports = {

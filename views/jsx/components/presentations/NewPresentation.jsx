@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Form for creating a new presentation
+ */
 export default class NewPresentation extends React.Component {
   constructor(props) {
     super(props);
@@ -48,7 +51,6 @@ export default class NewPresentation extends React.Component {
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
         // success
-
         this.setState({
           success: 'Prezentáció sikeresen létrehozva.',
         });
@@ -57,7 +59,6 @@ export default class NewPresentation extends React.Component {
         this.props.auth.logout();
       } else {
         // failure
-
         const errors = xhr.response.errors || {};
 
         this.setState({

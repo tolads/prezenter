@@ -1,12 +1,13 @@
 /**
  * GroupController
- *
- * @description :: Server-side logic for managing groups
+ * @description Server-side logic for managing groups
  */
 
 module.exports = {
   /**
-   * `GroupController.new()`
+   * Create new group
+   * @event POST /groups/new
+   *   {String} newGroupName
    */
   new: (req, res) => {
     const name = req.param('newGroupName');
@@ -35,13 +36,16 @@ module.exports = {
           owner: req.session.me,
         })
           .then(() => res.ok('Csoport sikeresen létrehozva.'))
-          .catch(err => res.negotiate(err));
+          .catch(res.negotiate);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 
   /**
-   * `GroupController.add()`
+   * Add new members to group
+   * @event POST /groups/add
+   *   {String} addToGroup
+   *   {(String|String[])} userIDs
    */
   add: (req, res) => {
     const addToGroup = req.param('addToGroup');
@@ -49,9 +53,7 @@ module.exports = {
     const userIDs = typeof paramUserIDs === 'string' ? [paramUserIDs] : paramUserIDs;
 
     if (!addToGroup || !paramUserIDs) {
-      return res.badRequest({
-        success: false,
-      });
+      return res.badRequest({ success: false });
     }
 
     Groups.findOne({
@@ -60,12 +62,10 @@ module.exports = {
     })
       .then((group) => {
         if (group === undefined) {
-          return res.badRequest({
-            success: false,
-          });
+          return res.badRequest({ success: false });
         }
 
-        const memberAddings = userIDs.map((userID) => (
+        const memberAddings = userIDs.map(userID => (
           new Promise((resolve, reject) => {
             Users.findOne({
               id: userID,
@@ -77,30 +77,30 @@ module.exports = {
 
                 resolve();
               })
-              .catch(err => reject(err));
+              .catch(reject);
           })
         ));
+
         Promise.all(memberAddings)
           .then(() => {
             group.save()
               .then(() => res.ok({ success: 'Sikeres hozzáadás a csoporthoz.' }))
-              .catch(err => res.negotiate(err));
+              .catch(res.negotiate);
           })
-          .catch(err => res.negotiate(err));
+          .catch(res.negotiate);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 
   /**
-   * `GroupController.deleteGroup()`
+   * Delete group
+   * @event GET /groups/delete/group/:id
    */
   deleteGroup: (req, res) => {
     const groupID = req.param('id');
 
     if (!groupID) {
-      return res.badRequest({
-        success: false,
-      });
+      return res.badRequest({ success: false });
     }
 
     Groups.findOne({
@@ -109,9 +109,7 @@ module.exports = {
     })
       .then((group) => {
         if (group === undefined) {
-          return res.badRequest({
-            success: false,
-          });
+          return res.badRequest({ success: false });
         }
 
         Groups.destroy({
@@ -119,22 +117,21 @@ module.exports = {
           owner: req.session.me,
         })
           .then(() => res.ok({ success: 'Csoport törölve.' }))
-          .catch(err => res.negotiate(err));
+          .catch(res.negotiate);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 
   /**
-   * `GroupController.deleteMember()`
+   * Delete member from a group
+   * @event GET /groups/delete/group/:gid/member/:uid
    */
   deleteMember: (req, res) => {
     const gid = req.param('gid');
     const uid = req.param('uid');
 
     if (!gid || !uid) {
-      return res.badRequest({
-        success: false,
-      });
+      return res.badRequest({ success: false });
     }
 
     Groups.findOne({
@@ -143,22 +140,21 @@ module.exports = {
     })
       .then((group) => {
         if (group === undefined) {
-          return res.badRequest({
-            success: false,
-          });
+          return res.badRequest({ success: false });
         }
 
         group.members.remove(uid);
 
         group.save()
           .then(() => res.ok({ success: 'Tag törölve.' }))
-          .catch(err => res.negotiate(err));
+          .catch(res.negotiate);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 
   /**
-   * `GroupController.list()`
+   * List groups of current user
+   * @event GET /grouplist
    */
   list: (req, res) => {
     Groups.find({
@@ -178,11 +174,14 @@ module.exports = {
 
         return res.ok(groupList);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 
   /**
-   * `GroupController.rename()`
+   * Rename group
+   * @event POST /groups/rename
+   *   {Number} id
+   *   {String} name
    */
   rename: (req, res) => {
     const groupID = req.param('id');
@@ -211,8 +210,8 @@ module.exports = {
           { id: groupID },
           { name: groupName }
         ).then(() => res.ok({ success: 'Csoport sikeresen átnevezve.' }))
-         .catch(err => res.negotiate(err));
+         .catch(res.negotiate);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 };

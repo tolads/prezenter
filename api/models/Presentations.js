@@ -1,7 +1,6 @@
 /**
 * Presentations.js
-*
-* @description :: model for storing presentations
+* @description Model for storing presentations
 */
 
 module.exports = {

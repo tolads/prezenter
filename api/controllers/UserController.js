@@ -1,13 +1,12 @@
 /**
  * UserController
- *
- * @description :: Server-side logic for managing users
+ * @description Server-side logic for managing users
  */
 
 module.exports = {
-
   /**
-   * `UserController.isLoggedId()`
+   * Determine if visitor is logged in
+   * @event GET /isloggedin
    */
   isLoggedIn: (req, res) => {
     if (!req.session.me) {
@@ -20,15 +19,16 @@ module.exports = {
       id: req.session.me,
     })
       .then(user => (
-        res.ok({
-          loggedin: user ? user.username : false,
-        })
+        res.ok({ loggedin: user ? user.username : false })
       ))
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 
   /**
-   * `UserController.login()`
+   * Log in user
+   * @event POST /login
+   *   {String} username
+   *   {String} password
    */
   login: (req, res) => {
     const username = req.param('username');
@@ -44,29 +44,29 @@ module.exports = {
     return res.login({ username, password });
   },
 
-
   /**
-   * `UserController.logout()`
+   * Log out user
+   * @event GET /logout
    */
   logout: (req, res) => {
     // "Forget" the user from the session.
     // Subsequent requests from this user agent will NOT have `req.session.me`.
     req.session.me = null;
 
-    // send a simple response letting the user agent know they were logged out
-    // successfully.
     return res.ok('Sikeres kijelentkezés.');
   },
 
-
   /**
-   * `UserController.signup()`
+   * Sign up user
+   * @event POST /login
+   *   {String} username
+   *   {String} password
+   *   {String} fullname
    */
   signup: (req, res) => {
     const errors = {};
     const username = req.param('username');
     const password = req.param('password');
-    const password2 = req.param('password2');
     const fullname = req.param('fullname');
     let hasError = false;
 
@@ -84,9 +84,6 @@ module.exports = {
     if (!password) {
       hasError = true;
       errors.password_error = 'Jelszó megadása kötelező.';
-    } else if (password2 !== password) {
-      hasError = true;
-      errors.password2_error = 'A megadott jelszavak nem egyeznek.';
     }
 
     if (!fullname) {
@@ -127,13 +124,14 @@ module.exports = {
 
             return res.ok('Signup successful!');
           })
-          .catch(err => res.negotiate(err));
+          .catch(res.negotiate);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 
   /**
-   * `UserController.list()`
+   * List all the users
+   * @event GET /list
    */
   list: (req, res) => {
     Users.find()
@@ -147,11 +145,12 @@ module.exports = {
 
         return res.ok(userList);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 
   /**
-   * `UserController.me()`
+   * Get details of current user
+   * @event GET /me
    */
   me: (req, res) => {
     Users.findOne({
@@ -166,11 +165,12 @@ module.exports = {
           presentations: user.presentations.length,
         })
       ))
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 
   /**
-   * `UserController.delete()`
+   * Delete current user
+   * @event GET /delete
    */
   delete: (req, res) => {
     Users.findOne({
@@ -178,9 +178,7 @@ module.exports = {
     })
       .then((user) => {
         if (user === undefined) {
-          return res.badRequest({
-            success: false,
-          });
+          return res.badRequest({ success: false });
         }
 
         Users.destroy({
@@ -190,8 +188,8 @@ module.exports = {
             req.session.me = null;
             res.ok({ success: 'Felhasználó törölve.' })
           })
-          .catch(err => res.negotiate(err));
+          .catch(res.negotiate);
       })
-      .catch(err => res.negotiate(err));
+      .catch(res.negotiate);
   },
 };

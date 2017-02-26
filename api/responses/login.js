@@ -1,10 +1,8 @@
 /**
  * res.login([inputs])
- *
  * @param {String} inputs.username
  * @param {String} inputs.password
- *
- * @description :: Log the requesting user in using a passport strategy
+ * @description Log the requesting user in using a passport strategy
  */
 
 module.exports = function login(inputs = {}) {
@@ -27,9 +25,7 @@ module.exports = function login(inputs = {}) {
 
       req.session.me = user.id;
 
-      return res.ok({
-        loggedin: inputs.username,
-      });
+      return res.ok({ loggedin: inputs.username });
     })
-    .catch(err => res.negotiate(err));
+    .catch(res.negotiate);
 };

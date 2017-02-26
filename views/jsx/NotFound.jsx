@@ -1,7 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+/**
+ * 404 Not Found page
+ */
 export default class NotFound extends React.Component {
+  /**
+   * Set <title>
+   */
   componentDidMount() {
     document.title = `Nem található | ${this.props.route.title}`;
   }
@@ -13,7 +19,9 @@ export default class NotFound extends React.Component {
           <h1> 404 </h1>
           <h2> A keresett oldal nem található :( </h2>
           <p>
-            <Link to="/" className="btn btn-lg btn-primary" role="button"> Vissza a kezdőlapra &gt;&gt; </Link>
+            <Link to="/" className="btn btn-lg btn-primary" role="button">
+              Vissza a kezdőlapra &gt;&gt;
+            </Link>
           </p>
         </div>
       </div>

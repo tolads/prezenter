@@ -3,6 +3,9 @@ import { browserHistory } from 'react-router';
 
 import { formatDate } from './utils';
 
+/**
+ * Profile page
+ */
 export default class Profile extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +23,9 @@ export default class Profile extends React.Component {
     this.deleteProfile = this.deleteProfile.bind(this);
   }
 
+  /**
+   * Check if logged in, load users data
+   */
   componentWillMount() {
     if (!this.props.auth.isLoggedIn) {
       browserHistory.push('/');
@@ -28,16 +34,26 @@ export default class Profile extends React.Component {
     }
   }
 
+  /**
+   * Set <title>
+   */
   componentDidMount() {
     document.title = `Adataim | ${this.props.route.title}`;
   }
 
+  /**
+   * Check if logged ins
+   */
   componentWillReceiveProps(nextProps) {
     if (!nextProps.auth.isLoggedIn) {
       browserHistory.push('/');
     }
   }
 
+
+  /**
+   * Get users data
+   */
   getData() {
     // create an AJAX request
     const xhr = new XMLHttpRequest();
@@ -47,7 +63,6 @@ export default class Profile extends React.Component {
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
         // success
-
         this.setState({
           username: xhr.response.username,
           fullname: xhr.response.fullname,
@@ -62,6 +77,9 @@ export default class Profile extends React.Component {
     xhr.send();
   }
 
+  /**
+   * Open dialog for profile deletion
+   */
   shouldDeleteProfile() {
     this.props.modal({
       title: 'Biztosan törölni szeretnéd a profilodat?',
@@ -70,6 +88,9 @@ export default class Profile extends React.Component {
     $('#modal').modal();
   }
 
+  /**
+   * Delete users profile
+   */
   deleteProfile() {
     // create an AJAX request
     const xhr = new XMLHttpRequest();

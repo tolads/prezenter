@@ -5,11 +5,30 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Modal from './components/Modal';
 
+/**
+ * Root component for all pages
+ */
 export default class Application extends React.Component {
   constructor(props) {
     super(props);
 
-    // check if still logged in
+    this.state = {
+      username: undefined,
+      loggedin: this.isLoggedIn(),
+      loginError: '',
+    };
+
+    this.isLoggedIn = this.isLoggedIn.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+    this.loginSubmit = this.loginSubmit.bind(this);
+    this.callModal = this.callModal.bind(this);
+  }
+
+  /**
+   * Check if still logged in
+   */
+  componentWillMount() {
     // create an AJAX request
     const xhr = new XMLHttpRequest();
     xhr.open('get', '/isloggedin');
@@ -32,44 +51,52 @@ export default class Application extends React.Component {
       }
     });
     xhr.send();
-
-    this.state = {
-      username: undefined,
-      loggedin: this.isLoggedIn(),
-      loginError: '',
-    };
-
-    this.isLoggedIn = this.isLoggedIn.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
-    this.loginSubmit = this.loginSubmit.bind(this);
-    this.callModal = this.callModal.bind(this);
   }
 
+  /**
+   * Check if still logged in
+   */
   isLoggedIn() {
     return !!localStorage.getItem('loggedin');
   }
 
+  /**
+   * Handle logging in
+   * @param {String} username
+   */
   handleLogin(username) {
-    if (username) {
-      this.setState({
-        username,
-      });
-    }
     localStorage.setItem('loggedin', 'true');
-    this.setState({ loggedin: this.isLoggedIn() });
+    this.setState({
+      username,
+      loggedin: true,
+    });
   }
 
+  /**
+   * Handle logging out
+   */
   handleLogout() {
     localStorage.removeItem('loggedin');
-    this.setState({ loggedin: this.isLoggedIn() });
+    this.setState({
+      loggedin: false,
+    });
   }
 
+  /**
+   * Function called by login forms
+   * @param {Object} data
+   *   {String} username
+   *   {String} password
+   */
   loginSubmit(data) {
-    this.setState({ loginError: '' });
+    this.setState({
+      loginError: '',
+    });
 
     if (data.username === '' || data.password === '') {
-      this.setState({ loginError: 'Felhasználónév és jelszó megadása kötelező.' });
+      this.setState({
+        loginError: 'Felhasználónév és jelszó megadása kötelező.',
+      });
       return;
     }
 
@@ -93,15 +120,23 @@ export default class Application extends React.Component {
         window.scroll(0, 0);
       } else {
         // failure
-        const errors = xhr.response.errors || {};
-
-        this.setState({ loginError: errors });
+        this.setState({ loginError: xhr.response.errors || {} });
         document.getElementById('login').scrollIntoView();
       }
     });
     xhr.send(formData);
   }
 
+  /**
+   * Set parameters for modal dialog
+   * @param {Object} modalData
+   *   {String} acceptText
+   *   {Object} args
+   *   {Function} handleSubmit
+   *   {Boolean} hasInput
+   *   {String} rejectText
+   *   {String} title
+   */
   callModal(modalData) {
     this.setState({
       modalData,

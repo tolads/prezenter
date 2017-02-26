@@ -2,6 +2,9 @@ import React from 'react';
 
 import { formatDate } from '../../utils';
 
+/**
+ * List presentations
+ */
 export default class NewPresentation extends React.Component {
   constructor(props) {
     super(props);

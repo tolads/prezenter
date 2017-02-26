@@ -1,8 +1,7 @@
 /**
-* Users.js
-*
-* @description :: model for storing users
-*/
+ * Users.js
+ * @description Model for storing users
+ */
 
 const bcrypt = require('bcryptjs');
 
@@ -37,7 +36,11 @@ module.exports = {
     },
   },
 
-
+  /**
+   * Called after destroying User records, delete their stuff also
+   * @param  {Object[]} deletedRecords
+   * @param  {Function} cb - callback function
+   */
   afterDestroy: (deletedRecords, cb) => {
     const deleteGroups = deletedRecords.map(user => (
       new Promise((resolve, reject) => {
@@ -64,15 +67,13 @@ module.exports = {
       .catch(() => cb());
   },
 
-
   /**
    * Create a new user using the provided inputs.
-   *
    * @param  {Object}   inputs
-   *                     • username {String}
-   *                     • fullname {String}
-   *                     • password {String}
-   * @param  {Function} cb
+   *   {String} username
+   *   {String} fullname
+   *   {String} password
+   * @returns {Promise<Object>}
    */
   signup: inputs => (
     new Promise((resolve, reject) => {
@@ -88,17 +89,14 @@ module.exports = {
     })
   ),
 
-
   /**
    * Check validness of a login using the provided inputs.
-   *
    * @param  {Object}   inputs
-   *                     • username {String}
-   *                     • password {String}
-   * @param  {Function} cb
+   *   {String} username
+   *   {String} password
+   * @returns {Promise<Object>}
    */
   attemptLogin: inputs => (
-    // Create a user
     new Promise((resolve, reject) => {
       Users.findOne({
         username: inputs.username,
