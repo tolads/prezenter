@@ -1,7 +1,7 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
-import { formatDate } from './utils';
+import { formatDate } from '../utils';
 
 /**
  * Profile page

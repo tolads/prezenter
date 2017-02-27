@@ -1,14 +1,10 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import Modal from './components/Modal';
-
 /**
  * Root component for all pages
  */
-export default class Application extends React.Component {
+export default class Auth extends React.Component {
   constructor(props) {
     super(props);
 
@@ -22,7 +18,6 @@ export default class Application extends React.Component {
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.loginSubmit = this.loginSubmit.bind(this);
-    this.callModal = this.callModal.bind(this);
   }
 
   /**
@@ -62,12 +57,10 @@ export default class Application extends React.Component {
 
   /**
    * Handle logging in
-   * @param {String} username
    */
-  handleLogin(username) {
+  handleLogin() {
     localStorage.setItem('loggedin', 'true');
     this.setState({
-      username,
       loggedin: true,
     });
   }
@@ -127,22 +120,6 @@ export default class Application extends React.Component {
     xhr.send(formData);
   }
 
-  /**
-   * Set parameters for modal dialog
-   * @param {Object} modalData
-   *   {String} acceptText
-   *   {Object} args
-   *   {Function} handleSubmit
-   *   {Boolean} hasInput
-   *   {String} rejectText
-   *   {String} title
-   */
-  callModal(modalData) {
-    this.setState({
-      modalData,
-    });
-  }
-
   render() {
     const loginObj = {
       isLoggedIn: this.state.loggedin,
@@ -154,24 +131,12 @@ export default class Application extends React.Component {
 
     return (
       <div>
-        <div className="screenreader">
-          <ul>
-            <li><a href="#navbar">Ugrás a navigációhoz</a></li>
-            <li><a href="#main">Ugrás a tartalomhoz</a></li>
-          </ul>
-        </div>
-
-        <Navbar auth={loginObj} username={this.state.username} />
-        <div id="main">
-          {React.cloneElement(this.props.children, { auth: loginObj, modal: this.callModal })}
-        </div>
-        <Footer />
-        <Modal data={this.state.modalData} />
+        {React.cloneElement(this.props.children, { auth: loginObj, username: this.state.username })}
       </div>
     );
   }
 }
 
-Application.propTypes = {
+Auth.propTypes = {
   children: React.PropTypes.element.isRequired,
 };

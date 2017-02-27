@@ -1,31 +1,32 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
-import NewPresentation from './components/presentations/NewPresentation';
-import ListPresentations from './components/presentations/ListPresentations';
+import NewGroup from '../components/groups/NewGroup';
+import MyGroups from '../components/groups/MyGroups';
+import ListUsers from '../components/groups/ListUsers';
 
 /**
- * Page for managing presentations
+ * Page for managing groups
  */
-export default class PresentationsOwn extends React.Component {
+export default class Groups extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      presentations: [],
+      groups: [],
     };
 
-    this.getPresentations = this.getPresentations.bind(this);
+    this.getGroups = this.getGroups.bind(this);
   }
 
   /**
-   * Check if logged in, load presentations
+   * Check if logged in, load groups
    */
   componentWillMount() {
     if (!this.props.auth.isLoggedIn) {
       browserHistory.push('/');
     } else {
-      this.getPresentations();
+      this.getGroups();
     }
   }
 
@@ -33,7 +34,7 @@ export default class PresentationsOwn extends React.Component {
    * Set <title>
    */
   componentDidMount() {
-    document.title = `Saját diasorok | ${this.props.route.title}`;
+    document.title = `Csoportok | ${this.props.route.title}`;
   }
 
   /**
@@ -46,19 +47,19 @@ export default class PresentationsOwn extends React.Component {
   }
 
   /**
-   * Get list of presentations
+   * Get list of groups
    */
-  getPresentations() {
+  getGroups() {
     // create an AJAX request
     const xhr = new XMLHttpRequest();
-    xhr.open('get', '/presentations/list');
+    xhr.open('get', '/grouplist');
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.responseType = 'json';
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
         // success
         this.setState({
-          presentations: xhr.response,
+          groups: xhr.response,
         });
       } else if (xhr.status === 401) {
         this.props.auth.logout();
@@ -70,22 +71,24 @@ export default class PresentationsOwn extends React.Component {
   render() {
     return (
       <div className="container inner-page">
-        <h1> Saját diasorok </h1>
+        <h1> Csoportok </h1>
 
-        <NewPresentation auth={this.props.auth} getPresentations={this.getPresentations} />
+        <NewGroup auth={this.props.auth} getGroups={this.getGroups} />
 
-        <ListPresentations
+        <MyGroups
           auth={this.props.auth}
-          presentations={this.state.presentations}
-          getPresentations={this.getPresentations}
+          groups={this.state.groups}
+          getGroups={this.getGroups}
           modal={this.props.modal}
         />
+
+        <ListUsers auth={this.props.auth} groups={this.state.groups} getGroups={this.getGroups} />
       </div>
     );
   }
 }
 
-PresentationsOwn.propTypes = {
+Groups.propTypes = {
   auth: React.PropTypes.object,
   route: React.PropTypes.object,
   modal: React.PropTypes.func,
