@@ -94,4 +94,72 @@ module.exports = {
       })
       .catch(res.negotiate);
   },
+
+  /**
+   * Get datas of a presentation
+   * @event GET /presentations/get/:id
+   */
+  get: (req, res) => {
+    const id = req.param('id');
+
+    if (!id) {
+      return res.badRequest({ success: false });
+    }
+
+    Presentations.findOne({
+      id,
+      owner: req.session.me,
+    })
+      .then(presentation => (
+        res.ok({
+          name: presentation.name,
+          desc: presentation.desc,
+          content: presentation.content,
+        })
+      ))
+      .catch(res.negotiate);
+  },
+
+  /**
+   * Edit presentation
+   * @event POST /presentations/edit/:id
+   *   {String} name
+   *   {String} desc
+   *   {String} content
+   */
+  edit: (req, res) => {
+    const id = req.param('id');
+    const name = req.param('name');
+    const desc = req.param('desc') || '';
+    const content = req.param('content') || '';
+
+    if (!id || !name) {
+      return res.badRequest({ success: false });
+    }
+
+    try {
+      if (content) {
+        JSON.parse(content);
+      }
+    } catch (err) {
+      return res.badRequest({ success: false });
+    }
+
+    Presentations.findOne({
+      id,
+      owner: req.session.me,
+    })
+      .then((presentation) => {
+        if (presentation === undefined) {
+          return res.badRequest({ success: false });
+        }
+
+        Presentations.update(
+          { id },
+          { name, desc, content }
+        ).then(() => res.ok({ success: 'Sikeres mentés.' }))
+         .catch(res.negotiate);
+      })
+      .catch(res.negotiate);
+  },
 };

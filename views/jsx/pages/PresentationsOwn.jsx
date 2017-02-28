@@ -37,7 +37,7 @@ export default class PresentationsOwn extends React.Component {
   }
 
   /**
-   * Check if logged ins
+   * Check if logged in
    */
   componentWillReceiveProps(nextProps) {
     if (!nextProps.auth.isLoggedIn) {

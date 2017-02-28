@@ -85,7 +85,7 @@ export default class NewPresentation extends React.Component {
                   className="form-control"
                   id="newPresentationName"
                   name="newPresentationName"
-                  value={this.state.username}
+                  value={this.state.newPresentationName}
                   onChange={this.handleInputChange}
                 />
               </div>
@@ -100,7 +100,7 @@ export default class NewPresentation extends React.Component {
                   className="form-control"
                   id="newPresentationDesc"
                   name="newPresentationDesc"
-                  value={this.state.username}
+                  value={this.state.newPresentationDesc}
                   onChange={this.handleInputChange}
                 />
               </div>

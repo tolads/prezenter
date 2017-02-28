@@ -1,7 +1,10 @@
 * { transition: all .5s; }
 body { transition: none; }
-h1 { border-bottom: 1px dashed #aaa; }
+#main h1 { border-bottom: 1px dashed #aaa; }
+#main h1 small { font-size: 40%; }
+#main pre { font-size: 12px; }
 .jumbotron h1 { border-bottom: none; }
+textarea.json { height: 150px; }
 
 .screenreader { text-indent: -9999px; position: absolute; }
 

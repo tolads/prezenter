@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 import { formatDate } from '../../utils';
 
@@ -66,9 +67,13 @@ export default class NewPresentation extends React.Component {
             </button>
           </td>
           <td>
-            <button className="btn btn-warning" value={presentation.id} title="Szerkesztés">
+            <Link
+              to={`/presentations/edit/${presentation.id}`}
+              className="btn btn-warning"
+              title="Szerkesztés"
+            >
               <span className="glyphicon glyphicon-wrench" />
-            </button>
+            </Link>
           </td>
           <td>
             <button
