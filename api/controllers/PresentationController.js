@@ -88,6 +88,9 @@ module.exports = {
           desc: presentation.desc,
           date: presentation.createdAt,
           modified: presentation.createdAt,
+          canBePlayed: presentation.content &&
+                       presentation.content.slides &&
+                       presentation.content.slides.length,
         }));
 
         return res.ok(presentationList);

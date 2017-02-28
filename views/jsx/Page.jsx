@@ -21,12 +21,13 @@ export default class Page extends React.Component {
   /**
    * Set parameters for modal dialog
    * @param {Object} modalData
-   *   {String} acceptText
-   *   {Object} args
+   *   {String}   acceptText
+   *   {Object}   args
    *   {Function} handleSubmit
-   *   {Boolean} hasInput
-   *   {String} rejectText
-   *   {String} title
+   *   {Boolean}  hasInput
+   *   {Object[]} options
+   *   {String}   rejectText
+   *   {String}   title
    */
   callModal(modalData) {
     this.setState({

@@ -47,7 +47,7 @@ export default class PresentationsEdit extends React.Component {
   }
 
   /**
-   * Get list of presentations
+   * Get a presentation
    */
   getPresentation() {
     // create an AJAX request

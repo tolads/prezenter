@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import Groups from './pages/Groups';
 import PresentationsOwn from './pages/PresentationsOwn';
 import PresentationsEdit from './pages/PresentationsEdit';
+import PresentationsPlay from './pages/PresentationsPlay';
 import NotFound from './pages/NotFound';
 
 const title = document.title;
@@ -23,6 +24,7 @@ ReactDOM.render(
         <Route path="presentations/own" component={PresentationsOwn} title={title} />
         <Route path="presentations/edit/:id" component={PresentationsEdit} title={title} />
       </Route>
+      <Route path="presentations/play/:id" component={PresentationsPlay} title={title} />
     </Route>
     <Route path="*" component={NotFound} title={title} />
   </Router>,

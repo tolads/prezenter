@@ -18,6 +18,11 @@ export default class Modal extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.data) {
       if (nextProps.data.hasInput) {
+        if (nextProps.data.options && nextProps.data.options.length) {
+          this.setState({
+            modalInput: nextProps.data.options[0] && nextProps.data.options[0].id,
+          });
+        }
         $('#modal').on('shown.bs.modal', () => $('#modalInput').focus());
       } else {
         $('#modal').on('shown.bs.modal', () => $('#modalAccept').focus());
@@ -41,6 +46,13 @@ export default class Modal extends React.Component {
   render() {
     const data = this.props.data || {};
 
+    let options = null;
+    if (data.options && data.options.length) {
+      options = data.options.map(option => (
+        <option key={option.id} value={option.id}>{option.name}</option>
+      ));
+    }
+
     return (
       <div className="modal fade inner-page" tabIndex="-1" role="dialog" id="modal">
         <div className="modal-dialog" role="document">
@@ -55,14 +67,26 @@ export default class Modal extends React.Component {
               {data.hasInput &&
                 <div className="modal-body">
                   <p>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="modalInput"
-                      name="modalInput"
-                      value={this.state.modalInput}
-                      onChange={this.handleInputChange}
-                    />
+                    {options ? (
+                      <select
+                        className="form-control"
+                        id="modalInput"
+                        name="modalInput"
+                        value={this.state.modalInput}
+                        onChange={this.handleInputChange}
+                      >
+                        {options}
+                      </select>
+                    ) : (
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="modalInput"
+                        name="modalInput"
+                        value={this.state.modalInput}
+                        onChange={this.handleInputChange}
+                      />
+                    )}
                   </p>
                 </div>
               }

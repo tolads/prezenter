@@ -18,6 +18,8 @@ export default class NewPresentation extends React.Component {
 
     this.shouldDeletePresentation = this.shouldDeletePresentation.bind(this);
     this.deletePresentation = this.deletePresentation.bind(this);
+    this.shouldPlayPresentation = this.shouldPlayPresentation.bind(this);
+    this.playPresentation = this.playPresentation.bind(this);
   }
 
   shouldDeletePresentation(e) {
@@ -51,6 +53,52 @@ export default class NewPresentation extends React.Component {
     xhr.send();
   }
 
+  shouldPlayPresentation(e) {
+    const value = e.target.value || e.target.parentElement.value;
+    const id = encodeURIComponent(value);
+
+    // create an AJAX request - get grouplist
+    const xhr = new XMLHttpRequest();
+    xhr.open('get', '/grouplist');
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.responseType = 'json';
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        // success
+        const options = [
+          { id: -1, name: 'Mindenki' },
+          ...xhr.response.map(group => ({
+            id: group.id,
+            name: group.name,
+          })),
+        ];
+        console.log(options);
+        this.props.modal({
+          title: 'Lejátszás hozzárendelése csoporthoz',
+          args: { id },
+          handleSubmit: this.playPresentation,
+          acceptText: 'Indít',
+          hasInput: true,
+          options,
+        });
+        $('#modal').modal();
+      } else if (xhr.status === 401) {
+        this.props.auth.logout();
+      }
+    });
+    xhr.send();
+  }
+
+  playPresentation(args) {
+    // TODO
+    const presentationID = args.id;
+    const groupID = args.input;
+
+    if (!presentationID || !groupID) return;
+
+    window.open(`/presentations/play/${presentationID}`, '_blank');
+  }
+
   render() {
     const presentations = [];
 
@@ -62,9 +110,15 @@ export default class NewPresentation extends React.Component {
           <td>{formatDate(new Date(presentation.date))}</td>
           <td>{formatDate(new Date(presentation.modified))}</td>
           <td>
-            <button className="btn btn-success" value={presentation.id} title="Lejátszás">
-              <span className="glyphicon glyphicon-play" />
-            </button>
+            {presentation.canBePlayed &&
+              <button
+                className="btn btn-success"
+                value={presentation.id}
+                onClick={this.shouldPlayPresentation}
+                title="Lejátszás"
+              >
+                <span className="glyphicon glyphicon-play" />
+              </button>}
           </td>
           <td>
             <Link
