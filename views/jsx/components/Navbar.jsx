@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import { request } from '../utils';
+
 /**
  * Navigation bar
  */
@@ -27,15 +29,20 @@ export default class Navbar extends React.Component {
   handleLogout(e) {
     e.preventDefault();
 
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', '/logout');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      this.props.auth.logout();
-    });
-    xhr.send();
+    // Send request to server
+    request('/logout', {
+      credentials: 'same-origin',
+    })
+      .then(() => {
+        // success
+        this.props.auth.logout();
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   handleLogin(e) {

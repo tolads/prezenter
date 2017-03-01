@@ -37,7 +37,7 @@ module.exports = {
           desc: req.param('newPresentationDesc') || '',
           owner: req.session.me,
         })
-          .then(() => res.ok('Prezentáció sikeresen létrehozva.'))
+          .then(() => res.ok({ success: 'Prezentáció sikeresen létrehozva.' }))
           .catch(res.negotiate);
       })
       .catch(res.negotiate);

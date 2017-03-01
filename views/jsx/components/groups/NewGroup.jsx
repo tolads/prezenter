@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { request } from '../../utils';
+
 /**
  * Form for creating a new group
  */
@@ -38,35 +40,32 @@ export default class NewGroup extends React.Component {
       return;
     }
 
-    const newGroupName = encodeURIComponent(this.state.newGroupName);
-    const formData = `newGroupName=${newGroupName}`;
+    const data = new FormData();
+    data.append('newGroupName', this.state.newGroupName);
 
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', '/groups/new');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request('/groups/new', {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: data,
+    })
+      .then(() => {
         // success
-
         this.setState({
           success: 'Csoport sikeresen létrehozva.',
         });
         this.props.getGroups();
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      } else {
-        // failure
-
-        const errors = xhr.response.errors || {};
-
-        this.setState({
-          error: errors || '',
-        });
-      }
-    });
-    xhr.send(formData);
+      })
+      .catch(({ status, json }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        } else if (status === 400) {
+          this.setState({
+            error: json.errors || '',
+          });
+        }
+      });
   }
 
   render() {

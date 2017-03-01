@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { request } from '../utils';
+
 /**
  * Registration form
  */
@@ -32,82 +34,84 @@ export default class Register extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    this.setState({
+    const errors = {
       username_error: '',
       password_error: '',
       password2_error: '',
       fullname_error: '',
-    });
+    };
 
     if (this.state.asdfgh !== '') return;
 
     if (this.state.username === '') {
-      this.setState({ username_error: 'Felhasználónév megadása kötelező.' });
+      errors.username_error = 'Felhasználónév megadása kötelező.';
     } else if (this.state.username.length > 63) {
-      this.setState({ username_error: 'A felhasználónév túl hosszú.' });
+      errors.username_error = 'A felhasználónév túl hosszú.';
     } else if (!/^[a-zA-Z0-9_]+$/.test(this.state.username)) {
-      this.setState({ username_error: 'A felhasználónév csak az angol ABC kis- és nagybetűit, számokat és aláhúzásjelet tartalmazhat.' });
+      errors.username_error = 'A felhasználónév csak az angol ABC kis- és nagybetűit, számokat és aláhúzásjelet tartalmazhat.';
     }
 
     if (this.state.password === '') {
-      this.setState({ password_error: 'Jelszó megadása kötelező.' });
+      errors.password_error = 'Jelszó megadása kötelező.';
     } else if (this.state.password !== this.state.password2) {
-      this.setState({ password2_error: 'A megadott jelszavak nem egyeznek.' });
+      errors.password2_error = 'A megadott jelszavak nem egyeznek.';
     }
 
     if (this.state.fullname === '') {
-      this.setState({ fullname_error: 'Teljes név megadása kötelező.' });
+      errors.fullname_error = 'Teljes név megadása kötelező.';
     } else if (this.state.fullname.length > 127) {
-      this.setState({ fullname_error: 'A név túl hosszú.' });
+      errors.fullname_error = 'A név túl hosszú.';
     } else if (!/^[a-zA-Z0-9áéíóöőúüűÁÉÍÓÖŐÚÜŰäÄôÔýÝčČďĎĺĹňŇšŠťŤ_ ,.\-/()]+$/
       .test(this.state.fullname)) {
-      this.setState({ fullname_error: 'A név nem megengedett karaktert tartalmaz.' });
+      errors.fullname_error = 'A név nem megengedett karaktert tartalmaz.';
     }
 
-    if (this.state.username_error === '' &&
-        this.state.password_error === '' &&
-        this.state.password2_error === '' &&
-        this.state.fullname_error === '') {
-      // create a string for an HTTP body message
-      const username = encodeURIComponent(this.state.username);
-      const password = encodeURIComponent(this.state.password);
-      const password2 = encodeURIComponent(this.state.password2);
-      const fullname = encodeURIComponent(this.state.fullname);
-      const formData = `username=${username}&password=${password}&password2=${password2}&fullname=${fullname}`;
-
-      // create an AJAX request
-      const xhr = new XMLHttpRequest();
-      xhr.open('post', '/signup');
-      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      xhr.responseType = 'json';
-      xhr.addEventListener('load', () => {
-        if (xhr.status === 200) {
-          // success
-
-          // change the component-container state
-          this.setState({
-            username_error: '',
-            password_error: '',
-            password2_error: '',
-            fullname_error: '',
-          });
-
-          this.props.auth.login(username);
-        } else {
-          // failure
-
-          const errors = xhr.response.errors || {};
-
-          this.setState({
-            username_error: errors.username_error || '',
-            password_error: errors.password_error || '',
-            password2_error: errors.password2_error || '',
-            fullname_error: errors.fullname_error || '',
-          });
-        }
+    if (errors.username_error !== '' ||
+        errors.password_error !== '' ||
+        errors.password2_error !== '' ||
+        errors.fullname_error !== '') {
+      this.setState({
+        username_error: errors.username_error,
+        password_error: errors.password_error,
+        password2_error: errors.password2_error,
+        fullname_error: errors.fullname_error,
       });
-      xhr.send(formData);
+      return;
     }
+
+    const data = new FormData();
+    data.append('username', this.state.username);
+    data.append('password', this.state.password);
+    data.append('fullname', this.state.fullname);
+
+    // Send request to server
+    request('/signup', {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: data,
+    })
+      .then(() => {
+        // success
+        this.setState({
+          username_error: '',
+          password_error: '',
+          password2_error: '',
+          fullname_error: '',
+        });
+
+        this.props.auth.login(this.state.username);
+      })
+      .catch(({ json }) => {
+        // error
+        const errors = json.errors || {};
+
+        this.setState({
+          username_error: errors.username_error || '',
+          password_error: errors.password_error || '',
+          password2_error: errors.password2_error || '',
+          fullname_error: errors.fullname_error || '',
+        });
+      });
   }
 
   render() {

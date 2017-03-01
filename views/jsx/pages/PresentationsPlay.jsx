@@ -1,6 +1,8 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
+import { request } from '../utils';
+
 /**
  * Play a presentation
  */
@@ -59,23 +61,24 @@ export default class PresentationsPlay extends React.Component {
    * Get a presentation
    */
   getPresentation() {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', `/presentations/get/${this.props.params.id}`);
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        console.log(xhr.response.content);
+    // Send request to server
+    request(`/presentations/get/${this.props.params.id}`, {
+      credentials: 'same-origin',
+    })
+      .then((json) => {
         // success
-        this.setState({
-          slides: xhr.response.content && xhr.response.content.slides,
-        });
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();
+        if (json.content) {
+          this.setState({
+            slides: json.content.slides,
+          });
+        }
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   render() {

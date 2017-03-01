@@ -1,6 +1,8 @@
 import React from 'react';
 import { browserHistory, Link } from 'react-router';
 
+import { request } from '../utils';
+
 /**
  * Page for editing a presentation
  */
@@ -50,24 +52,24 @@ export default class PresentationsEdit extends React.Component {
    * Get a presentation
    */
   getPresentation() {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', `/presentations/get/${this.props.params.id}`);
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request(`/presentations/get/${this.props.params.id}`, {
+      credentials: 'same-origin',
+    })
+      .then((json) => {
         // success
         this.setState({
-          name: xhr.response.name,
-          desc: xhr.response.desc,
-          content: JSON.stringify(xhr.response.content, null, '  '),
+          name: json.name,
+          desc: json.desc,
+          content: JSON.stringify(json.content, null, '  '),
         });
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   handleInputChange(e) {
@@ -102,32 +104,33 @@ export default class PresentationsEdit extends React.Component {
       return;
     }
 
-    const name = encodeURIComponent(this.state.name);
-    const desc = encodeURIComponent(this.state.desc);
-    const content = this.state.content || '';
-    const formData = `name=${name}&desc=${desc}&content=${content}`;
+    const data = new FormData();
+    data.append('name', this.state.name);
+    data.append('desc', this.state.desc);
+    data.append('content', this.state.content);
 
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', `/presentations/edit/${this.props.params.id}`);
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request( `/presentations/edit/${this.props.params.id}`, {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: data,
+    })
+      .then(() => {
         // success
         this.setState({
           success: 'Sikeres mentés.',
         });
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      } else {
-        // failure
-        this.setState({
-          error: xhr.response.errors || '',
-        });
-      }
-    });
-    xhr.send(formData);
+      })
+      .catch(({ status, json }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        } else if (status === 400) {
+          this.setState({
+            error: json.errors || '',
+          });
+        }
+      });
   }
 
   render() {

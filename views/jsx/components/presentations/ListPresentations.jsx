@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-import { formatDate } from '../../utils';
+import { formatDate, request } from '../../utils';
 
 /**
  * List presentations
@@ -33,41 +33,39 @@ export default class NewPresentation extends React.Component {
     $('#modal').modal();
   }
 
-  deletePresentation(args) {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', `/presentations/delete/${args.id}`);
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+  deletePresentation({ id }) {
+    // Send request to server
+    request(`/presentations/delete/${id}`, {
+      credentials: 'same-origin',
+    })
+      .then(() => {
         // success
         this.setState({
-          success: xhr.response.success,
+          success: 'Prezentáció törölve.',
         });
         this.props.getPresentations();
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   shouldPlayPresentation(e) {
     const value = e.target.value || e.target.parentElement.value;
     const id = encodeURIComponent(value);
 
-    // create an AJAX request - get grouplist
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', '/grouplist');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request('/grouplist', {
+      credentials: 'same-origin',
+    })
+      .then((json) => {
         // success
         const options = [
           { id: -1, name: 'Mindenki' },
-          ...xhr.response.map(group => ({
+          ...json.map(group => ({
             id: group.id,
             name: group.name,
           })),
@@ -82,11 +80,13 @@ export default class NewPresentation extends React.Component {
           options,
         });
         $('#modal').modal();
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   playPresentation(args) {

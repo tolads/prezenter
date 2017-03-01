@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { request } from '../../utils';
+
 /**
  * Form for creating a new presentation
  */
@@ -39,34 +41,34 @@ export default class NewPresentation extends React.Component {
       return;
     }
 
-    const newPresentationName = encodeURIComponent(this.state.newPresentationName);
-    const newPresentationDesc = encodeURIComponent(this.state.newPresentationDesc);
-    const formData = `newPresentationName=${newPresentationName}&newPresentationDesc=${newPresentationDesc}`;
+    const data = new FormData();
+    data.append('newPresentationName', this.state.newPresentationName);
+    data.append('newPresentationDesc', this.state.newPresentationDesc);
 
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', '/presentations/new');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request('/presentations/new', {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: data,
+    })
+      .then(() => {
         // success
+        console.log(1);
         this.setState({
           success: 'Prezentáció sikeresen létrehozva.',
         });
         this.props.getPresentations();
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      } else {
-        // failure
-        const errors = xhr.response.errors || {};
-
-        this.setState({
-          error: errors || '',
-        });
-      }
-    });
-    xhr.send(formData);
+      })
+      .catch(({ status, json }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        } else if (status === 400) {
+          this.setState({
+            error: json.errors || '',
+          });
+        }
+      });
   }
 
   render() {

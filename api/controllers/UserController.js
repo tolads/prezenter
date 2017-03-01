@@ -53,7 +53,7 @@ module.exports = {
     // Subsequent requests from this user agent will NOT have `req.session.me`.
     req.session.me = null;
 
-    return res.ok('Sikeres kijelentkezés.');
+    return res.ok({ success: 'Sikeres kijelentkezés.' });
   },
 
   /**
@@ -122,7 +122,7 @@ module.exports = {
           .then((user) => {
             req.session.me = user.id;
 
-            return res.ok('Signup successful!');
+            return res.ok({ success: 'Signup successful!' });
           })
           .catch(res.negotiate);
       })

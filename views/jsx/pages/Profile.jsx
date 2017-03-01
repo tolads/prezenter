@@ -1,7 +1,7 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
-import { formatDate } from '../utils';
+import { formatDate, request } from '../utils';
 
 /**
  * Profile page
@@ -55,26 +55,26 @@ export default class Profile extends React.Component {
    * Get users data
    */
   getData() {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', '/me');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request('/me', {
+      credentials: 'same-origin',
+    })
+      .then((json) => {
         // success
         this.setState({
-          username: xhr.response.username,
-          fullname: xhr.response.fullname,
-          date: xhr.response.date,
-          groups: xhr.response.groups,
-          presentations: xhr.response.presentations,
+          username: json.username,
+          fullname: json.fullname,
+          date: json.date,
+          groups: json.groups,
+          presentations: json.presentations,
         });
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   /**
@@ -92,16 +92,20 @@ export default class Profile extends React.Component {
    * Delete users profile
    */
   deleteProfile() {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/delete');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      console.log(xhr.status);
-      this.props.auth.logout();
-    });
-    xhr.send();
+    // Send request to server
+    request('/delete', {
+      credentials: 'same-origin',
+    })
+      .then(() => {
+        // success
+        this.props.auth.logout();
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   render() {

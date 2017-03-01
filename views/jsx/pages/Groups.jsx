@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router';
 import NewGroup from '../components/groups/NewGroup';
 import MyGroups from '../components/groups/MyGroups';
 import ListUsers from '../components/groups/ListUsers';
+import { request } from '../utils';
 
 /**
  * Page for managing groups
@@ -50,22 +51,22 @@ export default class Groups extends React.Component {
    * Get list of groups
    */
   getGroups() {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', '/grouplist');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request('/grouplist', {
+      credentials: 'same-origin',
+    })
+      .then((json) => {
         // success
         this.setState({
-          groups: xhr.response,
+          groups: json,
         });
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   render() {

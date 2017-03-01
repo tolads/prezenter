@@ -35,7 +35,7 @@ module.exports = {
           name,
           owner: req.session.me,
         })
-          .then(() => res.ok('Csoport sikeresen létrehozva.'))
+          .then(() => res.ok({ success: 'Csoport sikeresen létrehozva.' }))
           .catch(res.negotiate);
       })
       .catch(res.negotiate);
@@ -45,11 +45,11 @@ module.exports = {
    * Add new members to group
    * @event POST /groups/add
    *   {String} addToGroup
-   *   {(String|String[])} userIDs
+   *   {(String|String[])} userIDs[]
    */
   add: (req, res) => {
     const addToGroup = req.param('addToGroup');
-    const paramUserIDs = req.param('userIDs');
+    const paramUserIDs = req.param('userIDs[]');
     const userIDs = typeof paramUserIDs === 'string' ? [paramUserIDs] : paramUserIDs;
 
     if (!addToGroup || !paramUserIDs) {

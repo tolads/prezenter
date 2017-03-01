@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { formatDate } from '../../utils';
+import { formatDate, request } from '../../utils';
 
 /**
  * List groups of current user
@@ -32,24 +32,24 @@ export default class MyGroups extends React.Component {
     $('#modal').modal();
   }
 
-  deleteGroup(args) {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', `/groups/delete/group/${args.id}`);
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+  deleteGroup({ id }) {
+    // Send request to server
+    request(`/groups/delete/group/${id}`, {
+      credentials: 'same-origin',
+    })
+      .then(() => {
         // success
         this.setState({
-          success: xhr.response.success,
+          success: 'Csoport törölve.',
         });
         this.props.getGroups();
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   shouldDeleteMember(e) {
@@ -64,24 +64,24 @@ export default class MyGroups extends React.Component {
     $('#modal').modal();
   }
 
-  deleteMember(args) {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', `/groups/delete/group/${args.gid}/member/${args.uid}`);
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+  deleteMember({ gid, uid }) {
+    // Send request to server
+    request(`/groups/delete/group/${gid}/member/${uid}`, {
+      credentials: 'same-origin',
+    })
+      .then(() => {
         // success
         this.setState({
-          success: xhr.response.success,
+          success: 'Tag törölve.',
         });
         this.props.getGroups();
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   shouldRenameGroup(e) {
@@ -97,30 +97,36 @@ export default class MyGroups extends React.Component {
     $('#modal').modal();
   }
 
-  renameGroup(args) {
-    const newName = encodeURIComponent(args.input);
+  renameGroup({ id, input }) {
+    if (!input) return;
 
-    if (!newName) return;
+    const data = new FormData();
+    data.append('id', id);
+    data.append('name', input);
 
-    const formData = `id=${args.id}&name=${newName}`;
-
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', '/groups/rename');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request('/groups/rename', {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: data,
+    })
+      .then(() => {
         // success
         this.setState({
-          success: xhr.response.success,
+          success: 'Csoport sikeresen átnevezve.',
         });
         this.props.getGroups();
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send(formData);
+      })
+      .catch(({ status, json }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        } else if (status === 400) {
+          this.setState({
+            error: json.errors,
+          });
+        }
+      });
   }
 
   render() {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Checkbox from './Checkbox';
-import { formatDate } from '../../utils';
+import { formatDate, request } from '../../utils';
 
 /**
  * List all the users
@@ -31,44 +31,30 @@ export default class ListUsers extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      addToGroup: nextProps.groups[0] && nextProps.groups[0].id,
-    });
+    if (nextProps.groups[0] && nextProps.groups[0].id) {
+      this.setState({
+        addToGroup: nextProps.groups[0].id,
+      });
+    }
   }
 
   getUsers() {
-    fetch('/users', {
+    // Send request to server
+    request('/users', {
       credentials: 'same-origin',
     })
-      .then((response) => {
-        if (response.status === 401) {
-          this.props.auth.logout();
-          return;
-        }
-        return response.json();
-      }).then((response) => {
-        this.setState({
-          users: response,
-        });
-      });
-
-    // create an AJAX request
-    /*const xhr = new XMLHttpRequest();
-    xhr.open('get', '/users');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+      .then((json) => {
         // success
-
         this.setState({
-          users: xhr.response,
+          users: json,
         });
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();*/
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   toggleCheckbox(label) {
@@ -90,27 +76,29 @@ export default class ListUsers extends React.Component {
 
     if (this.selectedCheckboxes.size === 0) return;
 
-    const addToGroup = encodeURIComponent(this.state.addToGroup);
-    let formData = `addToGroup=${addToGroup}`;
-    this.selectedCheckboxes.forEach((x) => { formData += `&userIDs=${x}`; });
+    const data = new FormData();
+    data.append('addToGroup', this.state.addToGroup);
+    this.selectedCheckboxes.forEach((x) => { data.append('userIDs[]', x); });
 
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', '/groups/add');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request('/groups/add', {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: data,
+    })
+      .then(() => {
         // success
         this.setState({
-          success: xhr.response.success,
+          success: 'Sikeres hozzáadás a csoporthoz.',
         });
         this.props.getGroups();
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send(formData);
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   render() {

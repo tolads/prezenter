@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
   // send a 401 response letting the user agent know they need to login to
   // access this endpoint.
   if (req.wantsJSON) {
-    return res.send(401);
+    return res.send(401, {});
   }
 
   // Otherwise if this is an HTML-wanting browser, do a redirect.

@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router';
 
 import NewPresentation from '../components/presentations/NewPresentation';
 import ListPresentations from '../components/presentations/ListPresentations';
+import { request } from '../utils';
 
 /**
  * Page for managing presentations
@@ -49,22 +50,22 @@ export default class PresentationsOwn extends React.Component {
    * Get list of presentations
    */
   getPresentations() {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', '/presentations/list');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request('/presentations/list', {
+      credentials: 'same-origin',
+    })
+      .then((json) => {
         // success
         this.setState({
-          presentations: xhr.response,
+          presentations: json,
         });
-      } else if (xhr.status === 401) {
-        this.props.auth.logout();
-      }
-    });
-    xhr.send();
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
   }
 
   render() {
