@@ -33,10 +33,7 @@ export default class Auth extends React.Component {
       if (xhr.status === 200) {
         // success
         if (xhr.response.loggedin) {
-          this.setState({
-            username: xhr.response.loggedin,
-          });
-          this.handleLogin();
+          this.handleLogin(xhr.response.loggedin);
         } else {
           this.handleLogout();
         }
@@ -58,10 +55,11 @@ export default class Auth extends React.Component {
   /**
    * Handle logging in
    */
-  handleLogin() {
+  handleLogin(username) {
     localStorage.setItem('loggedin', 'true');
     this.setState({
       loggedin: true,
+      username,
     });
   }
 
@@ -105,10 +103,7 @@ export default class Auth extends React.Component {
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
         // success
-        this.setState({
-          username: xhr.response.loggedin,
-        });
-        this.handleLogin();
+        this.handleLogin(xhr.response.loggedin);
         browserHistory.push('/');
         window.scroll(0, 0);
       } else {
