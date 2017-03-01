@@ -37,8 +37,23 @@ export default class ListUsers extends React.Component {
   }
 
   getUsers() {
+    fetch('/users', {
+      credentials: 'same-origin',
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          this.props.auth.logout();
+          return;
+        }
+        return response.json();
+      }).then((response) => {
+        this.setState({
+          users: response,
+        });
+      });
+
     // create an AJAX request
-    const xhr = new XMLHttpRequest();
+    /*const xhr = new XMLHttpRequest();
     xhr.open('get', '/users');
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.responseType = 'json';
@@ -53,7 +68,7 @@ export default class ListUsers extends React.Component {
         this.props.auth.logout();
       }
     });
-    xhr.send();
+    xhr.send();*/
   }
 
   toggleCheckbox(label) {
