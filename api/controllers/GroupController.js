@@ -206,11 +206,25 @@ module.exports = {
           });
         }
 
-        Groups.update(
-          { id: groupID },
+        Groups.findOne({
+          name: groupName,
+          owner: req.session.me,
+        })
+          .then((group) => {
+            if (group !== undefined && String(group.id) !== groupID) {
+              return res.badRequest({
+                success: false,
+                errors: 'Ezzel a névvel van már csoportod.',
+              });
+            }
+
+            Groups.update(
+              { id: groupID },
           { name: groupName }
-        ).then(() => res.ok({ success: 'Csoport sikeresen átnevezve.' }))
-         .catch(res.negotiate);
+            ).then(() => res.ok({ success: 'Csoport sikeresen átnevezve.' }))
+              .catch(res.negotiate);
+          })
+          .catch(res.negotiate);
       })
       .catch(res.negotiate);
   },

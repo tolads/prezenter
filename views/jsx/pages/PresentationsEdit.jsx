@@ -14,6 +14,8 @@ export default class PresentationsEdit extends React.Component {
       name: '',
       desc: '',
       content: '',
+      error: '',
+      success: '',
     };
 
     this.getPresentation = this.getPresentation.bind(this);
@@ -61,7 +63,7 @@ export default class PresentationsEdit extends React.Component {
         this.setState({
           name: json.name,
           desc: json.desc,
-          content: JSON.stringify(json.content, null, '  '),
+          content: JSON.stringify(json.content, null, '  ') || '',
         });
       })
       .catch(({ status }) => {

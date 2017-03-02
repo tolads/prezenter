@@ -11,6 +11,7 @@ export default class MyGroups extends React.Component {
 
     this.state = {
       success: '',
+      error: '',
     };
 
     this.shouldDeleteGroup = this.shouldDeleteGroup.bind(this);
@@ -41,6 +42,7 @@ export default class MyGroups extends React.Component {
         // success
         this.setState({
           success: 'Csoport törölve.',
+          error: '',
         });
         this.props.getGroups();
       })
@@ -73,6 +75,7 @@ export default class MyGroups extends React.Component {
         // success
         this.setState({
           success: 'Tag törölve.',
+          error: '',
         });
         this.props.getGroups();
       })
@@ -114,6 +117,7 @@ export default class MyGroups extends React.Component {
         // success
         this.setState({
           success: 'Csoport sikeresen átnevezve.',
+          error: '',
         });
         this.props.getGroups();
       })
@@ -124,6 +128,7 @@ export default class MyGroups extends React.Component {
         } else if (status === 400) {
           this.setState({
             error: json.errors,
+            success: '',
           });
         }
       });
@@ -201,6 +206,10 @@ export default class MyGroups extends React.Component {
       <div className="row">
         <div className="col-md-12">
           <h2 id="groups"> Csoportjaim </h2>
+          {this.state.error &&
+            <span className="has-error">
+              <span className="help-block">{this.state.error}</span>
+            </span>}
           {this.state.success &&
             <span className="has-success">
               <span className="help-block">{this.state.success}</span>

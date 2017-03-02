@@ -53,6 +53,7 @@ export default class NewGroup extends React.Component {
         // success
         this.setState({
           success: 'Csoport sikeresen létrehozva.',
+          error: '',
         });
         this.props.getGroups();
       })
@@ -63,6 +64,7 @@ export default class NewGroup extends React.Component {
         } else if (status === 400) {
           this.setState({
             error: json.errors || '',
+            success: '',
           });
         }
       });

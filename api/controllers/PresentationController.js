@@ -157,11 +157,25 @@ module.exports = {
           return res.badRequest({ success: false });
         }
 
-        Presentations.update(
-          { id },
-          { name, desc, content }
-        ).then(() => res.ok({ success: 'Sikeres mentés.' }))
-         .catch(res.negotiate);
+        Presentations.findOne({
+          name,
+          owner: req.session.me,
+        })
+          .then((presentation) => {
+            if (presentation !== undefined && String(presentation.id) !== id) {
+              return res.badRequest({
+                success: false,
+                errors: 'Ezzel a névvel van már prezentációd.',
+              });
+            }
+
+            Presentations.update(
+              { id },
+              { name, desc, content }
+            ).then(() => res.ok({ success: 'Sikeres mentés.' }))
+              .catch(res.negotiate);
+          })
+          .catch(res.negotiate);
       })
       .catch(res.negotiate);
   },

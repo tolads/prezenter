@@ -56,6 +56,7 @@ export default class NewPresentation extends React.Component {
         console.log(1);
         this.setState({
           success: 'Prezentáció sikeresen létrehozva.',
+          error: '',
         });
         this.props.getPresentations();
       })
@@ -66,6 +67,7 @@ export default class NewPresentation extends React.Component {
         } else if (status === 400) {
           this.setState({
             error: json.errors || '',
+            success: '',
           });
         }
       });
