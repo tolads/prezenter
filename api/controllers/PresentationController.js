@@ -99,6 +99,49 @@ module.exports = {
   },
 
   /**
+   * Connect to a projection
+   * @event GET /presentations/connect/:pid/:gid
+   */
+  connect: (req, res) => {
+    const pid = parseInt(req.param('pid'), 10);
+    const gid = parseInt(req.param('gid'), 10);
+
+    if (!req.isSocket || isNaN(pid) || isNaN(gid)) {
+      return res.badRequest({ success: false });
+    }
+
+    Presentations.findOne({
+      id: pid,
+    })
+      .then((presentation) => {
+        if (presentation === undefined) {
+          return res.badRequest({ success: false });
+        }
+
+        if (gid === -1 || gid === -2) {
+          return PresentationService.handleConnect(
+            { req, res, pid, gid, presentation }
+          );
+        }
+
+        Groups.findOne({
+          id: gid,
+        }).populate('members')
+          .then((group) => {
+            if (group === undefined) {
+              return res.badRequest({ success: false });
+            }
+
+            return PresentationService.handleConnect(
+              { req, res, pid, gid, presentation, group }
+            );
+          })
+          .catch(res.negotiate);
+      })
+      .catch(res.negotiate);
+  },
+
+  /**
    * Get datas of a presentation
    * @event GET /presentations/get/:id
    */
@@ -176,6 +219,27 @@ module.exports = {
               .catch(res.negotiate);
           })
           .catch(res.negotiate);
+      })
+      .catch(res.negotiate);
+  },
+
+  /**
+   * Get active presentations available for user
+   * @event GET /presentations/listactive
+   */
+  listActive: (req, res) => {
+    Groups.find()
+      .populate('members')
+      .then((groups) => {
+        const memberships = new Set();
+        groups.forEach((group) => {
+          if (group.owner === req.session.me ||
+              group.members.some(({ id }) => id === req.session.me)) {
+            memberships.add(group.id);
+          }
+        });
+
+        return PresentationService.listActive({ req, res, memberships });
       })
       .catch(res.negotiate);
   },

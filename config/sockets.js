@@ -126,6 +126,13 @@ module.exports.sockets = {
   //   // By default: do nothing.
   //   return cb();
   // },
+  afterDisconnect: (session, socket, cb) => {
+    PresentationService.handleDisconnect({
+      referer: socket.handshake.headers.referer,
+      socketID: socket.conn.id,
+    });
+    return cb();
+  },
 
   /***************************************************************************
   *                                                                          *

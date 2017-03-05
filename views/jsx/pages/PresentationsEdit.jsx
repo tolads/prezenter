@@ -210,6 +210,13 @@ export default class PresentationsEdit extends React.Component {
             <div className="form-group">
               <div className="col-sm-offset-3 col-sm-9">
                 <button type="submit" className="btn btn-success"> Mentés </button>
+                <Link
+                  to={`/presentations/play/${this.props.params.id}/-2`}
+                  className="btn btn-primary"
+                  target="_blank"
+                >
+                  Megtekintés
+                </Link>
 
                 {this.state.error &&
                   <div className="has-error">

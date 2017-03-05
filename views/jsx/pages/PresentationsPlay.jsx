@@ -1,8 +1,6 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
-import { request } from '../utils';
-
 /**
  * Play a presentation
  */
@@ -13,21 +11,13 @@ export default class PresentationsPlay extends React.Component {
     this.state = {
       slides: [],
       currentSlide: 0,
+      role: undefined,
+      error: '',
     };
 
-    window.addEventListener('keyup', (e) => {
-      if (e.keyCode === 39 && this.state.currentSlide < this.state.slides.length - 1) {
-        this.setState(prevState => ({
-          currentSlide: prevState.currentSlide + 1,
-        }));
-      } else if (e.keyCode === 37 && this.state.currentSlide > 0) {
-        this.setState(prevState => ({
-          currentSlide: prevState.currentSlide - 1,
-        }));
-      }
-    });
-
-    this.getPresentation = this.getPresentation.bind(this);
+    this.connect = this.connect.bind(this);
+    this.setUpControl = this.setUpControl.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
   }
 
   /**
@@ -37,7 +27,7 @@ export default class PresentationsPlay extends React.Component {
     if (!this.props.auth.isLoggedIn) {
       browserHistory.push('/');
     } else {
-      this.getPresentation();
+      this.connect();
     }
   }
 
@@ -58,30 +48,75 @@ export default class PresentationsPlay extends React.Component {
   }
 
   /**
-   * Get a presentation
+   * Remove event listeners
    */
-  getPresentation() {
-    // Send request to server
-    request(`/presentations/get/${this.props.params.id}`, {
-      credentials: 'same-origin',
-    })
-      .then((json) => {
+  componentWillUnmount() {
+    window.removeEventListener('keyup', this.handleKeyUp);
+  }
+
+  /**
+   * Set up control for HEAD role
+   */
+  setUpControl() {
+    window.addEventListener('keyup', this.handleKeyUp);
+  }
+
+  /**
+   * Handle keyup event
+   */
+  handleKeyUp(e) {
+    if (e.keyCode === 39 && this.state.currentSlide < this.state.slides.length - 1) {
+      this.setState(prevState => ({
+        currentSlide: prevState.currentSlide + 1,
+      }));
+    } else if (e.keyCode === 37 && this.state.currentSlide > 0) {
+      this.setState(prevState => ({
+        currentSlide: prevState.currentSlide - 1,
+      }));
+    }
+  }
+
+  /**
+   * Register for projection
+   */
+  connect() {
+    io.socket.get(`/presentations/connect/${this.props.params.pid}/${this.props.params.gid}`, (data, res) => {
+      if (res.statusCode >= 200 && res.statusCode < 300) {
         // success
-        if (json.content) {
+        if (data.content) {
           this.setState({
-            slides: json.content.slides,
+            slides: data.content.slides,
+            role: data.role,
+            error: '',
           });
+
+          if (true || data.role === 'HEAD') { // TODO!!!
+            this.setUpControl();
+          }
         }
-      })
-      .catch(({ status }) => {
-        // error
-        if (status === 401) {
-          this.props.auth.logout();
-        }
-      });
+      } else if (res.statusCode === 401) {
+        // Error 401 - Unauthorized
+        this.props.auth.logout();
+      } else if (data.error) {
+        // Other error
+        this.setState({
+          error: data.error,
+        });
+      }
+    });
   }
 
   render() {
+    if (this.state.error !== '') {
+      return (
+        <div className="presentation-play">
+          <div className="slide current">
+            <h1> {this.state.error} </h1>
+          </div>
+        </div>
+      );
+    }
+
     const slides = this.state.slides.map((slide, ind) => {
       if (ind <= this.state.currentSlide) {
         return (

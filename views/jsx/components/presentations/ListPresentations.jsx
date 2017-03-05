@@ -65,12 +65,13 @@ export default class NewPresentation extends React.Component {
         // success
         const options = [
           { id: -1, name: 'Mindenki' },
+          { id: -2, name: 'Csak én' },
           ...json.map(group => ({
             id: group.id,
             name: group.name,
           })),
         ];
-        console.log(options);
+
         this.props.modal({
           title: 'Lejátszás hozzárendelése csoporthoz',
           args: { id },
@@ -96,7 +97,7 @@ export default class NewPresentation extends React.Component {
 
     if (!presentationID || !groupID) return;
 
-    window.open(`/presentations/play/${presentationID}`, '_blank');
+    window.open(`/presentations/play/${presentationID}/${groupID}`, '_blank');
   }
 
   render() {
