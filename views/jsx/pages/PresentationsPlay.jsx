@@ -18,6 +18,7 @@ export default class PresentationsPlay extends React.Component {
     this.connect = this.connect.bind(this);
     this.setUpControl = this.setUpControl.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.getSlide = this.getSlide.bind(this);
   }
 
   /**
@@ -62,17 +63,35 @@ export default class PresentationsPlay extends React.Component {
   }
 
   /**
+   * Get new slide for HEAD role
+   */
+  getSlide(id) {
+    io.socket.get(
+      `/presentations/getslide/${this.props.params.pid}/${id}`,
+      (data, res) => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          // success
+        } else if (res.statusCode === 401) {
+          // Error 401 - Unauthorized
+          this.props.auth.logout();
+        } else if (data.error) {
+          // Other error
+          this.setState({
+            error: data.error,
+          });
+        }
+      }
+    );
+  }
+
+  /**
    * Handle keyup event
    */
   handleKeyUp(e) {
-    if (e.keyCode === 39 && this.state.currentSlide < this.state.slides.length - 1) {
-      this.setState(prevState => ({
-        currentSlide: prevState.currentSlide + 1,
-      }));
-    } else if (e.keyCode === 37 && this.state.currentSlide > 0) {
-      this.setState(prevState => ({
-        currentSlide: prevState.currentSlide - 1,
-      }));
+    if (e.keyCode === 39) {
+      this.getSlide(this.state.currentSlide + 1);
+    } else if (e.keyCode === 37) {
+      this.getSlide(this.state.currentSlide - 1);
     }
   }
 
@@ -80,33 +99,52 @@ export default class PresentationsPlay extends React.Component {
    * Register for projection
    */
   connect() {
-    io.socket.get(`/presentations/connect/${this.props.params.pid}/${this.props.params.gid}`, (data, res) => {
-      if (res.statusCode >= 200 && res.statusCode < 300) {
-        // success
-        if (data.content) {
+    io.socket.get(
+      `/presentations/connect/${this.props.params.pid}/${this.props.params.gid}`,
+      (data, res) => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          // success
           this.setState({
-            slides: data.content.slides,
+            slides: [data.currentSlide],
+            currentSlide: data.currentSlideID,
             role: data.role,
             error: '',
           });
 
-          if (true || data.role === 'HEAD') { // TODO!!!
+          document.title = `${data.name} - Prezentáció lejátszása | ${this.props.route.title}`;
+
+          if (data.role === 'head') {
             this.setUpControl();
           }
+
+          io.socket.on('newSlide', (data) => {
+            console.log('newSlide');
+            this.setState((prevState) => {
+              const newSlides = prevState.slides;
+              newSlides[data.currentSlideID] = data.currentSlide;
+
+              return {
+                slides: newSlides,
+                currentSlide: data.currentSlideID,
+                error: '',
+              };
+            });
+          });
+        } else if (res.statusCode === 401) {
+          // Error 401 - Unauthorized
+          this.props.auth.logout();
+        } else if (data.error) {
+          // Other error
+          this.setState({
+            error: data.error,
+          });
         }
-      } else if (res.statusCode === 401) {
-        // Error 401 - Unauthorized
-        this.props.auth.logout();
-      } else if (data.error) {
-        // Other error
-        this.setState({
-          error: data.error,
-        });
       }
-    });
+    );
   }
 
   render() {
+    console.log('render');
     if (this.state.error !== '') {
       return (
         <div className="presentation-play">
@@ -117,26 +155,33 @@ export default class PresentationsPlay extends React.Component {
       );
     }
 
-    const slides = this.state.slides.map((slide, ind) => {
-      if (ind <= this.state.currentSlide) {
+    const slides = [
+      ...this.state.slides.map((slide, ind) => {
+        if (ind <= this.state.currentSlide) {
+          return (
+            <div
+              key={ind}
+              className="slide current"
+              style={{ background: slide.background }}
+              dangerouslySetInnerHTML={{ __html: slide.html }}
+            />
+          );
+        }
         return (
           <div
             key={ind}
-            className="slide current"
-            style={{ background: slide.background }}
+            className="slide"
+            style={{ marginLeft: window.innerWidth, opacity: 0, background: slide.background }}
             dangerouslySetInnerHTML={{ __html: slide.html }}
           />
         );
-      }
-      return (
-        <div
-          key={ind}
-          className="slide"
-          style={{ marginLeft: window.innerWidth, opacity: 0, background: slide.background }}
-          dangerouslySetInnerHTML={{ __html: slide.html }}
-        />
-      );
-    });
+      }),
+      <div
+        key={this.state.slides.length}
+        className="slide"
+        style={{ marginLeft: window.innerWidth, opacity: 0 }}
+      />,
+    ];
 
     return (
       <div className="presentation-play">

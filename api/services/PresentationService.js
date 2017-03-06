@@ -3,7 +3,7 @@
  * @description Socket based presentation handling
  */
 
-/** @type Map {Number} { {Number} group, {String} socket } */
+/** @type Map {Number} { {Number} group, {String} socket, {Number} currentSlide } */
 const currentlyPlayed = new Map();
 
 module.exports = {
@@ -34,11 +34,12 @@ module.exports = {
         }
 
         sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as PROJECTOR`);
+        sails.sockets.join(req, `p${pid}`);
         return res.ok({
           role: 'projector',
           name: presentation.name,
-          desc: presentation.desc,
-          content: presentation.content,
+          currentSlide: presentation.content.slides[currentlyPlayed.get(pid).currentSlide],
+          currentSlideID: currentlyPlayed.get(pid).currentSlide,
         });
       }
 
@@ -47,15 +48,18 @@ module.exports = {
       }
 
       if (gid !== -2) {
-        currentlyPlayed.set(pid, { group: gid, socket: req.socket.conn.id });
+        currentlyPlayed.set(pid,
+          { group: gid, socket: req.socket.conn.id, currentSlide: 0 });
       }
       // return HEAD role
       sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as HEAD`);
+      sails.sockets.join(req, `p${pid}`);
       return res.ok({
         role: 'head',
         name: presentation.name,
-        desc: presentation.desc,
         content: presentation.content,
+        currentSlide: presentation.content.slides[0],
+        currentSlideID: 0,
       });
     }
 
@@ -76,11 +80,12 @@ module.exports = {
 
     // return SPECTATOR role
     sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as SPECTATOR`);
+    sails.sockets.join(req, `p${pid}`);
     return res.ok({
       role: 'spectator',
       name: presentation.name,
-      desc: presentation.desc,
-      content: presentation.content,
+      currentSlide: presentation.content.slides[currentlyPlayed.get(pid).currentSlide],
+      currentSlideID: currentlyPlayed.get(pid).currentSlide,
     });
   },
 
@@ -101,6 +106,7 @@ module.exports = {
       if (currentlyPlayed.has(pid) && currentlyPlayed.get(pid).socket === socketID) {
         sails.log.verbose(`Projection '${page[1]}' closed\n`);
         currentlyPlayed.delete(pid);
+        sails.sockets.removeRoomMembersFromRooms(`p${pid}`, `p${pid}`);
       }
     }
   },
@@ -141,6 +147,39 @@ module.exports = {
 
     Promise.all(selects)
       .then(() => res.ok(presentations))
+      .catch(res.negotiate);
+  },
+
+  /**
+   * Get a slide from a presentation
+   * called in PresentationController.getSlide
+   * @param {Object} options
+   *   {Object} req
+   *   {Object} res
+   *   {Number} pid
+   *   {Number} id
+   */
+  getSlide: ({ req, res, pid, id }) => {
+    if (!currentlyPlayed.has(pid) || currentlyPlayed.get(pid).socket !== req.socket.conn.id) {
+      return res.badRequest({ success: false });
+    }
+
+    Presentations.findOne({
+      id: pid,
+    })
+      .then((presentation) => {
+        if (id < 0 || id >= presentation.content.slides.length) {
+          return res.badRequest({ success: false });
+        }
+
+        currentlyPlayed.get(pid).currentSlide = id;
+        sails.sockets.broadcast(`p${pid}`, 'newSlide', {
+          currentSlide: presentation.content.slides[id],
+          currentSlideID: id,
+        });
+
+        return res.ok({});
+      })
       .catch(res.negotiate);
   },
 };

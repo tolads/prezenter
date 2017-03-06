@@ -33,6 +33,7 @@ module.exports.routes = {
   'GET /presentations/list': 'PresentationController.list',
   'GET /presentations/delete/:id': 'PresentationController.delete',
   'GET /presentations/get/:id': 'PresentationController.get',
+  'GET /presentations/getslide/:pid/:id': 'PresentationController.getSlide',
   'GET /presentations/connect/:pid/:gid': 'PresentationController.connect',
   'GET /presentations/listactive': 'PresentationController.listActive',
 

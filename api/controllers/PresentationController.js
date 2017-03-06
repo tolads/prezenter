@@ -167,6 +167,21 @@ module.exports = {
   },
 
   /**
+   * Get a slide from a presentation
+   * @event GET /presentations/getslide/:pid/:id
+   */
+  getSlide: (req, res) => {
+    const pid = parseInt(req.param('pid'), 10);
+    const id = parseInt(req.param('id'), 10);
+
+    if (isNaN(pid) || isNaN(id)) {
+      return res.badRequest({ success: false });
+    }
+
+    return PresentationService.getSlide({ req, res, pid, id });
+  },
+
+  /**
    * Edit presentation
    * @event POST /presentations/edit/:id
    *   {String} name
