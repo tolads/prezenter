@@ -118,7 +118,6 @@ export default class PresentationsPlay extends React.Component {
           }
 
           io.socket.on('newSlide', (data) => {
-            console.log('newSlide');
             this.setState((prevState) => {
               const newSlides = prevState.slides;
               newSlides[data.currentSlideID] = data.currentSlide;
@@ -144,7 +143,6 @@ export default class PresentationsPlay extends React.Component {
   }
 
   render() {
-    console.log('render');
     if (this.state.error !== '') {
       return (
         <div className="presentation-play">

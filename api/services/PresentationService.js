@@ -34,7 +34,7 @@ module.exports = {
         }
 
         sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as PROJECTOR`);
-        sails.sockets.join(req, `p${pid}`);
+        sails.sockets.join(req, `p${id}`);
         return res.ok({
           role: 'projector',
           name: presentation.name,
@@ -47,13 +47,12 @@ module.exports = {
         return res.badRequest({ success: false });
       }
 
-      if (gid !== -2) {
-        currentlyPlayed.set(pid,
-          { group: gid, socket: req.socket.conn.id, currentSlide: 0 });
-      }
+      currentlyPlayed.set(pid,
+        { group: gid, socket: req.socket.conn.id, currentSlide: 0 });
+
       // return HEAD role
       sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as HEAD`);
-      sails.sockets.join(req, `p${pid}`);
+      sails.sockets.join(req, `p${id}`);
       return res.ok({
         role: 'head',
         name: presentation.name,
@@ -71,7 +70,7 @@ module.exports = {
       });
     }
 
-    if (gid !== -1 && !group.members.some(({ id }) => id === req.session.me)) {
+    if (gid === -2 || (gid !== -1 && !group.members.some(({ id }) => id === req.session.me))) {
       return res.badRequest({
         success: false,
         error: 'A prezenetáció megtekintéséhez nincs jogosultságod.',
@@ -80,7 +79,7 @@ module.exports = {
 
     // return SPECTATOR role
     sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as SPECTATOR`);
-    sails.sockets.join(req, `p${pid}`);
+    sails.sockets.join(req, `p${id}`);
     return res.ok({
       role: 'spectator',
       name: presentation.name,
@@ -102,11 +101,11 @@ module.exports = {
     if (page) {
       sails.log.verbose(`Socket with id '${socketID}' disconnected`);
       const pid = parseInt(page[2], 10);
+      const gid = parseInt(page[3], 10);
 
       if (currentlyPlayed.has(pid) && currentlyPlayed.get(pid).socket === socketID) {
         sails.log.verbose(`Projection '${page[1]}' closed\n`);
         currentlyPlayed.delete(pid);
-        sails.sockets.removeRoomMembersFromRooms(`p${pid}`, `p${pid}`);
       }
     }
   },
@@ -173,7 +172,8 @@ module.exports = {
         }
 
         currentlyPlayed.get(pid).currentSlide = id;
-        sails.sockets.broadcast(`p${pid}`, 'newSlide', {
+        const gid = currentlyPlayed.get(pid).group;
+        sails.sockets.broadcast(`p${pid},${gid}`, 'newSlide', {
           currentSlide: presentation.content.slides[id],
           currentSlideID: id,
         });
