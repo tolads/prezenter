@@ -8,5 +8,5 @@ module.exports = {
    * Send index.html file
    * @event GET /
    */
-  index: (req, res) => (res.sendfile('.tmp/public/index.html')),
+  index: (req, res) => res.sendfile('.tmp/public/index.html'),
 };

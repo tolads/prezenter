@@ -137,6 +137,10 @@ module.exports = {
             id: key,
           }).populate('owner')
             .then((presentation) => {
+              if (presentation === undefined) {
+                return reject();
+              }
+
               presentations.push({
                 pid: key,
                 gid: value.group,
@@ -175,6 +179,10 @@ module.exports = {
       id: pid,
     })
       .then((presentation) => {
+        if (presentation === undefined) {
+          return res.badRequest({ success: false });
+        }
+
         if (id < 0 || id >= presentation.content.slides.length) {
           return res.badRequest({ success: false });
         }
@@ -216,6 +224,10 @@ module.exports = {
         id: pid,
       })
         .then((presentation) => {
+          if (presentation === undefined) {
+            return res.badRequest({ success: false });
+          }
+
           const content = presentation.content;
           if (!content ||
               !content.slides ||

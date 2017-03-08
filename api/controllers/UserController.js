@@ -186,7 +186,7 @@ module.exports = {
         })
           .then(() => {
             req.session.me = null;
-            res.ok({ success: 'Felhasználó törölve.' })
+            res.ok({ success: 'Felhasználó törölve.' });
           })
           .catch(res.negotiate);
       })

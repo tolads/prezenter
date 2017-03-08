@@ -220,7 +220,7 @@ module.exports = {
 
             Groups.update(
               { id: groupID },
-          { name: groupName }
+              { name: groupName }
             ).then(() => res.ok({ success: 'Csoport sikeresen átnevezve.' }))
               .catch(res.negotiate);
           })
