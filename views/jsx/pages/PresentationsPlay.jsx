@@ -1,6 +1,8 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
+import MessageBoard from '../components/MessageBoard';
+
 /**
  * Play a presentation
  */
@@ -155,23 +157,48 @@ export default class PresentationsPlay extends React.Component {
 
     const slides = [
       ...this.state.slides.map((slide, ind) => {
-        if (ind <= this.state.currentSlide) {
+        const divStyle = {
+          background: slide.background,
+        };
+        if (ind > this.state.currentSlide) {
+          divStyle.marginLeft = window.innerWidth;
+          divStyle.opacity = 0;
+        }
+
+        if (slide.html) {
           return (
             <div
               key={ind}
-              className="slide current"
-              style={{ background: slide.background }}
+              className={ind > this.state.currentSlide ? 'slide' : 'slide current'}
+              style={divStyle}
               dangerouslySetInnerHTML={{ __html: slide.html }}
             />
           );
+        } else if (slide.app === 'MessageBoard') {
+          return (
+            <div
+              key={ind}
+              className={ind > this.state.currentSlide ? 'slide' : 'slide current'}
+              style={divStyle}
+            >
+              <MessageBoard
+                role={this.state.role}
+                title={slide.title}
+                auth={this.props.auth}
+                pid={this.props.params.pid}
+              />
+            </div>
+          );
         }
+
         return (
           <div
             key={ind}
-            className="slide"
-            style={{ marginLeft: window.innerWidth, opacity: 0, background: slide.background }}
-            dangerouslySetInnerHTML={{ __html: slide.html }}
-          />
+            className={ind > this.state.currentSlide ? 'slide' : 'slide current'}
+            style={divStyle}
+          >
+            Hiba történt :(
+          </div>
         );
       }),
       <div

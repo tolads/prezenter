@@ -49,4 +49,5 @@ module.exports.routes = {
   'POST /groups/rename': 'GroupController.rename',
   'POST /presentations/new': 'PresentationController.new',
   'POST /presentations/edit/:id': 'PresentationController.edit',
+  'POST /presentations/app/:pid/:name': 'PresentationController.app',
 };

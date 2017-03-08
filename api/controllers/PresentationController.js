@@ -146,9 +146,9 @@ module.exports = {
    * @event GET /presentations/get/:id
    */
   get: (req, res) => {
-    const id = req.param('id');
+    const id = parseInt(req.param('id'), 10);
 
-    if (!id) {
+    if (isNaN(id)) {
       return res.badRequest({ success: false });
     }
 
@@ -179,6 +179,29 @@ module.exports = {
     }
 
     return PresentationService.getSlide({ req, res, pid, id });
+  },
+
+  /**
+   * Posts from built in presentation apps
+   * @event GET /presentations/app/:pid/:name
+   */
+  app: (req, res) => {
+    const pid = parseInt(req.param('pid'), 10);
+
+    if (isNaN(pid)) {
+      return res.badRequest({ success: false });
+    }
+
+    if (req.param('name') === 'messageboard') {
+      const message = req.param('message');
+      if (!message) {
+        return res.badRequest({ success: false });
+      }
+
+      return PresentationService.messageBoard({ req, res, pid, message });
+    }
+
+    return res.badRequest({ success: false });
   },
 
   /**

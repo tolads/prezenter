@@ -19,6 +19,10 @@ module.exports = {
     content: {
       type: 'json',
     },
+    reports: {
+      collection: 'reports',
+      via: 'presentation',
+    },
   },
 
 };
