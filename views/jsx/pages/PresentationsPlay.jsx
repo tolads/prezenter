@@ -20,6 +20,9 @@ export default class PresentationsPlay extends React.Component {
     this.connect = this.connect.bind(this);
     this.setUpControl = this.setUpControl.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleTouchStart = this.handleTouchStart.bind(this);
+    this.handleTouchMove = this.handleTouchMove.bind(this);
+    this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.getSlide = this.getSlide.bind(this);
   }
 
@@ -55,13 +58,22 @@ export default class PresentationsPlay extends React.Component {
    */
   componentWillUnmount() {
     window.removeEventListener('keyup', this.handleKeyUp);
+    window.removeEventListener('touchstart', this.handleTouchStart);
+    window.removeEventListener('touchmove', this.handleTouchMove);
+    window.removeEventListener('touchend', this.handleTouchEnd);
   }
 
   /**
    * Set up control for HEAD role
    */
   setUpControl() {
+    this.touchStartX = 0;
+    this.touchEndX = 0;
+
     window.addEventListener('keyup', this.handleKeyUp);
+    window.addEventListener('touchstart', this.handleTouchStart);
+    window.addEventListener('touchmove', this.handleTouchMove);
+    window.addEventListener('touchend', this.handleTouchEnd);
   }
 
   /**
@@ -94,6 +106,32 @@ export default class PresentationsPlay extends React.Component {
       this.getSlide(this.state.currentSlide + 1);
     } else if (e.keyCode === 37) {
       this.getSlide(this.state.currentSlide - 1);
+    }
+  }
+
+  /**
+   * Handle touchstart event
+   */
+  handleTouchStart(e) {
+    this.touchStartX = e.touches[0].screenX;
+  }
+
+  /**
+   * Handle touchmove event
+   */
+  handleTouchMove(e) {
+    this.touchEndX = e.touches[0].screenX;
+  }
+
+  /**
+   * Handle touchend event
+   */
+  handleTouchEnd() {
+    const minDist = 100;
+    if (this.touchEnd - this.touchStart > minDist) {
+      this.getSlide(this.state.currentSlide - 1);
+    } else if (this.touchStart - this.touchEnd > minDist) {
+      this.getSlide(this.state.currentSlide + 1);
     }
   }
 
