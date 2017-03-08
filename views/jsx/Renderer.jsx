@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { Router, Route, browserHistory } from 'react-router';
 
 import Auth from './Auth';
 import Page from './Page';
@@ -17,16 +17,16 @@ const title = document.title;
 
 ReactDOM.render(
   <Router history={browserHistory}>
-    <Route path="/" component={Auth}>
+    <Route component={Auth}>
       <Route component={Page}>
-        <IndexRoute component={Home} title={title} />
-        <Route path="profile" component={Profile} title={title} />
-        <Route path="groups" component={Groups} title={title} />
-        <Route path="presentations/own" component={PresentationsOwn} title={title} />
-        <Route path="presentations/edit/:id" component={PresentationsEdit} title={title} />
-        <Route path="presentations/active" component={PresentationsActive} title={title} />
+        <Route path="/" component={Home} title={title} />
+        <Route path="/profile" component={Profile} title={title} />
+        <Route path="/groups" component={Groups} title={title} />
+        <Route path="/presentations/own" component={PresentationsOwn} title={title} />
+        <Route path="/presentations/edit/:id" component={PresentationsEdit} title={title} />
+        <Route path="/presentations/active" component={PresentationsActive} title={title} />
       </Route>
-      <Route path="presentations/play/:pid/:gid" component={PresentationsPlay} title={title} />
+      <Route path="/presentations/play/:pid/:gid" component={PresentationsPlay} title={title} />
     </Route>
     <Route path="*" component={NotFound} title={title} />
   </Router>,

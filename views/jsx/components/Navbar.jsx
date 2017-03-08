@@ -91,7 +91,7 @@ export default class Navbar extends React.Component {
       // menu
       navbarContent = [
         (<ul key="0" className="nav navbar-nav">
-          <li><Link to="/"> Kezdőlap </Link></li>
+          <li><Link to="/" activeClassName="active"> Kezdőlap </Link></li>
           <li><Link to="/groups" activeClassName="active"> Csoportok </Link></li>
           <li className="dropdown">
             <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
