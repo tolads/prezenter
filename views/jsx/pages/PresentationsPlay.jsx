@@ -128,9 +128,9 @@ export default class PresentationsPlay extends React.Component {
    */
   handleTouchEnd() {
     const minDist = 100;
-    if (this.touchEnd - this.touchStart > minDist) {
+    if (this.touchEndX - this.touchStartX > minDist) {
       this.getSlide(this.state.currentSlide - 1);
-    } else if (this.touchStart - this.touchEnd > minDist) {
+    } else if (this.touchStartX - this.touchEndX > minDist) {
       this.getSlide(this.state.currentSlide + 1);
     }
   }
