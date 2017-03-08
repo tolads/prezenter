@@ -81,6 +81,7 @@ module.exports = {
     Presentations.find({
       owner: req.session.me,
     })
+      .populate('reports')
       .then((presentations) => {
         const presentationList = presentations.map(presentation => ({
           id: presentation.id,
@@ -91,6 +92,7 @@ module.exports = {
           canBePlayed: presentation.content &&
                        presentation.content.slides &&
                        presentation.content.slides.length,
+          hasReports: presentation.reports && !!presentation.reports.length,
         }));
 
         return res.ok(presentationList);
@@ -156,13 +158,19 @@ module.exports = {
       id,
       owner: req.session.me,
     })
-      .then(presentation => (
-        res.ok({
+      .populate('reports')
+      .then(presentation => {
+        if (presentation === undefined) {
+          return res.badRequest({ success: false });
+        }
+
+        return res.ok({
           name: presentation.name,
           desc: presentation.desc,
           content: presentation.content,
-        })
-      ))
+          reports: presentation.reports,
+        });
+      })
       .catch(res.negotiate);
   },
 

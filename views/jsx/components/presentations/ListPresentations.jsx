@@ -122,6 +122,16 @@ export default class NewPresentation extends React.Component {
               </button>}
           </td>
           <td>
+            {presentation.hasReports &&
+              <Link
+                to={`/presentations/report/${presentation.id}`}
+                className="btn btn-info"
+                title="Eredmények"
+              >
+                <span className="glyphicon glyphicon-th-list" />
+              </Link>}
+          </td>
+          <td>
             <Link
               to={`/presentations/edit/${presentation.id}`}
               className="btn btn-warning"
@@ -167,6 +177,7 @@ export default class NewPresentation extends React.Component {
                 <th> Létrehozva </th>
                 <th> Utolsó módosítás </th>
                 <th> Lejátszás </th>
+                <th> Eredmények </th>
                 <th> Szerkesztés </th>
                 <th> Törlés </th>
               </tr>

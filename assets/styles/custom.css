@@ -40,6 +40,7 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 .table-presentations tr > :last-child:not(.presentation-desc),
 .table-presentations tr > :nth-last-child(2),
 .table-presentations tr > :nth-last-child(3),
+.table-presentations tr > :nth-last-child(4),
 .groups-table > thead > tr > th:last-child,
 .groups-table > thead > tr > :nth-last-child(2),
 .groups-table > tbody > tr > :last-child:not(:first-child),
