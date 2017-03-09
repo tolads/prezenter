@@ -2,6 +2,7 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 
 import MessageBoard from '../components/MessageBoard';
+import Form from '../components/Form';
 
 /**
  * Play a presentation
@@ -224,6 +225,22 @@ export default class PresentationsPlay extends React.Component {
                 title={slide.title}
                 auth={this.props.auth}
                 pid={this.props.params.pid}
+              />
+            </div>
+          );
+        } else if (slide.app === 'Form') {
+          return (
+            <div
+              key={ind}
+              className={ind > this.state.currentSlide ? 'slide' : 'slide current'}
+              style={divStyle}
+            >
+              <Form
+                role={this.state.role}
+                title={slide.title}
+                auth={this.props.auth}
+                pid={this.props.params.pid}
+                inputs={slide.inputs}
               />
             </div>
           );

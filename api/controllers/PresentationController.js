@@ -207,6 +207,15 @@ module.exports = {
       }
 
       return PresentationService.messageBoard({ req, res, pid, message });
+    } else if (req.param('name') === 'form') {
+      const data = {};
+      let i = 0;
+      while (req.param(`input${i}`) !== undefined) {
+        data[`input${i}`] = parseInt(req.param(`input${i}`), 10);
+        i++;
+      }
+
+      return PresentationService.form({ req, res, pid, data });
     }
 
     return res.badRequest({ success: false });

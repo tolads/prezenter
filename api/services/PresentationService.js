@@ -201,7 +201,7 @@ module.exports = {
 
   /**
    * Handle posts from messageBoard
-   * called in PresentationController.getSlide
+   * called in PresentationController.app
    * @param {Object} options
    *   {Object} req
    *   {Object} res
@@ -253,10 +253,91 @@ module.exports = {
                 .then((messages) => {
                   const messageList = messages.map(message => message.content.message);
 
-                  sails.sockets.emit(currentlyPlayed.get(pid).head, 'messageBoard', { messageList });
+                  sails.sockets.broadcast(currentlyPlayed.get(pid).head, 'messageBoard', { messageList });
                   sails.sockets.broadcast(`p${pid},${gid}_projectors`, 'messageBoard', { messageList });
 
                   return res.ok({});
+                })
+                .catch(res.negotiate);
+            })
+            .catch(res.negotiate);
+        })
+        .catch(res.negotiate);
+    });
+  },
+
+   /**
+   * Handle posts from Form
+   * called in PresentationController.app
+   * @param {Object} options
+   *   {Object} req
+   *   {Object} res
+   *   {Number} pid
+   *   {Object} data
+   */
+  form: ({ req, res, pid, data }) => {
+    if (!currentlyPlayed.has(pid)) {
+      return res.badRequest({ success: false });
+    }
+
+    const gid = currentlyPlayed.get(pid).group;
+
+    sails.io.sockets.in(`p${pid},${gid}`).clients((_, clients) => {
+      if (!clients.some(id => id === req.socket.conn.id)) {
+        return res.badRequest({ success: false });
+      }
+
+      Presentations.findOne({
+        id: pid,
+      })
+        .then((presentation) => {
+          if (presentation === undefined) {
+            return res.badRequest({ success: false });
+          }
+
+          const content = presentation.content;
+          if (!content ||
+              !content.slides ||
+              !content.slides[currentlyPlayed.get(pid).currentSlide] ||
+              !(content.slides[currentlyPlayed.get(pid).currentSlide].app === 'Form')) {
+            return res.badRequest({ success: false });
+          }
+
+          data.user = req.session.me;
+
+          Reports.find({
+            app: 'Form',
+            start: currentlyPlayed.get(pid).start,
+            presentation: pid,
+            slide: currentlyPlayed.get(pid).currentSlide,
+          })
+            .then((reports) => {
+              if (reports.some(report => report.content.user === req.session.me)) {
+                 return res.badRequest({ success: false });
+              }
+
+              Reports.create({
+                app: 'Form',
+                start: currentlyPlayed.get(pid).start,
+                presentation: pid,
+                slide: currentlyPlayed.get(pid).currentSlide,
+                content: data,
+              })
+                .then(() => {
+                  Reports.find({
+                    app: 'Form',
+                    start: currentlyPlayed.get(pid).start,
+                    presentation: pid,
+                    slide: currentlyPlayed.get(pid).currentSlide,
+                  })
+                    .then((datas) => {
+                      const dataList = datas.map(data => data.content);
+
+                      sails.sockets.broadcast(currentlyPlayed.get(pid).head, 'form', { dataList });
+
+                      return res.ok({});
+                    })
+                    .catch(res.negotiate);
                 })
                 .catch(res.negotiate);
             })
