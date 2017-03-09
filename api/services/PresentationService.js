@@ -200,7 +200,7 @@ module.exports = {
   },
 
   /**
-   * Handle posts from messageBoard
+   * Handle posts from MessageBoard
    * called in PresentationController.app
    * @param {Object} options
    *   {Object} req
@@ -232,12 +232,12 @@ module.exports = {
           if (!content ||
               !content.slides ||
               !content.slides[currentlyPlayed.get(pid).currentSlide] ||
-              !(content.slides[currentlyPlayed.get(pid).currentSlide].app === 'MessageBoard')) {
+              !(content.slides[currentlyPlayed.get(pid).currentSlide].app === 'messageboard')) {
             return res.badRequest({ success: false });
           }
 
           Reports.create({
-            app: 'messageBoard',
+            app: 'messageboard',
             start: currentlyPlayed.get(pid).start,
             presentation: pid,
             slide: currentlyPlayed.get(pid).currentSlide,
@@ -245,7 +245,7 @@ module.exports = {
           })
             .then(() => {
               Reports.find({
-                app: 'messageBoard',
+                app: 'messageboard',
                 start: currentlyPlayed.get(pid).start,
                 presentation: pid,
                 slide: currentlyPlayed.get(pid).currentSlide,
@@ -253,8 +253,8 @@ module.exports = {
                 .then((messages) => {
                   const messageList = messages.map(message => message.content.message);
 
-                  sails.sockets.broadcast(currentlyPlayed.get(pid).head, 'messageBoard', { messageList });
-                  sails.sockets.broadcast(`p${pid},${gid}_projectors`, 'messageBoard', { messageList });
+                  sails.sockets.broadcast(currentlyPlayed.get(pid).head, 'messageboard', { messageList });
+                  sails.sockets.broadcast(`p${pid},${gid}_projectors`, 'messageboard', { messageList });
 
                   return res.ok({});
                 })
@@ -299,14 +299,14 @@ module.exports = {
           if (!content ||
               !content.slides ||
               !content.slides[currentlyPlayed.get(pid).currentSlide] ||
-              !(content.slides[currentlyPlayed.get(pid).currentSlide].app === 'Form')) {
+              !(content.slides[currentlyPlayed.get(pid).currentSlide].app === 'form')) {
             return res.badRequest({ success: false });
           }
 
           data.user = req.session.me;
 
           Reports.find({
-            app: 'Form',
+            app: 'form',
             start: currentlyPlayed.get(pid).start,
             presentation: pid,
             slide: currentlyPlayed.get(pid).currentSlide,
@@ -317,7 +317,7 @@ module.exports = {
               }
 
               Reports.create({
-                app: 'Form',
+                app: 'form',
                 start: currentlyPlayed.get(pid).start,
                 presentation: pid,
                 slide: currentlyPlayed.get(pid).currentSlide,
@@ -325,7 +325,7 @@ module.exports = {
               })
                 .then(() => {
                   Reports.find({
-                    app: 'Form',
+                    app: 'form',
                     start: currentlyPlayed.get(pid).start,
                     presentation: pid,
                     slide: currentlyPlayed.get(pid).currentSlide,

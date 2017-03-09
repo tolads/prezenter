@@ -22,7 +22,7 @@ export default class MessageBoard extends React.Component {
    */
   componentWillMount() {
     if (this.props.role === 'head' || this.props.role === 'projector') {
-      io.socket.on('messageBoard', (data) => {
+      io.socket.on('messageboard', (data) => {
         this.setState({
           messages: data.messageList,
         });

@@ -75,12 +75,12 @@ export default class PresentationsReport extends React.Component {
     const reports = [];
     starts.forEach((start) => {
       const messageBoardReports = this.state.reports
-        .filter(report => report.app === 'messageBoard' && report.start === start)
+        .filter(report => report.app === 'messageboard' && report.start === start)
         .sort((a, b) => a.slide - b.slide)
         .map(({ id, slide, content }) => <li key={id}><b> #{slide + 1} dia: </b> {content.message} </li>);
 
       const formReports = this.state.reports
-        .filter(report => report.app === 'Form' && report.start === start)
+        .filter(report => report.app === 'form' && report.start === start)
         .sort((a, b) => a.slide - b.slide)
         .map(({ id, slide, content }) => <li key={id}><b> #{slide + 1} dia: </b> {JSON.stringify(content)} </li>);
 

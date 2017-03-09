@@ -213,7 +213,7 @@ export default class PresentationsPlay extends React.Component {
               dangerouslySetInnerHTML={{ __html: slide.html }}
             />
           );
-        } else if (slide.app === 'MessageBoard') {
+        } else if (slide.app === 'messageboard') {
           return (
             <div
               key={ind}
@@ -228,7 +228,7 @@ export default class PresentationsPlay extends React.Component {
               />
             </div>
           );
-        } else if (slide.app === 'Form') {
+        } else if (slide.app === 'form') {
           return (
             <div
               key={ind}
