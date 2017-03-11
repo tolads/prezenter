@@ -25,6 +25,7 @@ export default class PresentationsPlay extends React.Component {
     this.handleTouchMove = this.handleTouchMove.bind(this);
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.getSlide = this.getSlide.bind(this);
+    this.getNextSlide = this.getNextSlide.bind(this);
   }
 
   /**
@@ -81,6 +82,8 @@ export default class PresentationsPlay extends React.Component {
    * Get new slide for HEAD role
    */
   getSlide(id) {
+    window.clearTimeout(this.getNextSlide);
+
     io.socket.get(
       `/presentations/getslide/${this.props.params.pid}/${id}`,
       (data, res) => {
@@ -97,6 +100,13 @@ export default class PresentationsPlay extends React.Component {
         }
       }
     );
+  }
+
+  /**
+   * Get next slide for HEAD role
+   */
+  getNextSlide() {
+    this.getSlide(this.state.currentSlide + 1);
   }
 
   /**
@@ -159,6 +169,10 @@ export default class PresentationsPlay extends React.Component {
           }
 
           io.socket.on('newSlide', (data) => {
+            if (this.state.role === 'head' && data.currentSlide.timeOut) {
+              window.setTimeout(this.getNextSlide, data.currentSlide.timeOut * 1000);
+            }
+
             this.setState((prevState) => {
               const newSlides = prevState.slides;
               newSlides[data.currentSlideID] = data.currentSlide;
