@@ -34,7 +34,9 @@ export default class NewPresentation extends React.Component {
       success: '',
     });
 
-    if (this.state.newPresentationName === '') {
+    const newPresentationName = this.state.newPresentationName.trim();
+
+    if (newPresentationName === '') {
       this.setState({
         error: 'Prezentáció nevének megadása kötelező.',
       });
@@ -42,7 +44,7 @@ export default class NewPresentation extends React.Component {
     }
 
     const data = new FormData();
-    data.append('newPresentationName', this.state.newPresentationName);
+    data.append('newPresentationName', newPresentationName);
     data.append('newPresentationDesc', this.state.newPresentationDesc);
 
     // Send request to server
@@ -53,7 +55,6 @@ export default class NewPresentation extends React.Component {
     })
       .then(() => {
         // success
-        console.log(1);
         this.setState({
           success: 'Prezentáció sikeresen létrehozva.',
           error: '',

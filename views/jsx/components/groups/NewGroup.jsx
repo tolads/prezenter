@@ -33,7 +33,9 @@ export default class NewGroup extends React.Component {
       success: '',
     });
 
-    if (this.state.newGroupName === '') {
+    const newGroupName = this.state.newGroupName.trim();
+
+    if (newGroupName === '') {
       this.setState({
         error: 'Csoportnév megadása kötelező.',
       });
@@ -41,7 +43,7 @@ export default class NewGroup extends React.Component {
     }
 
     const data = new FormData();
-    data.append('newGroupName', this.state.newGroupName);
+    data.append('newGroupName', newGroupName);
 
     // Send request to server
     request('/groups/new', {

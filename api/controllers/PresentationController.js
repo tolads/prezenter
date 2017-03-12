@@ -11,7 +11,8 @@ module.exports = {
    *   {String} newPresentationDesc
    */
   new: (req, res) => {
-    const name = req.param('newPresentationName');
+    const name = typeof req.param('newPresentationName') === 'string'
+      ? req.param('newPresentationName').trim() : '';
 
     if (!name) {
       return res.badRequest({

@@ -10,7 +10,8 @@ module.exports = {
    *   {String} newGroupName
    */
   new: (req, res) => {
-    const name = req.param('newGroupName');
+    const name = typeof req.param('newGroupName') === 'string'
+      ? req.param('newGroupName').trim() : '';
 
     if (!name) {
       return res.badRequest({
