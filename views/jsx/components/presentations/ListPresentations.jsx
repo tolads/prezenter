@@ -104,7 +104,7 @@ export default class NewPresentation extends React.Component {
     const presentations = [];
 
     this.props.presentations.forEach((presentation) => {
-      presentations.push(
+      presentations.push((
         <tr key={`${presentation.id}_1`}>
           <td>{presentation.id}</td>
           <td>{presentation.name}</td>
@@ -151,18 +151,18 @@ export default class NewPresentation extends React.Component {
             </button>
           </td>
         </tr>
-      );
+      ));
       if (presentation.desc) {
-        presentations.push(
+        presentations.push((
           <tr key={`${presentation.id}_2`}>
-            <td colSpan="7" className="presentation-desc">{presentation.desc}</td>
+            <td colSpan="8" className="presentation-desc">{presentation.desc}</td>
           </tr>
-        );
+        ));
       }
     });
 
     return (
-      <div className="row">
+      <section className="row">
         <div className="col-md-12">
           <h2 id="users"> Prezentációim </h2>
           {this.state.success &&
@@ -189,7 +189,7 @@ export default class NewPresentation extends React.Component {
               </tbody>
             </table>)}
         </div>
-      </div>
+      </section>
     );
   }
 }

@@ -76,7 +76,7 @@ export default class NewPresentation extends React.Component {
 
   render() {
     return (
-      <div className="row">
+      <section className="row">
         <div className="col-md-12">
           <h2 id="new"> Új prezentáció létrehozása </h2>
           <form className="form-horizontal" onSubmit={this.handleSubmit}>
@@ -128,7 +128,7 @@ export default class NewPresentation extends React.Component {
 
           </form>
         </div>
-      </div>
+      </section>
     );
   }
 }

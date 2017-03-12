@@ -116,7 +116,7 @@ export default class ListUsers extends React.Component {
 
     const pagination = [];
     for (let i = 0; i < this.state.users.length / this.usersPerPage; i++) {
-      pagination.push(
+      pagination.push((
         <li key={i}>
           <a
             href=""
@@ -126,7 +126,7 @@ export default class ListUsers extends React.Component {
             {i + 1}
           </a>
         </li>
-      );
+      ));
     }
 
     const groupList = this.props.groups.map(group => (
@@ -134,7 +134,7 @@ export default class ListUsers extends React.Component {
     ));
 
     return (
-      <div className="row">
+      <section className="row">
         <div className="col-md-12">
           <h2 id="users"> Felhasználók </h2>
           <form onSubmit={this.handleSubmit}>
@@ -178,7 +178,7 @@ export default class ListUsers extends React.Component {
             </div>
           </form>
         </div>
-      </div>
+      </section>
     );
   }
 }

@@ -28,7 +28,7 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 .groups-table { margin-bottom: 0; }
 .table > tbody > tr > td { vertical-align: middle; }
 .groups-table thead > tr > th:last-child { width: 100px; }
-.groups-table > tbody > tr:nth-child(2n) > td  { padding: 0 30px 10px 30px; }
+.groups-table > tbody > tr:nth-child(2n) > td  { padding: 0 15px 0 15px; }
 .inner-page input, .inner-page select, .inner-page textarea, .inner-page label, .inner-page .btn { margin-top: 5px; margin-right: 5px; }
 .form-horizontal label { margin-right: 0; }
 .inner-page table .btn { margin: 0; }
@@ -41,9 +41,8 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 .table-presentations tr > :nth-last-child(2),
 .table-presentations tr > :nth-last-child(3),
 .table-presentations tr > :nth-last-child(4),
-.groups-table > thead > tr > th:last-child,
 .groups-table > thead > tr > :nth-last-child(2),
-.groups-table > tbody > tr > :last-child:not(:first-child),
+.groups-table tr > :last-child:not(:first-child),
 .groups-table > tbody > tr > :nth-last-child(2) { text-align: center; width: 70px; padding-left: 0; padding-right: 0; }
 
 .delete-btn { margin-top: 20px; padding-left: 30px; }
@@ -56,7 +55,7 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 .presentation-play { overflow: hidden; position: fixed; width: 100%; height: 100%; }
 .presentation-play .slide { display: flex; flex-direction: column; text-align: center; justify-content: center; position: absolute; width: 100%; height: 100%; background: #ddd; }
 
-.message-board, .form-app { display: flex; flex-direction: column; width: 100%; height: 100; }
+.message-board, .form-app { display: flex; flex-direction: column; width: 100%; height: 100%; }
 .message-board .messages { overflow-x: hidden; text-align: left; background: rgba(255,255,255,0.2); width: auto; margin-left: 10px; margin-right: 10px; margin-top: 10px; padding: 15px; }
 .message-board .messages p:not(:last-child) { border-bottom: 1px solid rgba(0,0,0,0.15); }
 .message-board .messages p:last-child { margin-bottom: 0; }

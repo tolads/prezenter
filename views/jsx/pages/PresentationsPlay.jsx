@@ -82,7 +82,10 @@ export default class PresentationsPlay extends React.Component {
    * Get new slide for HEAD role
    */
   getSlide(id) {
-    window.clearTimeout(this.getNextSlide);
+    if (this.timeOut) {
+      window.clearTimeout(this.timeOut);
+      this.timeOut = undefined;
+    }
 
     io.socket.get(
       `/presentations/getslide/${this.props.params.pid}/${id}`,
@@ -170,7 +173,7 @@ export default class PresentationsPlay extends React.Component {
 
           io.socket.on('newSlide', (data) => {
             if (this.state.role === 'head' && data.currentSlide.timeOut) {
-              window.setTimeout(this.getNextSlide, data.currentSlide.timeOut * 1000);
+              this.timeOut = window.setTimeout(this.getNextSlide, data.currentSlide.timeOut * 1000);
             }
 
             this.setState((prevState) => {

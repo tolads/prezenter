@@ -74,11 +74,11 @@ export default class NewGroup extends React.Component {
 
   render() {
     return (
-      <div className="row">
+      <section className="row">
         <div className="col-md-12">
           <h2 id="new"> Új csoport létrehozása </h2>
           <form
-            className={this.state.error ? 'form-inline has-error' : this.state.success ? 'form-inline has-success' : 'form-inline'}
+            className={`form-inline ${this.state.error ? 'has-error' : ''} ${this.state.success ? 'has-success' : ''}`}
             onSubmit={this.handleSubmit}
           >
             <div className="form-group">
@@ -99,7 +99,7 @@ export default class NewGroup extends React.Component {
               <span className="help-block">{this.state.success}</span>}
           </form>
         </div>
-      </div>
+      </section>
     );
   }
 }

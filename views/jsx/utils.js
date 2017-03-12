@@ -14,25 +14,6 @@ export function formatDate(date) {
         date.getMinutes();
 }
 
-export function checkStatus(response) {
-  if (response.status < 200 || response.status >= 300) {
-    console.log(response.status);
-    response.json().then((json) => {
-      const error = new Error();
-      error.status = response.status;
-      error.data = json;
-      console.log(json);
-      throw error;
-    });
-  }
-
-  if (response.status < 200 || response.status >= 300) {
-
-  }
-
-  return response.json();
-}
-
 /**
  * Requests a URL, returning a promise
  * @param  {string} url       The URL we want to request

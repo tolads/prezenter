@@ -13,10 +13,6 @@ export default class Form extends React.Component {
       submitted: [],
     };
 
-    for (let i = 0; i < this.props.inputs.length; i++) {
-      this.state[`input${i}`] = 0;
-    }
-
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -30,6 +26,12 @@ export default class Form extends React.Component {
         this.setState({
           submitted: data.dataList,
         });
+      });
+    }
+
+    for (let i = 0; i < this.props.inputs.length; i++) {
+      this.setState({
+        [`input${i}`]: 0,
       });
     }
   }

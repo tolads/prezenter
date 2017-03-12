@@ -137,7 +137,7 @@ export default class MyGroups extends React.Component {
   render() {
     const groups = [];
     this.props.groups.forEach((group) => {
-      groups.push(
+      groups.push((
         <tr key={`${group.id}_1`}>
           <td>{group.name}</td>
           <td>
@@ -161,7 +161,7 @@ export default class MyGroups extends React.Component {
             </button>
           </td>
         </tr>
-      );
+      ));
       const userList = group.members.map(user => (
         <tr key={user.id}>
           <td> {user.id} </td>
@@ -180,7 +180,7 @@ export default class MyGroups extends React.Component {
           </td>
         </tr>
       ));
-      groups.push(
+      groups.push((
         <tr key={`${group.id}_2`}>
           <td colSpan="3">
             <table className="table table-hover table-members">
@@ -199,11 +199,11 @@ export default class MyGroups extends React.Component {
             </table>
           </td>
         </tr>
-      );
+      ));
     });
 
     return (
-      <div className="row">
+      <section className="row">
         <div className="col-md-12">
           <h2 id="groups"> Csoportjaim </h2>
           {this.state.error &&
@@ -229,7 +229,7 @@ export default class MyGroups extends React.Component {
               </tbody>
             </table>)}
         </div>
-      </div>
+      </section>
     );
   }
 }

@@ -33,7 +33,7 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <div className="col-md-4">
+      <section className="col-md-4">
         <h2 id="login">Bejelentkezés</h2>
         <form onSubmit={this.handleSubmit} className={this.props.auth.loginError && 'has-error'}>
 
@@ -66,7 +66,7 @@ export default class Login extends React.Component {
 
           <button type="submit" className="btn btn-success"> Bejelentkezés </button>
         </form>
-      </div>
+      </section>
     );
   }
 }

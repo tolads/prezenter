@@ -89,10 +89,8 @@ module.exports = {
           name: presentation.name,
           desc: presentation.desc,
           date: presentation.createdAt,
-          modified: presentation.createdAt,
-          canBePlayed: presentation.content &&
-                       presentation.content.slides &&
-                       presentation.content.slides.length,
+          modified: presentation.updatedAt,
+          canBePlayed: presentation.content && presentation.content.length,
           hasReports: presentation.reports && !!presentation.reports.length,
         }));
 
@@ -160,7 +158,7 @@ module.exports = {
       owner: req.session.me,
     })
       .populate('reports')
-      .then(presentation => {
+      .then((presentation) => {
         if (presentation === undefined) {
           return res.badRequest({ success: false });
         }

@@ -116,7 +116,7 @@ export default class Register extends React.Component {
 
   render() {
     return (
-      <div className="col-md-8">
+      <section className="col-md-8">
         <h2 id="signup"> Regisztráció </h2>
         <form className="form-horizontal" onSubmit={this.handleSubmit}>
 
@@ -192,7 +192,7 @@ export default class Register extends React.Component {
           </div>
 
         </form>
-      </div>
+      </section>
     );
   }
 }

@@ -36,7 +36,7 @@ export default class Checkbox extends React.Component {
   }
 }
 
-Checkbox.proptypes = {
+Checkbox.propTypes = {
   handleCheckboxChange: React.PropTypes.func.isRequired,
   label: React.PropTypes.oneOfType([
     React.PropTypes.string,

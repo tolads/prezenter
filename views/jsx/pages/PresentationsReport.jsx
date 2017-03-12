@@ -1,5 +1,5 @@
 import React from 'react';
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 
 import { formatDate, request } from '../utils';
 
@@ -106,7 +106,10 @@ export default class PresentationsReport extends React.Component {
 
     return (
       <div className="container inner-page">
-        <h1> Prezentáció eredményei </h1>
+        <h1>
+          <small><Link to="/presentations/own"> Saját diasorok </Link> / </small>
+          Prezentáció eredményei
+        </h1>
         <h2> {this.state.name} </h2>
         {reports}
       </div>

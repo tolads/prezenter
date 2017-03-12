@@ -112,7 +112,7 @@ export default class PresentationsEdit extends React.Component {
     data.append('content', this.state.content);
 
     // Send request to server
-    request( `/presentations/edit/${this.props.params.id}`, {
+    request(`/presentations/edit/${this.props.params.id}`, {
       method: 'POST',
       credentials: 'same-origin',
       body: data,
@@ -140,7 +140,8 @@ export default class PresentationsEdit extends React.Component {
       <div className="container inner-page">
         <div className="col-md-12">
           <h1 id="new">
-            <small><Link to="/presentations/own"> Saját diasorok </Link> / </small> Prezentáció szerkesztése
+            <small><Link to="/presentations/own"> Saját diasorok </Link> / </small>
+            Prezentáció szerkesztése
           </h1>
           <form className="form-horizontal" onSubmit={this.handleSubmit}>
             <div className="form-group">
@@ -189,21 +190,19 @@ export default class PresentationsEdit extends React.Component {
               </div>
               <div className="col-sm-offset-3 col-sm-6">
                 <p> Minta: </p>
-                <pre><code>{`{
-  "slides": [
-    {
-      "html": "<h1> Első dia </h1><p> Lorem ipsum dolor sit amet </p>",
-      "background": "#a00"
-    },
-    {
-      "html": "<h1> Második dia </h1><p> Lorem ipsum dolor sit amet </p>",
-      "background": "#0a0"
-    },
-    {
-      "html": "<h1> Harmadik dia </h1><p> Lorem ipsum dolor sit amet </p>"
-    }
-  ]
-}`}</code></pre>
+                <pre><code>{`[
+  {
+    "html": "<h1> Első dia </h1><p> Lorem ipsum dolor sit amet </p>",
+    "background": "#a00"
+  },
+  {
+    "html": "<h1> Második dia </h1><p> Lorem ipsum dolor sit amet </p>",
+    "background": "#0a0"
+  },
+  {
+    "html": "<h1> Harmadik dia </h1><p> Lorem ipsum dolor sit amet </p>"
+  }
+]`}</code></pre>
               </div>
             </div>
 

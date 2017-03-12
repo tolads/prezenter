@@ -39,7 +39,7 @@ export default class MessageBoard extends React.Component {
   /**
    * Submit new message
    */
-  handleSubmit(e) {
+  handleSubmit() {
     const message = this.state.newMessage.trim();
     if (message === '') return;
 
