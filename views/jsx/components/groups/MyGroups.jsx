@@ -214,18 +214,20 @@ export default class MyGroups extends React.Component {
             <span className="has-success">
               <span className="help-block">{this.state.success}</span>
             </span>}
-          <table className="table groups-table">
-            <thead>
-              <tr>
-                <th> Név </th>
-                <th> Átnevezés </th>
-                <th> Törlés </th>
-              </tr>
-            </thead>
-            <tbody>
-              {groups}
-            </tbody>
-          </table>
+          {groups.length === 0 ?
+            <p> Egy csoportod sincs. </p> :
+            (<table className="table groups-table">
+              <thead>
+                <tr>
+                  <th> Név </th>
+                  <th> Átnevezés </th>
+                  <th> Törlés </th>
+                </tr>
+              </thead>
+              <tbody>
+                {groups}
+              </tbody>
+            </table>)}
         </div>
       </div>
     );

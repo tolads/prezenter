@@ -84,9 +84,9 @@ export default class PresentationsOwn extends React.Component {
       <div className="container inner-page">
         <h1> Futó prezentációk </h1>
 
-        <div className="list-group">
-          {presentations}
-        </div>
+        {presentations.length === 0 ?
+          <p> Nincs egy aktív prezentáció sem. </p> :
+          (<div className="list-group"> {presentations} </div>)}
       </div>
     );
   }

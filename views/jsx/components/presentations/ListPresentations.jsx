@@ -169,23 +169,25 @@ export default class NewPresentation extends React.Component {
             <span className="has-success">
               <span className="help-block">{this.state.success}</span>
             </span>}
-          <table className="table table-presentations">
-            <thead>
-              <tr>
-                <th> # </th>
-                <th> Név </th>
-                <th> Létrehozva </th>
-                <th> Utolsó módosítás </th>
-                <th> Lejátszás </th>
-                <th> Eredmények </th>
-                <th> Szerkesztés </th>
-                <th> Törlés </th>
-              </tr>
-            </thead>
-            <tbody>
-              {presentations}
-            </tbody>
-          </table>
+          {presentations.length === 0 ?
+            <p> Egy prezentációd sincs. </p> :
+            (<table className="table table-presentations">
+              <thead>
+                <tr>
+                  <th> # </th>
+                  <th> Név </th>
+                  <th> Létrehozva </th>
+                  <th> Utolsó módosítás </th>
+                  <th> Lejátszás </th>
+                  <th> Eredmények </th>
+                  <th> Szerkesztés </th>
+                  <th> Törlés </th>
+                </tr>
+              </thead>
+              <tbody>
+                {presentations}
+              </tbody>
+            </table>)}
         </div>
       </div>
     );
