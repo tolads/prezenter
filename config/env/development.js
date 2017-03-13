@@ -9,8 +9,8 @@ module.exports = {
    * environment (see config/connections.js and config/models.js )           *
    ***************************************************************************/
   models: {
-    connection: 'localDiskDb',
-    // connection: 'herokuPostgresqlServer',
+    // connection: 'localDiskDb',
+    connection: 'herokuPostgresqlServer',
   },
   log: {
     level: 'verbose',
