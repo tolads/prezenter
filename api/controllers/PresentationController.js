@@ -153,22 +153,34 @@ module.exports = {
       return res.badRequest({ success: false });
     }
 
-    Presentations.findOne({
-      id,
-      owner: req.session.me,
-    })
-      .populate('reports')
-      .then((presentation) => {
-        if (presentation === undefined) {
-          return res.badRequest({ success: false });
-        }
+    Users.find()
+      .then((users) => {
+        const userList = users.map(user => ({
+          id: user.id,
+          username: user.username,
+          fullname: user.fullname,
+          date: user.createdAt,
+        }));
 
-        return res.ok({
-          name: presentation.name,
-          desc: presentation.desc,
-          content: presentation.content,
-          reports: presentation.reports,
-        });
+        Presentations.findOne({
+          id,
+          owner: req.session.me,
+        })
+          .populate('reports')
+          .then((presentation) => {
+            if (presentation === undefined) {
+              return res.badRequest({ success: false });
+            }
+
+            return res.ok({
+              name: presentation.name,
+              desc: presentation.desc,
+              content: presentation.content,
+              reports: presentation.reports,
+              users: userList,
+            });
+          })
+          .catch(res.negotiate);
       })
       .catch(res.negotiate);
   },

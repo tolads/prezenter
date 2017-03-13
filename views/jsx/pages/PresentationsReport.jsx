@@ -12,6 +12,7 @@ export default class PresentationsReport extends React.Component {
 
     this.state = {
       name: '',
+      users: [],
       reports: [],
     };
 
@@ -57,6 +58,7 @@ export default class PresentationsReport extends React.Component {
         // success
         this.setState({
           name: json.name,
+          users: json.users,
           reports: json.reports,
         });
       })
@@ -77,12 +79,35 @@ export default class PresentationsReport extends React.Component {
       const messageBoardReports = this.state.reports
         .filter(report => report.app === 'messageboard' && report.start === start)
         .sort((a, b) => a.slide - b.slide)
-        .map(({ id, slide, content }) => <li key={id}><b> #{slide + 1} dia: </b> {content.message} </li>);
+        .map(({ id, slide, content }) => <li key={id}><b> {slide + 1}. dia: </b> {content.message} </li>);
 
       const formReports = this.state.reports
         .filter(report => report.app === 'form' && report.start === start)
         .sort((a, b) => a.slide - b.slide)
-        .map(({ id, slide, content }) => <li key={id}><b> #{slide + 1} dia: </b> {JSON.stringify(content)} </li>);
+        .map(({ id, slide, content }) => {
+          const rows = content.inputs.map((row, ind) => (
+            <tr key={ind}>
+              <td> <b>Kérdés:</b> {row.question} </td>
+              <td> <b>Válasz:</b> {row.answer} </td>
+            </tr>
+          ));
+
+          const user = this.state.users.find(({ id }) => id === content.user);
+
+          return (
+            <table className="table">
+              <tr>
+                <td> Dia </td>
+                <td> {slide + 1} </td>
+              </tr>
+              <tr>
+                <td> Felhasználó </td>
+                <td> {user ? `${user.fullname} (${user.username})` : '<i>törölt felhasználó</i>'} </td>
+              </tr>
+              {rows}
+            </table>
+          );
+        });
 
       reports.push((
         <div key={start}>
@@ -90,7 +115,7 @@ export default class PresentationsReport extends React.Component {
           {!!messageBoardReports.length &&
             <div>
               <h4> Üzenőfal </h4>
-              {messageBoardReports}
+              <ul> {messageBoardReports} </ul>
             </div>
           }
 

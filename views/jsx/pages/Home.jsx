@@ -40,7 +40,7 @@ export default class Home extends React.Component {
             </div>
             <div className="col-md-3">
               <h2> <span className="glyphicon glyphicon-stats" /> Statisztikák </h2>
-              <p> Nézd vissza a prezentációidban kitöltött teszteket, kérdéseket. </p>
+              <p> Nézd vissza a prezentációidban kitöltött teszteket, feltett kérdéseket. </p>
             </div>
           </section>
 

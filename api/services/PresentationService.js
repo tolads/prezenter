@@ -298,7 +298,18 @@ module.exports = {
             return res.badRequest({ success: false });
           }
 
-          const rContent = Object.assign({}, data, { user: req.session.me });
+          const rContent = {
+            user: req.session.me,
+            inputs: [],
+          };
+
+          pContent[currentlyPlayed.get(pid).currentSlide].inputs.forEach((input, ind) => {
+            console.log(ind, input, input.options, input.options[`input${ind}`]);
+            rContent.inputs.push({
+              question: input.label,
+              answer: input.options[data[`input${ind}`]],
+            });
+          });
 
           Reports.find({
             app: 'form',
@@ -311,6 +322,7 @@ module.exports = {
                 return res.badRequest({ success: false });
               }
 
+              // create report
               Reports.create({
                 app: 'form',
                 start: currentlyPlayed.get(pid).start,
