@@ -17,14 +17,32 @@ export default class Home extends React.Component {
   render() {
     return (
       <div>
-        <div className="jumbotron">
+        <section className="jumbotron">
           <div className="container">
             <h1>Prezenter</h1>
-            <p>böngőszőben futó valós idejű prezentációs alkalmazás</p>
+            <p>böngészőben futó valós idejű prezentációs alkalmazás</p>
           </div>
-        </div>
+        </section>
 
         <div className="container">
+          <section className="row marketing">
+            <div className="col-md-3">
+              <h2> <span className="glyphicon glyphicon-user" /> Csoportok </h2>
+              <p> Hozz létre csoportokat, majd rendeld hozzá a vetítésedet a megfelelő csoporthoz. </p>
+            </div>
+            <div className="col-md-3">
+              <h2> <span className="glyphicon glyphicon-refresh" /> Szinkronizáció </h2>
+              <p> A lejátszásba becsatlakozott felhasználók csak azt látják, amit épp mutatsz. A vetítést te vezérled. </p>
+            </div>
+            <div className="col-md-3">
+              <h2> <span className="glyphicon glyphicon-list-alt" /> Minialkalmazások </h2>
+              <p> Építs prezentációdba üzenőfalat, feleletválasztós tesztet a nézőkkel való kapcsolat megteremtéséhez. </p>
+            </div>
+            <div className="col-md-3">
+              <h2> <span className="glyphicon glyphicon-stats" /> Statisztikák </h2>
+              <p> Nézd vissza a prezentációidban kitöltött teszteket, kérdéseket. </p>
+            </div>
+          </section>
 
           { !this.props.auth.isLoggedIn &&
           <div className="row">
