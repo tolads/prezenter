@@ -91,7 +91,6 @@ export default class NewPresentation extends React.Component {
   }
 
   playPresentation(args) {
-    // TODO
     const presentationID = args.id;
     const groupID = args.input;
 

@@ -1,6 +1,6 @@
 /**
  * HomeController
- * @description Server-side logic for managing homes
+ * @description Server-side logic for managing home
  */
 
 module.exports = {

@@ -39,7 +39,7 @@ export default class Groups extends React.Component {
   }
 
   /**
-   * Check if logged ins
+   * Check if logged in
    */
   componentWillReceiveProps(nextProps) {
     if (!nextProps.auth.isLoggedIn) {

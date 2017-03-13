@@ -15,6 +15,9 @@ export default class Modal extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  /**
+   * Set focus on input element and initial state
+   */
   componentWillReceiveProps(nextProps) {
     if (nextProps.data) {
       if (nextProps.data.hasInput) {

@@ -16,6 +16,7 @@ import NotFound from './pages/NotFound';
 
 const title = document.title;
 
+/** Render page in #root HTML element */
 ReactDOM.render(
   <Router history={browserHistory}>
     <Route component={Auth}>

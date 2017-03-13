@@ -46,7 +46,7 @@ export default class Auth extends React.Component {
   }
 
   /**
-   * Check if still logged in
+   * Check if logged in
    */
   isLoggedIn() {
     return !!localStorage.getItem('loggedin');

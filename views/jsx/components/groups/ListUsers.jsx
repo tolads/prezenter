@@ -38,6 +38,9 @@ export default class ListUsers extends React.Component {
     }
   }
 
+  /**
+   * Get user list from the server
+   */
   getUsers() {
     // Send request to server
     request('/users', {
