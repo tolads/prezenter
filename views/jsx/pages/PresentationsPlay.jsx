@@ -21,6 +21,7 @@ export default class PresentationsPlay extends React.Component {
     this.connect = this.connect.bind(this);
     this.setUpControl = this.setUpControl.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleWheel = this.handleWheel.bind(this);
     this.handleTouchStart = this.handleTouchStart.bind(this);
     this.handleTouchMove = this.handleTouchMove.bind(this);
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
@@ -60,6 +61,7 @@ export default class PresentationsPlay extends React.Component {
    */
   componentWillUnmount() {
     window.removeEventListener('keyup', this.handleKeyUp);
+    window.removeEventListener('wheel', this.handleWheel);
     window.removeEventListener('touchstart', this.handleTouchStart);
     window.removeEventListener('touchmove', this.handleTouchMove);
     window.removeEventListener('touchend', this.handleTouchEnd);
@@ -73,6 +75,7 @@ export default class PresentationsPlay extends React.Component {
     this.touchEndX = 0;
 
     window.addEventListener('keyup', this.handleKeyUp);
+    window.addEventListener('wheel', this.handleWheel);
     window.addEventListener('touchstart', this.handleTouchStart);
     window.addEventListener('touchmove', this.handleTouchMove);
     window.addEventListener('touchend', this.handleTouchEnd);
@@ -116,9 +119,24 @@ export default class PresentationsPlay extends React.Component {
    * Handle keyup event
    */
   handleKeyUp(e) {
+    e.preventDefault();
+
     if (e.keyCode === 39) {
       this.getSlide(this.state.currentSlide + 1);
     } else if (e.keyCode === 37) {
+      this.getSlide(this.state.currentSlide - 1);
+    }
+  }
+
+  /**
+   * Handle wheel event
+   */
+  handleWheel(e) {
+    e.preventDefault();
+
+    if (e.deltaY > 100) {
+      this.getSlide(this.state.currentSlide + 1);
+    } else if (e.deltaY < - 100) {
       this.getSlide(this.state.currentSlide - 1);
     }
   }
