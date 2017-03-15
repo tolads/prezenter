@@ -1,3 +1,5 @@
+import 'whatwg-fetch';
+
 /**
  * Format given date
  * @param {Date} date
@@ -6,7 +8,7 @@
 export function formatDate(date) {
   return date.getFullYear() + '.' +
         (date.getMonth() < 10 ? '0' : '') +
-        date.getMonth() + '.' +
+        (date.getMonth() + 1) + '.' +
         (date.getDate() < 10 ? '0' : '') +
         date.getDate() + '. ' +
         date.getHours() + ':' +
