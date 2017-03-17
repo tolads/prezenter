@@ -72,6 +72,8 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 
 .form-app .form-horizontal { overflow-x: hidden; padding-left: 10px; padding-right: 10px; }
 
+.report-page td { width: 50%; border: 1px solid #ddd; }
+
 @media (min-width: 768px) {
   .navbar-nav > li.dropdown > a { padding-bottom: 11px; }
   .message-board .messages {  width: 600px; margin: 0 auto 30px auto; }

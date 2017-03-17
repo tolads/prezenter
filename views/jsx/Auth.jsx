@@ -88,6 +88,7 @@ export default class Auth extends React.Component {
       this.setState({
         loginError: 'Felhasználónév és jelszó megadása kötelező.',
       });
+      document.getElementById('login').scrollIntoView();
       return;
     }
 

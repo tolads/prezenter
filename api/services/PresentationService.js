@@ -71,7 +71,7 @@ module.exports = {
     if (!currentlyPlayed.has(pid)) {
       return res.badRequest({
         success: false,
-        error: 'A prezenetáció jelenleg nem aktív.',
+        error: 'A prezentáció jelenleg nem aktív.',
       });
     }
 

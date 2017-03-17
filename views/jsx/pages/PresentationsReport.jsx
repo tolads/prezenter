@@ -95,16 +95,18 @@ export default class PresentationsReport extends React.Component {
           const user = this.state.users.find(({ id }) => id === content.user);
 
           return (
-            <table className="table">
-              <tr>
-                <td> Dia </td>
-                <td> {slide + 1} </td>
-              </tr>
-              <tr>
-                <td> Felhasználó </td>
-                <td> {user ? `${user.fullname} (${user.username})` : '<i>törölt felhasználó</i>'} </td>
-              </tr>
-              {rows}
+            <table key={id} className="table">
+              <tbody>
+                <tr>
+                  <td> Dia </td>
+                  <td> {slide + 1} </td>
+                </tr>
+                <tr>
+                  <td> Felhasználó </td>
+                  <td> {user ? `${user.fullname} (${user.username})` : '<i>törölt felhasználó</i>'} </td>
+                </tr>
+                {rows}
+              </tbody>
             </table>
           );
         });
@@ -130,7 +132,7 @@ export default class PresentationsReport extends React.Component {
     });
 
     return (
-      <div className="container inner-page">
+      <div className="container inner-page report-page">
         <h1>
           <small><Link to="/presentations/own"> Saját diasorok </Link> / </small>
           Prezentáció eredményei
