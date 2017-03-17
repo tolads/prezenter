@@ -37,7 +37,9 @@
   "scripts": {
     "debug": "node debug app.js",
     "start": "node app.js",
-    "browserify": "browserify --extension=.jsx views\\jsx\\Renderer.jsx > .tmp\\public\\js\\bundle.js"
+    "browserify": "browserify --extension=.jsx views/jsx/Renderer.jsx > .tmp/public/js/bundle.js",
+    "test": "node ./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/bootstrap.test.js test/integration/**/*.test.js",
+    "lint": "node ./node_modules/eslint/bin/eslint.js --ext .jsx,.js ."
   },
   "browserify": {
     "transform": [
@@ -53,5 +55,14 @@
     ]
   },
   "main": "app.js",
-  "author": "Tamas Laszlo"
+  "author": "Tamas Laszlo",
+  "devDependencies": {
+    "babel-register": "^6.24.0",
+    "eslint": "^3.17.1",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.0",
+    "mocha": "^3.2.0"
+  }
 }
