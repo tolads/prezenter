@@ -25,7 +25,7 @@ export default class MessageBoard extends React.Component {
     if (this.props.role === 'head' || this.props.role === 'projector') {
       console.log('head||projector');
       io.socket.on('messageboard', (data) => {
-        console.log('messageboard');
+        console.log('messageboard', data.messageList);
         this.setState({
           messages: data.messageList,
         });
@@ -60,7 +60,9 @@ export default class MessageBoard extends React.Component {
   }
 
   render() {
+    console.log('rerender');
     const messages = this.state.messages.map((message, ind) => (<p key={ind}> {message} </p>));
+    console.log(messages);
 
     return (
       <div className="message-board">
