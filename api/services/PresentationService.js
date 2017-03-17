@@ -251,7 +251,7 @@ module.exports = {
                   console.log('messageboard listed');
                   console.log('head', currentlyPlayed.get(pid).head);
                   const messageList = messages.map(message => message.content.message);
-
+                  console.log('messageboard listed', messages, messageList);
                   sails.sockets.broadcast(currentlyPlayed.get(pid).head, 'messageboard', { messageList });
                   sails.sockets.broadcast(`p${pid},${gid}_projectors`, 'messageboard', { messageList });
 
