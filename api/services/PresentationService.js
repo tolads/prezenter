@@ -53,7 +53,7 @@ module.exports = {
       }
 
       currentlyPlayed.set(pid,
-        { group: gid, head: req.socket.conn.id, currentSlide: 0, start: new Date() });
+        { group: gid, head: req.socket.conn.id, currentSlide: 0, start: new Date().getTime() });
 
       // return HEAD role
       sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as HEAD`);
@@ -240,27 +240,6 @@ module.exports = {
             content: { message },
           })
             .then(() => {
-              console.log('messageboard created');
-
-              Reports.find({
-                app: 'messageboard',
-                start: currentlyPlayed.get(pid).start,
-              })
-                .then((messages) => { console.log('\n\n\n FIND 2', messages); });
-
-              Reports.find({
-                app: 'messageboard',
-                presentation: pid,
-              })
-                .then((messages) => { console.log('\n\n\n FIND 3', messages); });
-
-              Reports.find({
-                app: 'messageboard',
-                slide: currentlyPlayed.get(pid).currentSlide,
-              })
-                .then((messages) => { console.log('\n\n\n FIND 4', messages); });
-
-
               Reports.find({
                 app: 'messageboard',
                 start: currentlyPlayed.get(pid).start,
@@ -268,10 +247,8 @@ module.exports = {
                 slide: currentlyPlayed.get(pid).currentSlide,
               })
                 .then((messages) => {
-                  console.log('messageboard listed');
-                  console.log('head', currentlyPlayed.get(pid).head);
                   const messageList = messages.map(message => message.content.message);
-                  console.log('messageboard listed', messages, messageList);
+
                   sails.sockets.broadcast(currentlyPlayed.get(pid).head, 'messageboard', { messageList });
                   sails.sockets.broadcast(`p${pid},${gid}_projectors`, 'messageboard', { messageList });
 
@@ -327,7 +304,6 @@ module.exports = {
           };
 
           pContent[currentlyPlayed.get(pid).currentSlide].inputs.forEach((input, ind) => {
-            console.log(ind, input, input.options, input.options[`input${ind}`]);
             rContent.inputs.push({
               question: input.label,
               answer: input.options[data[`input${ind}`]],

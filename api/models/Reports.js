@@ -10,7 +10,7 @@ module.exports = {
       required: true,
     },
     start: {
-      type: 'datetime',
+      type: 'string',
       required: true,
     },
     presentation: {
