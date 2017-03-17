@@ -21,8 +21,11 @@ export default class MessageBoard extends React.Component {
    * Subscribe to messageBoard socket event if HEAD or PROJECTOR
    */
   componentWillMount() {
+    console.log('componentWillMount');
     if (this.props.role === 'head' || this.props.role === 'projector') {
+      console.log('head||projector');
       io.socket.on('messageboard', (data) => {
+        console.log('messageboard');
         this.setState({
           messages: data.messageList,
         });

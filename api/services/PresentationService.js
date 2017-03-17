@@ -240,6 +240,7 @@ module.exports = {
             content: { message },
           })
             .then(() => {
+              console.log('messageboard created');
               Reports.find({
                 app: 'messageboard',
                 start: currentlyPlayed.get(pid).start,
@@ -247,6 +248,8 @@ module.exports = {
                 slide: currentlyPlayed.get(pid).currentSlide,
               })
                 .then((messages) => {
+                  console.log('messageboard listed');
+                  console.log('head', currentlyPlayed.get(pid).head);
                   const messageList = messages.map(message => message.content.message);
 
                   sails.sockets.broadcast(currentlyPlayed.get(pid).head, 'messageboard', { messageList });
