@@ -241,6 +241,28 @@ module.exports = {
           })
             .then(() => {
               console.log('messageboard created');
+              console.log('\n\n\n FIND 1');
+              Reports.find({
+                app: 'messageboard',
+              })
+                .then((messages) => { console.log(messages); });
+
+              console.log('\n\n\n FIND 2');
+              Reports.find({
+                app: 'messageboard',
+                start: currentlyPlayed.get(pid).start,
+              })
+                .then((messages) => { console.log(messages); });
+
+              console.log('\n\n\n FIND 3');
+              Reports.find({
+                app: 'messageboard',
+                start: currentlyPlayed.get(pid).start,
+                presentation: pid,
+              })
+                .then((messages) => { console.log(messages); });
+
+
               Reports.find({
                 app: 'messageboard',
                 start: currentlyPlayed.get(pid).start,
