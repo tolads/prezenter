@@ -39,6 +39,7 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 .inner-page input, .inner-page select, .inner-page textarea, .inner-page label, .inner-page .btn { margin-top: 5px; margin-right: 5px; }
 .form-horizontal label { margin-right: 0; }
 .inner-page table .btn { margin: 0; }
+.inner-page .btn-group-justified { margin-top: 5px; }
 .table .btn { padding-top: 4px; padding-bottom: 4px; }
 .inner-page .table-members button { padding-top: 1px; padding-bottom: 1px; }
 .inner-page .table-members td { padding: 4px; }
@@ -60,7 +61,19 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 .modal-footer .btn + .btn { margin-left: 0; }
 
 .presentation-play { overflow: hidden; position: fixed; width: 100%; height: 100%; }
-.presentation-play .slide { display: flex; flex-direction: column; text-align: center; justify-content: center; position: absolute; width: 100%; height: 100%; background: #ddd; }
+.presentation-play .slide { padding: 5%; display: flex; flex-direction: column; text-align: center; justify-content: center; position: absolute; width: 100%; height: 100%; background: #ddd; }
+.presentation-play { font-size: 3vmin; }
+.presentation-play h1 { font-size: 7vmin; }
+.presentation-play h2 { font-size: 6vmin; }
+.presentation-play h3 { font-size: 5vmin; }
+.presentation-play h4 { font-size: 4vmin; }
+.presentation-play h5 { font-size: 3.5vmin; }
+.presentation-play h6 { font-size: 3vmin; }
+.presentation-play li, .presentation-play pre { text-align: left; }
+.presentation-play table { width: 100%; text-align: left; }
+.presentation-play th, .presentation-play td { line-height: 1.4; padding: 8px; vertical-align: middle; }
+.presentation-play blockquote { text-align: left; border-left: 5px solid #6f6f6f; }
+.presentation-play hr { width: 100%; border-color: #999; }
 
 .message-board, .form-app { display: flex; flex-direction: column; width: 100%; height: 100%; }
 .message-board .messages { overflow-x: hidden; text-align: left; background: rgba(255,255,255,0.2); width: auto; margin-left: 10px; margin-right: 10px; margin-top: 10px; padding: 15px; }
@@ -74,16 +87,21 @@ label, .control-label { font-weight: bold; font-size: 1em; }
 
 .report-page td { width: 50%; border: 1px solid #ddd; }
 
+.presentation-edit-buttons > div { padding: 0; }
+.slideId { padding-top: 13px; }
+
 @media (min-width: 768px) {
   .navbar-nav > li.dropdown > a { padding-bottom: 11px; }
-  .message-board .messages {  width: 600px; margin: 0 auto 30px auto; }
+  .message-board .messages {  width: 600px; margin: 0 auto; }
   .form-app .form-horizontal { width: 700px; margin-left: auto; margin-right: auto; }
   .form-app .control-label { text-align: right; padding-top: 9px; }
   .form-app button { width: 100%; }
+  .presentation-edit-buttons > div:not(:last-child) { padding-right: 5px; }
 }
 @media (max-width: 500px) {
   .btn { width: 100%; display: block; }
   table .btn { display: inline-block; width: auto; }
+  .message-board textarea, .message-board button { width: 100%; }
 }
 @media (min-width: 500px) {
   .modal-dialog { width: 400px; margin-left: auto; margin-right: auto; }
