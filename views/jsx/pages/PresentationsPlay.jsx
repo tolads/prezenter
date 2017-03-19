@@ -1,5 +1,6 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
+import marked from 'marked';
 
 import MessageBoard from '../components/MessageBoard';
 import Form from '../components/Form';
@@ -245,7 +246,7 @@ export default class PresentationsPlay extends React.Component {
               key={ind}
               className={ind > this.state.currentSlide ? 'slide' : 'slide current'}
               style={divStyle}
-              dangerouslySetInnerHTML={{ __html: slide.html }}
+              dangerouslySetInnerHTML={{ __html: marked(slide.html) }}
             />
           );
         } else if (slide.app === 'messageboard') {
