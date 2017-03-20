@@ -122,7 +122,29 @@ module.exports = {
           .then((user) => {
             req.session.me = user.id;
 
-            return res.ok({ success: 'Signup successful!' });
+            Presentations.create({
+              name: 'Markdown minták',
+              desc: 'Példák a markdown jelölések használatára prezentációban.',
+              owner: user.id,
+              content: [
+                { html: '# Markdown examples' },
+                { html: '# Headers\n\n# H1\n## H2\n### H3\n#### H4\n##### H5\n###### H6\n\nAlternatively, for H1 and H2, an underline-ish style:\n\nAlt-H1\n======\n\nAlt-H2\n------' },
+                { html: '# Emphasis\n\nEmphasis, aka italics, with *asterisks* or _underscores_.\n\nStrong emphasis, aka bold, with **asterisks** or __underscores__.\n\nCombined emphasis with **asterisks and _underscores_**.\n\nStrikethrough uses two tildes. ~~Scratch this.~~' },
+                { html: '# Lists\n\n1. First ordered list item\n2. Another item\n1. Actual numbers don\'t matter, just that it\'s a number\n4. And another item.\n\n* Unordered list can use asterisks\n- Or minuses\n+ Or pluses' },
+                { html: '# Links\n\n[I\'m an inline-style link](https://www.google.com)\n\n[I\'m an inline-style link with title](https://www.google.com "Google\'s Homepage")\n\n[I\'m a reference-style link][Arbitrary case-insensitive reference text]\n\n[I\'m a relative reference to a repository file](../../../favicon.ico)\n\n[You can use numbers for reference-style link definitions][1]\n\nOr leave it empty and use the [link text itself].\n\nURLs and URLs in angle brackets will automatically get turned into links. \nhttp://www.example.com or <http://www.example.com>.\n\nSome text to show that the reference links can follow later.\n\n[arbitrary case-insensitive reference text]: https://www.mozilla.org\n[1]: http://slashdot.org\n[link text itself]: http://www.reddit.com' },
+
+                { html: '# Images\n\nHere\'s our favicon (hover to see the title text):\n\nInline-style: \n![alt text](/favicon.ico "Logo Title Text 1")\n\nReference-style: \n![alt text][logo]\n\n[logo]: /favicon.ico "Logo Title Text 2"\n' },
+                { html: '# Code\n\n```\n/**\n * Handle keyup event\n */\nhandleKeyUp(e) {\n  e.preventDefault();\n\n  if (e.keyCode === 39) {\n    this.getSlide(this.state.currentSlide + 1);\n  } else if (e.keyCode === 37) {\n    this.getSlide(this.state.currentSlide - 1);\n  }\n}\n```' },
+                { html: '# Tables\n\nColons can be used to align columns.\n\n| Tables        | Are           | Cool  |\n| ------------- |:-------------:| -----:|\n| col 3 is      | right-aligned | $1600 |\n| col 2 is      | centered      |   $12 |\n| zebra stripes | are neat      |    $1 |\n\nThere must be at least 3 dashes separating each header cell.\nThe outer pipes (|) are optional, and you don\'t need to make the \nraw Markdown line up prettily. You can also use inline Markdown.\n\nMarkdown | Less | Pretty\n--- | --- | ---\n*Still* | `renders` | **nicely**\n1 | 2 | 3' },
+                { html: '# Blockquotes\n\n> Blockquotes are very handy in email to emulate reply text.\n> This line is part of the same quote.\n\nQuote break.\n\n> This is a very long line that will still be quoted properly when it wraps. Oh boy let\'s keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can *put* **Markdown** into a blockquote. \n' },
+                { html: '# Horizontal Rule\n\nThree or more...\n\n---\n\nHyphens\n\n***\n\nAsterisks\n\n___\n\nUnderscores' },
+                { html: '# Line Breaks\n\nHere\'s a line for us to start with.\n\nThis line is separated from the one above by two newlines, so it will be a *separate paragraph*.' },
+                { html: '# Inline html\n<dl>\n  <dt>Definition list</dt>\n  <dd>Is something people use sometimes.</dd>\n</dl>' },
+                { html: '### Source for samples\n\nhttps://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' },
+              ],
+            })
+              .then(() => res.ok({ success: 'Signup successful!' }))
+              .catch(res.negotiate);
           })
           .catch(res.negotiate);
       })
