@@ -407,6 +407,61 @@ export default class PresentationsEdit extends React.Component {
               </div>
             </div>
 
+            {/* help for settings of current slide */}
+            <div className="col-sm-offset-1 col-sm-10 panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+              <div className="panel panel-default">
+                <div className="panel-heading" role="tab" id="headingOne">
+                  <h4 className="panel-title">
+                    <a className="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                      Minták beállításokra
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseOne" className="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                  <div className="panel-body">
+                    <p> Háttérszín beállítása: </p>
+                    <pre><code>{`{
+  "background": "#f9f4ce"
+}`}</code></pre>
+                    <p> Űrlap létrehozása feleletválasztós kérdésekkel: </p>
+                    <pre><code>{`{
+  "app": "form",
+  "title": "Mennyi volt az egyéni rekordja?",
+  "inputs": [
+    {
+      "label": "Mike Powell",
+      "options": [
+        "813",
+        "887",
+        "890",
+        "895"
+      ]
+    },
+    {
+      "label": "Bob Beamon",
+      "options": [
+        "813",
+        "887",
+        "890",
+        "895"
+      ]
+    }
+  ]
+}`}</code></pre>
+                    <p> Üzenőfal létrehozása: </p>
+                    <pre><code>{`{
+  "app": "messageboard",
+  "title": "Kérdések?"
+}`}</code></pre>
+                    <p> Automatikus váltás a következő diára (késleltetés másodpercekben megadva): </p>
+                    <pre><code>{`{
+  "timeOut": 20
+}`}</code></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="form-group">
               {/* content of current slide */}
               <label htmlFor="content" className="col-sm-3 control-label">
@@ -420,26 +475,6 @@ export default class PresentationsEdit extends React.Component {
                   value={this.state.contents[this.state.currentSlide]}
                   onChange={this.handleContentChange}
                 />
-              </div>
-            </div>
-
-            <div className="form-group">
-              {/* sample */}
-              <div className="col-sm-offset-3 col-sm-6">
-                <p> Minta: </p>
-                <pre><code>{`[
-  {
-    "html": "<h1> Első dia </h1><p> Lorem ipsum dolor sit amet </p>",
-    "background": "#a00"
-  },
-  {
-    "html": "<h1> Második dia </h1><p> Lorem ipsum dolor sit amet </p>",
-    "background": "#0a0"
-  },
-  {
-    "html": "<h1> Harmadik dia </h1><p> Lorem ipsum dolor sit amet </p>"
-  }
-]`}</code></pre>
               </div>
             </div>
 

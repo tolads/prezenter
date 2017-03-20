@@ -113,7 +113,7 @@ export default class PresentationsReport extends React.Component {
 
       reports.push((
         <div key={start}>
-          <h3> Prezentáció kezdete: {formatDate(new Date(start))} </h3>
+          <h3> Prezentáció kezdete: {formatDate(new Date(parseInt(start, 10)))} </h3>
           {!!messageBoardReports.length &&
             <div>
               <h4> Üzenőfal </h4>
