@@ -36,6 +36,24 @@ export default class Form extends React.Component {
     }
   }
 
+  /**
+   * Init tooltips for HEAD role statistics
+   */
+  componentDidMount() {
+    if (this.props.role === 'head') {
+      $('[data-toggle="tooltip"]').tooltip();
+    }
+  }
+  componentDidUpdate() {
+    if (this.props.role === 'head') {
+      $('[data-toggle="tooltip"]').tooltip({
+        title: function(){
+          return $(this).attr('data-title');
+        }
+      });
+    }
+  }
+
   handleInputChange(e) {
     this.setState({
       [e.target.name]: e.target.value,
@@ -73,16 +91,44 @@ export default class Form extends React.Component {
   }
 
   render() {
-    if (this.props.role === 'head') {
-      return (
-        <div className="form-app">
-          <h1> {this.props.title || 'Űrlap'} </h1>
-          <p> Elküldött válaszok: {this.state.submitted.length}db </p>
-        </div>
-      );
-    }
-
     const form = this.props.inputs.map((input, ind) => {
+      if (this.props.role === 'head') {
+        if (this.state.submitted.length) {
+          const submitCount = this.state.submitted.length;
+          const colors = ['info', 'success', 'danger', 'warning', 'primary', 'default'];
+          const options = input.options.map((option, ind2) => {
+            const count = this.state.submitted.reduce((acc, val) => {
+              if (val.inputs[ind].answer === option) {
+                return acc + 1;
+              }
+              return acc;
+            }, 0);
+
+            return (
+              <div
+                data-title={`${option} - ${count} / ${submitCount}`}
+                data-toggle="tooltip"
+                data-placement="top"
+                className={`progress-bar progress-bar-${colors[ind2 % colors.length]}`}
+                key={ind2}
+                style={{ width: `${Math.round(count / submitCount * 100)}%` }}
+              />
+            );
+          });
+
+          return (
+            <div key={ind} className="form-head">
+              <p className="col-sm-4"> {input.label} </p>
+              <div className="progress">
+                {options}
+              </div>
+            </div>
+          );
+        }
+
+        return <div key={ind} className="form-head" />;
+      }
+
       const options = input.options.map((option, ind2) =>
         <option key={ind2} value={ind2}> {option} </option>);
 
@@ -103,6 +149,16 @@ export default class Form extends React.Component {
         </div>
       );
     });
+
+    if (this.props.role === 'head') {
+      return (
+        <div className="form-app">
+          <h1> {this.props.title || 'Űrlap'} </h1>
+          <p> Elküldött válaszok: {this.state.submitted.length}db </p>
+          {form}
+        </div>
+      );
+    }
 
     return (
       <div className="form-app">
