@@ -15,6 +15,7 @@ export default class PresentationsEdit extends React.Component {
       desc: '',
       contents: [''],
       slides: [''],
+      saved: {},
       currentSlide: 0,
       error: '',
       success: '',
@@ -25,11 +26,13 @@ export default class PresentationsEdit extends React.Component {
     this.handleSlideChange = this.handleSlideChange.bind(this);
     this.handleContentChange = this.handleContentChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleImport = this.handleImport.bind(this);
     this.prevSlide = this.prevSlide.bind(this);
     this.nextSlide = this.nextSlide.bind(this);
     this.deleteSlide = this.deleteSlide.bind(this);
     this.addPrevSlide = this.addPrevSlide.bind(this);
     this.addNextSlide = this.addNextSlide.bind(this);
+    this.processPresentation = this.processPresentation.bind(this);
   }
 
   /**
@@ -69,29 +72,7 @@ export default class PresentationsEdit extends React.Component {
     })
       .then((json) => {
         // success
-        const slides = [];
-        const contents = [];
-
-        if (json.content) {
-          json.content.map((slide) => {
-            const slideJSON = Object.assign({}, slide);
-            contents.push(slideJSON.html || '');
-            slideJSON.html = undefined;
-            slides.push(JSON.stringify(slideJSON, null, '  '));
-          });
-        }
-
-        if (!slides.length) {
-          slides.push('');
-          contents.push('');
-        }
-
-        this.setState({
-          name: json.name,
-          desc: json.desc,
-          slides,
-          contents,
-        });
+        this.processPresentation(json);
       })
       .catch(({ status }) => {
         // error
@@ -99,6 +80,38 @@ export default class PresentationsEdit extends React.Component {
           this.props.auth.logout();
         }
       });
+  }
+
+  processPresentation(json) {
+    const slides = [];
+    const contents = [];
+
+    this.setState({
+      error: '',
+      success: '',
+    });
+
+    if (json.content) {
+      json.content.map((slide) => {
+        const slideJSON = Object.assign({}, slide);
+        contents.push(slideJSON.html || '');
+        slideJSON.html = undefined;
+        slides.push(JSON.stringify(slideJSON, null, '  '));
+      });
+    }
+
+    if (!slides.length) {
+      slides.push('');
+      contents.push('');
+    }
+
+    this.setState(prevState => ({
+      name: json.name || prevState.name,
+      desc: json.desc || prevState.desc,
+      slides,
+      contents,
+      saved: json.content,
+    }));
   }
 
   /**
@@ -254,6 +267,10 @@ export default class PresentationsEdit extends React.Component {
       return;
     }
 
+    this.setState({
+      saved: slides,
+    });
+
     const data = new FormData();
     data.append('name', this.state.name);
     data.append('desc', this.state.desc);
@@ -281,6 +298,26 @@ export default class PresentationsEdit extends React.Component {
           });
         }
       });
+  }
+
+  /**
+   * handle onChange event from input type file
+   */
+  handleImport(e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.addEventListener('load', (e2) => {
+      console.log(e2.target.result);
+      try {
+        const json = JSON.parse(e2.target.result);
+        this.processPresentation({ content: json });
+      } catch (err) {
+        this.setState({
+          error: 'A fájl formátuma nem megfelelő JSON.',
+        });
+      }
+    });
+    reader.readAsText(file);
   }
 
   render() {
@@ -482,6 +519,15 @@ export default class PresentationsEdit extends React.Component {
               <div className="col-sm-offset-3 col-sm-9">
                 {/* buttons */}
                 <button type="submit" className="btn btn-success"> Mentés </button>
+                <a
+                  href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state.saved, null, '  '))}`}
+                  download="json.json"
+                  className="btn btn-info"
+                >
+                  Exportálás
+                </a>
+                <label htmlFor="import" className="btn btn-info"> Importálás </label>
+                <input id="import" type="file" onChange={this.handleImport} />
                 <Link
                   to={`/presentations/play/${this.props.params.id}/-2`}
                   className="btn btn-primary"
