@@ -13,6 +13,7 @@ export default class PresentationsPlay extends React.Component {
     super(props);
 
     this.state = {
+      scale: 1,
       slides: [],
       currentSlide: 0,
       role: undefined,
@@ -28,6 +29,7 @@ export default class PresentationsPlay extends React.Component {
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.getSlide = this.getSlide.bind(this);
     this.getNextSlide = this.getNextSlide.bind(this);
+    this.handleResize = this.handleResize.bind(this);
   }
 
   /**
@@ -46,6 +48,8 @@ export default class PresentationsPlay extends React.Component {
    */
   componentDidMount() {
     document.title = `Prezentáció lejátszása | ${this.props.route.title}`;
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   }
 
   /**
@@ -66,6 +70,7 @@ export default class PresentationsPlay extends React.Component {
     window.removeEventListener('touchstart', this.handleTouchStart);
     window.removeEventListener('touchmove', this.handleTouchMove);
     window.removeEventListener('touchend', this.handleTouchEnd);
+    window.removeEventListener('resize', this.handleResize);
   }
 
   /**
@@ -169,6 +174,22 @@ export default class PresentationsPlay extends React.Component {
   }
 
   /**
+   * Handle window resize event
+   */
+  handleResize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const containerWidth = 800;
+    const containerHeight = 600;
+
+    this.setState({
+      scale: width > containerWidth
+        ? Math.min(width / containerWidth, height / containerHeight) - 0.05
+        : Math.min(width / containerWidth, height / containerHeight),
+    });
+  }
+
+  /**
    * Register for projection
    */
   connect() {
@@ -220,11 +241,20 @@ export default class PresentationsPlay extends React.Component {
   }
 
   render() {
+    const div2Style = {
+      transform: `scale(${this.state.scale})`,
+    };
+    if (window.innerWidth < 800) {
+      div2Style.transformOrigin = 'left';
+    }
+
     if (this.state.error !== '') {
       return (
         <div className="presentation-play">
           <div className="slide current">
-            <h1> {this.state.error} </h1>
+            <div className="box">
+              <h1> {this.state.error} </h1>
+            </div>
           </div>
         </div>
       );
@@ -246,8 +276,9 @@ export default class PresentationsPlay extends React.Component {
               key={ind}
               className={ind > this.state.currentSlide ? 'slide' : 'slide current'}
               style={divStyle}
-              dangerouslySetInnerHTML={{ __html: marked(slide.html) }}
-            />
+            >
+              <div className="box" dangerouslySetInnerHTML={{ __html: marked(slide.html) }} style={div2Style} />
+            </div>
           );
         } else if (slide.app === 'messageboard') {
           return (
@@ -288,7 +319,9 @@ export default class PresentationsPlay extends React.Component {
             className={ind > this.state.currentSlide ? 'slide' : 'slide current'}
             style={divStyle}
           >
-            Hiba történt :(
+            <div className="box" style={div2Style}>
+              Hiba történt :(
+            </div>
           </div>
         );
       }),
