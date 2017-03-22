@@ -26,7 +26,7 @@ export default class Auth extends React.Component {
   componentWillMount() {
     // create an AJAX request
     const xhr = new XMLHttpRequest();
-    xhr.open('get', '/isloggedin');
+    xhr.open('get', '/users/isloggedin');
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.responseType = 'json';
     xhr.addEventListener('load', () => {
@@ -98,7 +98,7 @@ export default class Auth extends React.Component {
 
     // create an AJAX request
     const xhr = new XMLHttpRequest();
-    xhr.open('post', '/login');
+    xhr.open('post', '/users/login');
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.responseType = 'json';
     xhr.addEventListener('load', () => {

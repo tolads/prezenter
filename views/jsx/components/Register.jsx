@@ -85,7 +85,7 @@ export default class Register extends React.Component {
     data.append('fullname', this.state.fullname);
 
     // Send request to server
-    request('/signup', {
+    request('/users/signup', {
       method: 'POST',
       credentials: 'same-origin',
       body: data,
@@ -117,7 +117,7 @@ export default class Register extends React.Component {
   render() {
     return (
       <section className="col-md-8">
-        <h2 id="signup"> Regisztráció </h2>
+        <h2 id="signup" className="signup"> Regisztráció </h2>
         <form className="form-horizontal" onSubmit={this.handleSubmit}>
 
           <div className={this.state.username_error ? 'form-group has-error' : 'form-group'}>

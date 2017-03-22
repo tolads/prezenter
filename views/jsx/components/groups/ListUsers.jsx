@@ -43,7 +43,7 @@ export default class ListUsers extends React.Component {
    */
   getUsers() {
     // Send request to server
-    request('/users', {
+    request('/users/list', {
       credentials: 'same-origin',
     })
       .then((json) => {

@@ -30,7 +30,7 @@ export default class Navbar extends React.Component {
     e.preventDefault();
 
     // Send request to server
-    request('/logout', {
+    request('/users/logout', {
       credentials: 'same-origin',
     })
       .then(() => {

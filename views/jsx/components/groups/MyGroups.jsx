@@ -35,7 +35,8 @@ export default class MyGroups extends React.Component {
 
   deleteGroup({ id }) {
     // Send request to server
-    request(`/groups/delete/group/${id}`, {
+    request(`/groups/group/${id}`, {
+      method: 'DELETE',
       credentials: 'same-origin',
     })
       .then(() => {
@@ -68,7 +69,8 @@ export default class MyGroups extends React.Component {
 
   deleteMember({ gid, uid }) {
     // Send request to server
-    request(`/groups/delete/group/${gid}/member/${uid}`, {
+    request(`/groups/group/${gid}/member/${uid}`, {
+      method: 'DELETE',
       credentials: 'same-origin',
     })
       .then(() => {

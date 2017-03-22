@@ -35,7 +35,8 @@ export default class NewPresentation extends React.Component {
 
   deletePresentation({ id }) {
     // Send request to server
-    request(`/presentations/delete/${id}`, {
+    request(`/presentations/${id}`, {
+      method: 'DELETE',
       credentials: 'same-origin',
     })
       .then(() => {
@@ -58,7 +59,7 @@ export default class NewPresentation extends React.Component {
     const id = encodeURIComponent(value);
 
     // Send request to server
-    request('/grouplist', {
+    request('/groups/list', {
       credentials: 'same-origin',
     })
       .then((json) => {

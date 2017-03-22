@@ -52,7 +52,7 @@ export default class Groups extends React.Component {
    */
   getGroups() {
     // Send request to server
-    request('/grouplist', {
+    request('/groups/list', {
       credentials: 'same-origin',
     })
       .then((json) => {
