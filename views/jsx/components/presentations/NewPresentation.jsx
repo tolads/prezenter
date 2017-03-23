@@ -50,7 +50,6 @@ export default class NewPresentation extends React.Component {
     // Send request to server
     request('/presentations/new', {
       method: 'POST',
-      credentials: 'same-origin',
       body: data,
     })
       .then(() => {

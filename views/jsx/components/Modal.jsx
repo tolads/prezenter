@@ -91,6 +91,7 @@ export default class Modal extends React.Component {
                       />
                     )}
                   </p>
+                  {data.desc && <p><small> {data.desc} </small></p>}
                 </div>
               }
               <div className="modal-footer">

@@ -4,7 +4,7 @@ import { browserHistory, Link } from 'react-router';
 import { formatDate, request } from '../utils';
 
 /**
- * Page for managing presentations
+ * Page for displaying reports from built in apps
  */
 export default class PresentationsReport extends React.Component {
   constructor(props) {
@@ -51,9 +51,7 @@ export default class PresentationsReport extends React.Component {
    */
   getReports() {
     // Send request to server
-    request(`/presentations/get/${this.props.params.id}`, {
-      credentials: 'same-origin',
-    })
+    request(`/presentations/get/${this.props.params.id}`)
       .then((json) => {
         // success
         this.setState({
@@ -79,7 +77,8 @@ export default class PresentationsReport extends React.Component {
       const messageBoardReports = this.state.reports
         .filter(report => report.app === 'messageboard' && report.start === start)
         .sort((a, b) => a.slide - b.slide)
-        .map(({ id, slide, content }) => <li key={id}><b> {slide + 1}. dia: </b> {content.message} </li>);
+        .map(({ id, slide, content }) =>
+          <li key={id}><b> {slide + 1}. dia: </b> {content.message} </li>);
 
       const formReports = this.state.reports
         .filter(report => report.app === 'form' && report.start === start)
@@ -87,12 +86,12 @@ export default class PresentationsReport extends React.Component {
         .map(({ id, slide, content }) => {
           const rows = content.inputs.map((row, ind) => (
             <tr key={ind}>
-              <td> <b>Kérdés:</b> {row.question} </td>
-              <td> <b>Válasz:</b> {row.answer} </td>
+              <td> <b> Kérdés: </b> {row.question} </td>
+              <td> <b> Válasz: </b> {row.answer} </td>
             </tr>
           ));
 
-          const user = this.state.users.find(({ id }) => id === content.user);
+          const user = this.state.users.find(row => row.id === content.user);
 
           return (
             <table key={id} className="table">

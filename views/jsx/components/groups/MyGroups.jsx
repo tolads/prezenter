@@ -37,7 +37,6 @@ export default class MyGroups extends React.Component {
     // Send request to server
     request(`/groups/group/${id}`, {
       method: 'DELETE',
-      credentials: 'same-origin',
     })
       .then(() => {
         // success
@@ -71,7 +70,6 @@ export default class MyGroups extends React.Component {
     // Send request to server
     request(`/groups/group/${gid}/member/${uid}`, {
       method: 'DELETE',
-      credentials: 'same-origin',
     })
       .then(() => {
         // success
@@ -112,7 +110,6 @@ export default class MyGroups extends React.Component {
     // Send request to server
     request('/groups/rename', {
       method: 'POST',
-      credentials: 'same-origin',
       body: data,
     })
       .then(() => {

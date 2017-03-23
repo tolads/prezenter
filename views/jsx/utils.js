@@ -1,7 +1,7 @@
 import 'whatwg-fetch';
 
 /**
- * Format given date
+ * Format given date, e.x. 2017.03.20. 18:47
  * @param {Date} date
  * @return {String}
  */
@@ -10,32 +10,38 @@ export function formatDate(date) {
         (date.getMonth() < 10 ? '0' : '') +
         (date.getMonth() + 1) + '.' +
         (date.getDate() < 10 ? '0' : '') +
-        date.getDate() + '. ' +
-        date.getHours() + ':' +
+         date.getDate() + '. ' +
+         date.getHours() + ':' +
         (date.getMinutes() < 10 ? '0' : '') +
-        date.getMinutes();
+         date.getMinutes();
 }
 
 /**
  * Requests a URL, returns a promise
  * @param  {string} url       The URL we want to request
- * @param  {object} [options] The options we want to pass to "fetch"
+ * @param  {object} options The options we want to pass to "fetch"
  * @return {Promise}           The request promise
  */
-export function request(url, options) {
+export function request(url, options = {}) {
   return new Promise((resolve, reject) => {
-    fetch(url, options)
+    fetch(url, Object.assign({}, options, { credentials: 'same-origin' }))
       .then((response) => {
-        if (!response.ok) {
-          return new Promise(() => response.json()
-            .then(json => reject({
-              status: response.status,
-              json,
-            }))
-          );
-        }
+        try {
+          const jsonResponse = response.json();
 
-        return resolve(response.json());
+          if (!response.ok) {
+            return new Promise(() => jsonResponse
+              .then(json => reject({
+                status: response.status,
+                json,
+              })),
+            );
+          }
+
+          return resolve(jsonResponse);
+        } catch (err) {
+          return reject();
+        }
       })
       .catch(() => reject());
   });

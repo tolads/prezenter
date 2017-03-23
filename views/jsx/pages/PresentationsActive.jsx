@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router';
 import { request } from '../utils';
 
 /**
- * Page for managing presentations
+ * Page for listing active presentations for current user
  */
 export default class PresentationsOwn extends React.Component {
   constructor(props) {
@@ -49,9 +49,7 @@ export default class PresentationsOwn extends React.Component {
    */
   getActivePresentations() {
     // Send request to server
-    request('/presentations/listactive', {
-      credentials: 'same-origin',
-    })
+    request('/presentations/listactive')
       .then((json) => {
         // success
         this.setState({

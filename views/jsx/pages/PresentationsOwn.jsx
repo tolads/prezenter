@@ -51,9 +51,7 @@ export default class PresentationsOwn extends React.Component {
    */
   getPresentations() {
     // Send request to server
-    request('/presentations/list', {
-      credentials: 'same-origin',
-    })
+    request('/presentations/list')
       .then((json) => {
         // success
         this.setState({

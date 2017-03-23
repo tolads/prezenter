@@ -67,9 +67,7 @@ export default class PresentationsEdit extends React.Component {
    */
   getPresentation() {
     // Send request to server
-    request(`/presentations/get/${this.props.params.id}`, {
-      credentials: 'same-origin',
-    })
+    request(`/presentations/get/${this.props.params.id}`)
       .then((json) => {
         // success
         this.processPresentation(json);
@@ -82,6 +80,9 @@ export default class PresentationsEdit extends React.Component {
       });
   }
 
+  /**
+   * Process loaded or imported presentation
+   */
   processPresentation(json) {
     const slides = [];
     const contents = [];
@@ -92,7 +93,7 @@ export default class PresentationsEdit extends React.Component {
     });
 
     if (json.content) {
-      json.content.map((slide) => {
+      json.content.forEach((slide) => {
         const slideJSON = Object.assign({}, slide);
         contents.push(slideJSON.html || '');
         slideJSON.html = undefined;
@@ -152,6 +153,7 @@ export default class PresentationsEdit extends React.Component {
         const contents = prevState.contents;
         slides.splice(prevState.currentSlide, 1);
         contents.splice(prevState.currentSlide, 1);
+
         if (!slides.length) {
           slides.push('');
           contents.push('');
@@ -160,7 +162,9 @@ export default class PresentationsEdit extends React.Component {
         return {
           slides,
           contents,
-          currentSlide: prevState.currentSlide >= slides.length ? slides.length - 1 : prevState.currentSlide,
+          currentSlide: prevState.currentSlide >= slides.length
+            ? slides.length - 1
+            : prevState.currentSlide,
         };
       });
     }
@@ -186,7 +190,7 @@ export default class PresentationsEdit extends React.Component {
   }
 
   /**
-   * Add new slide before current
+   * Add new slide after current
    */
   addNextSlide(e) {
     e.preventDefault();
@@ -279,7 +283,6 @@ export default class PresentationsEdit extends React.Component {
     // Send request to server
     request(`/presentations/edit/${this.props.params.id}`, {
       method: 'POST',
-      credentials: 'same-origin',
       body: data,
     })
       .then(() => {
@@ -301,19 +304,23 @@ export default class PresentationsEdit extends React.Component {
   }
 
   /**
-   * handle onChange event from input type file
+   * Handle onchange event from input type file
    */
   handleImport(e) {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.addEventListener('load', (e2) => {
-      console.log(e2.target.result);
       try {
         const json = JSON.parse(e2.target.result);
         this.processPresentation({ content: json });
+        this.setState({
+          success: 'Sikeres importálás.',
+          error: '',
+        });
       } catch (err) {
         this.setState({
           error: 'A fájl formátuma nem megfelelő JSON.',
+          success: '',
         });
       }
     });
@@ -424,20 +431,22 @@ export default class PresentationsEdit extends React.Component {
 
             {/* slide id */}
             <div className="form-group">
-              <label className="col-sm-3 control-label"> Dia: </label>
-              <div className="col-sm-6"><div className="slideId"> {this.state.currentSlide + 1} / {this.state.slides.length} </div></div>
+              <p className="col-sm-3 control-label"> Dia: </p>
+              <div className="col-sm-6"><div className="slide-id">
+                {this.state.currentSlide + 1} / {this.state.slides.length}
+              </div></div>
             </div>
 
             {/* settings of current slide */}
             <div className="form-group">
-              <label htmlFor="content" className="col-sm-3 control-label">
+              <label htmlFor="settings" className="col-sm-3 control-label">
                 Beállítások:
               </label>
               <div className="col-sm-6">
                 <textarea
-                  className="form-control json"
-                  id="content"
-                  name="content"
+                  className="form-control content"
+                  id="settings"
+                  name="settings"
                   value={this.state.slides[this.state.currentSlide]}
                   onChange={this.handleSlideChange}
                 />
@@ -445,16 +454,29 @@ export default class PresentationsEdit extends React.Component {
             </div>
 
             {/* help for settings of current slide */}
-            <div className="col-sm-offset-1 col-sm-10 panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div className="col-sm-offset-1 col-sm-10 panel-group" id="accordion" role="tablist">
               <div className="panel panel-default">
                 <div className="panel-heading" role="tab" id="headingOne">
                   <h4 className="panel-title">
-                    <a className="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    <a
+                      className="collapsed"
+                      role="button"
+                      data-toggle="collapse"
+                      data-parent="#accordion"
+                      href="#collapseOne"
+                      aria-expanded="false"
+                      aria-controls="collapseOne"
+                    >
                       Minták beállításokra
                     </a>
                   </h4>
                 </div>
-                <div id="collapseOne" className="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div
+                  id="collapseOne"
+                  className="panel-collapse collapse"
+                  role="tabpanel"
+                  aria-labelledby="headingOne"
+                >
                   <div className="panel-body">
                     <p> Háttérszín beállítása: </p>
                     <pre><code>{`{
@@ -490,7 +512,9 @@ export default class PresentationsEdit extends React.Component {
   "app": "messageboard",
   "title": "Kérdések?"
 }`}</code></pre>
-                    <p> Automatikus váltás a következő diára (késleltetés másodpercekben megadva): </p>
+                    <p>
+                      Automatikus váltás a következő diára (késleltetés másodpercekben megadva):
+                    </p>
                     <pre><code>{`{
   "timeOut": 20
 }`}</code></pre>
@@ -506,7 +530,7 @@ export default class PresentationsEdit extends React.Component {
               </label>
               <div className="col-sm-6">
                 <textarea
-                  className="form-control json"
+                  className="form-control content"
                   id="content"
                   name="content"
                   value={this.state.contents[this.state.currentSlide]}

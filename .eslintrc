@@ -20,10 +20,15 @@
   },
 
   "rules": {
-    "react/forbid-prop-types": "warn",
     "no-console": "off",
     "no-plusplus": "off",
     "consistent-return": "warn",
-    "no-undef": "warn"
+    "no-undef": "warn",
+    "react/forbid-prop-types": "warn",
+    "react/require-default-props": "warn",
+    "react/no-array-index-key": "warn",
+    "class-methods-use-this": "warn",
+    "no-mixed-operators": "warn",
+    "jsx-a11y/href-no-hash": "warn"
   }
 }

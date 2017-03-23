@@ -33,5 +33,5 @@ ReactDOM.render(
     </Route>
     <Route path="*" component={NotFound} title={title} />
   </Router>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

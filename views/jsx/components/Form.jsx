@@ -47,9 +47,9 @@ export default class Form extends React.Component {
   componentDidUpdate() {
     if (this.props.role === 'head') {
       $('[data-toggle="tooltip"]').tooltip({
-        title: function(){
+        title: function () {
           return $(this).attr('data-title');
-        }
+        },
       });
     }
   }
@@ -72,16 +72,18 @@ export default class Form extends React.Component {
       data[`input${i}`] = this.state[`input${i}`];
     }
 
-    io.socket.post(`/presentations/app/${this.props.pid}/form`, data, (data, res) => {
+    io.socket.post(`/presentations/app/${this.props.pid}/form`, data, (data2, res) => {
       if (res.statusCode === 401) {
         // Error 401 - Unauthorized
         this.props.auth.logout();
       } else if (res.statusCode >= 200 && res.statusCode < 300) {
+        // success
         this.setState({
           success: 'Űrlap sikeresen elküldve.',
           error: '',
         });
       } else {
+        // other error
         this.setState({
           error: 'Az űrlapot már egyszer elküldted.',
           success: '',
@@ -170,7 +172,13 @@ export default class Form extends React.Component {
             {form}
             <div className="form-group">
               <div className="col-sm-offset-4 col-sm-8">
-                <button type="submit" className="btn btn-primary" disabled={this.props.role === 'projector'}> Elküld </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={this.props.role === 'projector'}
+                >
+                  Elküld
+                </button>
               </div>
             </div>
           </form>

@@ -48,7 +48,6 @@ export default class NewGroup extends React.Component {
     // Send request to server
     request('/groups/new', {
       method: 'POST',
-      credentials: 'same-origin',
       body: data,
     })
       .then(() => {

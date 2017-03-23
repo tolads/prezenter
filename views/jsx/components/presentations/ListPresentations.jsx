@@ -37,7 +37,6 @@ export default class NewPresentation extends React.Component {
     // Send request to server
     request(`/presentations/${id}`, {
       method: 'DELETE',
-      credentials: 'same-origin',
     })
       .then(() => {
         // success
@@ -59,9 +58,7 @@ export default class NewPresentation extends React.Component {
     const id = encodeURIComponent(value);
 
     // Send request to server
-    request('/groups/list', {
-      credentials: 'same-origin',
-    })
+    request('/groups/list')
       .then((json) => {
         // success
         const options = [
@@ -75,6 +72,7 @@ export default class NewPresentation extends React.Component {
 
         this.props.modal({
           title: 'Lejátszás hozzárendelése csoporthoz',
+          desc: 'A prezentáció vezérlő módban indul számodra. Ha mégegy ablakban megnyitod, a második példány vetítő módban indul.',
           args: { id },
           handleSubmit: this.playPresentation,
           acceptText: 'Indít',

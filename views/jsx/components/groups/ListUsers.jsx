@@ -43,9 +43,7 @@ export default class ListUsers extends React.Component {
    */
   getUsers() {
     // Send request to server
-    request('/users/list', {
-      credentials: 'same-origin',
-    })
+    request('/users/list')
       .then((json) => {
         // success
         this.setState({
@@ -86,7 +84,6 @@ export default class ListUsers extends React.Component {
     // Send request to server
     request('/groups/add', {
       method: 'POST',
-      credentials: 'same-origin',
       body: data,
     })
       .then(() => {

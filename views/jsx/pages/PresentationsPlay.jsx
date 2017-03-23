@@ -27,9 +27,10 @@ export default class PresentationsPlay extends React.Component {
     this.handleTouchStart = this.handleTouchStart.bind(this);
     this.handleTouchMove = this.handleTouchMove.bind(this);
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
+    this.handleResize = this.handleResize.bind(this);
     this.getSlide = this.getSlide.bind(this);
     this.getNextSlide = this.getNextSlide.bind(this);
-    this.handleResize = this.handleResize.bind(this);
+    this.slideSwitched = this.slideSwitched.bind(this);
   }
 
   /**
@@ -44,7 +45,7 @@ export default class PresentationsPlay extends React.Component {
   }
 
   /**
-   * Set <title>
+   * Set <title>, resize slides to fit window
    */
   componentDidMount() {
     document.title = `Prezentáció lejátszása | ${this.props.route.title}`;
@@ -110,7 +111,7 @@ export default class PresentationsPlay extends React.Component {
             error: data.error,
           });
         }
-      }
+      },
     );
   }
 
@@ -142,7 +143,7 @@ export default class PresentationsPlay extends React.Component {
 
     if (e.deltaY > 100) {
       this.getSlide(this.state.currentSlide + 1);
-    } else if (e.deltaY < - 100) {
+    } else if (e.deltaY < -100) {
       this.getSlide(this.state.currentSlide - 1);
     }
   }
@@ -166,6 +167,7 @@ export default class PresentationsPlay extends React.Component {
    */
   handleTouchEnd() {
     const minDist = 100;
+
     if (this.touchEndX - this.touchStartX > minDist) {
       this.getSlide(this.state.currentSlide - 1);
     } else if (this.touchStartX - this.touchEndX > minDist) {
@@ -198,8 +200,10 @@ export default class PresentationsPlay extends React.Component {
       (data, res) => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           // success
+          const slides = [];
+          slides[data.currentSlideID] = data.currentSlide;
           this.setState({
-            slides: [data.currentSlide],
+            slides,
             currentSlide: data.currentSlideID,
             role: data.role,
             error: '',
@@ -211,22 +215,7 @@ export default class PresentationsPlay extends React.Component {
             this.setUpControl();
           }
 
-          io.socket.on('newSlide', (data) => {
-            if (this.state.role === 'head' && data.currentSlide.timeOut) {
-              this.timeOut = window.setTimeout(this.getNextSlide, data.currentSlide.timeOut * 1000);
-            }
-
-            this.setState((prevState) => {
-              const newSlides = prevState.slides;
-              newSlides[data.currentSlideID] = data.currentSlide;
-
-              return {
-                slides: newSlides,
-                currentSlide: data.currentSlideID,
-                error: '',
-              };
-            });
-          });
+          this.slideSwitched();
         } else if (res.statusCode === 401) {
           // Error 401 - Unauthorized
           this.props.auth.logout();
@@ -236,8 +225,30 @@ export default class PresentationsPlay extends React.Component {
             error: data.error,
           });
         }
-      }
+      },
     );
+  }
+
+  /**
+   * Display new slide
+   */
+  slideSwitched() {
+    io.socket.on('newSlide', (data) => {
+      if (this.state.role === 'head' && data.currentSlide.timeOut) {
+        this.timeOut = window.setTimeout(this.getNextSlide, data.currentSlide.timeOut * 1000);
+      }
+
+      this.setState((prevState) => {
+        const newSlides = prevState.slides;
+        newSlides[data.currentSlideID] = data.currentSlide;
+
+        return {
+          slides: newSlides,
+          currentSlide: data.currentSlideID,
+          error: '',
+        };
+      });
+    });
   }
 
   render() {
@@ -251,7 +262,7 @@ export default class PresentationsPlay extends React.Component {
     if (this.state.error !== '') {
       return (
         <div className="presentation-play">
-          <div className="slide current">
+          <div className="slide">
             <div className="box">
               <h1> {this.state.error} </h1>
             </div>
@@ -267,48 +278,43 @@ export default class PresentationsPlay extends React.Component {
         };
         if (ind > this.state.currentSlide) {
           divStyle.marginLeft = window.innerWidth;
-          divStyle.opacity = 0;
+        } else if (ind < this.state.currentSlide) {
+          divStyle.marginLeft = -window.innerWidth;
         }
 
-        if (slide.html) {
-          return (
-            <div
-              key={ind}
-              className={ind > this.state.currentSlide ? 'slide' : 'slide current'}
-              style={divStyle}
-            >
-              <div className="box" dangerouslySetInnerHTML={{ __html: marked(slide.html) }} style={div2Style} />
-            </div>
-          );
-        } else if (slide.app === 'messageboard') {
-          return (
-            <div
-              key={ind}
-              className={ind > this.state.currentSlide ? 'slide' : 'slide current'}
-              style={divStyle}
-            >
-              <MessageBoard
-                role={this.state.role}
-                title={slide.title}
-                auth={this.props.auth}
-                pid={this.props.params.pid}
-              />
-            </div>
+        let content;
+
+        if (slide.app === 'messageboard') {
+          content = (
+            <MessageBoard
+              role={this.state.role}
+              title={slide.title}
+              auth={this.props.auth}
+              pid={this.props.params.pid}
+            />
           );
         } else if (slide.app === 'form') {
-          return (
+          content = (
+            <Form
+              role={this.state.role}
+              title={slide.title}
+              auth={this.props.auth}
+              pid={this.props.params.pid}
+              inputs={slide.inputs}
+            />
+          );
+        } else if (slide.html) {
+          content = (
             <div
-              key={ind}
-              className={ind > this.state.currentSlide ? 'slide' : 'slide current'}
-              style={divStyle}
-            >
-              <Form
-                role={this.state.role}
-                title={slide.title}
-                auth={this.props.auth}
-                pid={this.props.params.pid}
-                inputs={slide.inputs}
-              />
+              className="box"
+              dangerouslySetInnerHTML={{ __html: marked(slide.html) }}
+              style={div2Style}
+            />
+          );
+        } else {
+          content = (
+            <div className="box" style={div2Style}>
+              Hiba történt :(
             </div>
           );
         }
@@ -316,12 +322,10 @@ export default class PresentationsPlay extends React.Component {
         return (
           <div
             key={ind}
-            className={ind > this.state.currentSlide ? 'slide' : 'slide current'}
+            className={ind !== this.state.currentSlide ? 'slide' : 'slide current'}
             style={divStyle}
           >
-            <div className="box" style={div2Style}>
-              Hiba történt :(
-            </div>
+            {content}
           </div>
         );
       }),

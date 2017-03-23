@@ -23,6 +23,7 @@ export default class Page extends React.Component {
    * @param {Object} modalData
    *   {String}   acceptText
    *   {Object}   args
+   *   {String}   desc
    *   {Function} handleSubmit
    *   {Boolean}  hasInput
    *   {Object[]} options
@@ -40,17 +41,17 @@ export default class Page extends React.Component {
       <div>
         <div className="screenreader">
           <ul>
-            <li><a href="#navbar">Ugrás a navigációhoz</a></li>
-            <li><a href="#main">Ugrás a tartalomhoz</a></li>
+            <li><a href="#navbar"> Ugrás a navigációhoz </a></li>
+            <li><a href="#main"> Ugrás a tartalomhoz </a></li>
           </ul>
         </div>
 
         <Navbar auth={this.props.auth} username={this.props.username} />
 
-        <div id="main">
+        <div id="main" className="main">
           {React.cloneElement(
             this.props.children,
-            { auth: this.props.auth, modal: this.callModal }
+            { auth: this.props.auth, modal: this.callModal },
           )}
         </div>
 

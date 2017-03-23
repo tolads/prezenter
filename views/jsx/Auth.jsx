@@ -1,8 +1,10 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
+import { request } from './utils';
+
 /**
- * Root component for all pages
+ * Component for managing authentication
  */
 export default class Auth extends React.Component {
   constructor(props) {
@@ -24,25 +26,22 @@ export default class Auth extends React.Component {
    * Check if still logged in
    */
   componentWillMount() {
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', '/users/isloggedin');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request('/users/isloggedin')
+      .then((json) => {
         // success
-        if (xhr.response.loggedin) {
-          this.handleLogin(xhr.response.loggedin);
+        if (json.loggedin) {
+          this.handleLogin(json.loggedin);
         } else {
           this.handleLogout();
         }
-      } else {
-        // failure
-        this.handleLogout();
-      }
-    });
-    xhr.send();
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.handleLogout();
+        }
+      });
   }
 
   /**
@@ -92,28 +91,28 @@ export default class Auth extends React.Component {
       return;
     }
 
-    const username = encodeURIComponent(data.username);
-    const password = encodeURIComponent(data.password);
-    const formData = `username=${username}&password=${password}`;
+    const formData = new FormData();
+    formData.append('username', data.username);
+    formData.append('password', data.password);
 
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', '/users/login');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
+    // Send request to server
+    request('/users/login', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((json) => {
         // success
-        this.handleLogin(xhr.response.loggedin);
+        this.handleLogin(json.loggedin);
         browserHistory.push('/');
         window.scroll(0, 0);
-      } else {
-        // failure
-        this.setState({ loginError: xhr.response.errors || {} });
+      })
+      .catch(({ json }) => {
+        // error
+        this.setState({
+          loginError: json.errors || {},
+        });
         document.getElementById('login').scrollIntoView();
-      }
-    });
-    xhr.send(formData);
+      });
   }
 
   render() {

@@ -87,7 +87,6 @@ export default class Register extends React.Component {
     // Send request to server
     request('/users/signup', {
       method: 'POST',
-      credentials: 'same-origin',
       body: data,
     })
       .then(() => {
@@ -103,13 +102,13 @@ export default class Register extends React.Component {
       })
       .catch(({ json }) => {
         // error
-        const errors = json.errors || {};
+        const err = json.errors || {};
 
         this.setState({
-          username_error: errors.username_error || '',
-          password_error: errors.password_error || '',
-          password2_error: errors.password2_error || '',
-          fullname_error: errors.fullname_error || '',
+          username_error: err.username_error || '',
+          password_error: err.password_error || '',
+          password2_error: err.password2_error || '',
+          fullname_error: err.fullname_error || '',
         });
       });
   }

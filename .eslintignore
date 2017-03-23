@@ -1,9 +1,9 @@
 .tmp/*
-node_modules/*
-assets/*
-tasks/*
 api/responses/badRequest.js
 api/responses/created.js
 api/responses/ok.js
+assets/*
+node_modules/*
+tasks/*
 app.js
 Gruntfile.js

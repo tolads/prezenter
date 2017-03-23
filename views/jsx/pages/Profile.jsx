@@ -56,9 +56,7 @@ export default class Profile extends React.Component {
    */
   getData() {
     // Send request to server
-    request('/users/me', {
-      credentials: 'same-origin',
-    })
+    request('/users/me')
       .then((json) => {
         // success
         this.setState({
@@ -95,7 +93,6 @@ export default class Profile extends React.Component {
     // Send request to server
     request('/users/me', {
       method: 'DELETE',
-      credentials: 'same-origin',
     })
       .then(() => {
         // success
