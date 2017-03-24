@@ -70,10 +70,11 @@ input[type="file"] { display: none; }
 .presentation-edit-buttons > div { padding: 0; }
 .slide-id { padding-top: 9px; }
 
-.presentation-play { overflow: hidden; position: fixed; width: 100%; height: 100%; }
-.presentation-play .slide { transition: margin .5s ease-in; display: flex; flex-direction: column; text-align: center; justify-content: center; position: absolute; width: 100%; height: 100%; background: #ddd; }
-.presentation-play .slide .box { display: flex; flex-direction: column; text-align: center; justify-content: center; width: 800px; height: 600px; margin-left: auto; margin-right: auto; }
+.presentation-play { overflow: hidden; position: fixed; width: 100%; height: 100%; line-height: 1.5; }
+.presentation-play .slide { transition: margin .5s ease-in; display: flex; flex-direction: row; align-items: center; text-align: center; justify-content: center; position: absolute; width: 100%; height: 100%; background: #ddd; }
+.presentation-play .slide .box { display: flex; flex-direction: column; text-align: center; justify-content: center; max-width: 800px; height: 600px; margin-left: auto; margin-right: auto; }
 .presentation-play li, .presentation-play pre, .presentation-play table, .presentation-play blockquote { text-align: left; }
+.presentation-play li { padding-bottom: .5em; }
 .presentation-play table { width: 100%; }
 .presentation-play th, .presentation-play td { line-height: 1.4; padding: 8px; vertical-align: middle; }
 .presentation-play blockquote { border-left: 5px solid #6f6f6f; }
@@ -99,6 +100,12 @@ input[type="file"] { display: none; }
   .form-app .control-label { text-align: right; padding-top: 9px; }
   .form-app button { width: 100%; }
   .presentation-edit-buttons > div:not(:last-child) { padding-right: 5px; }
+}
+@media (max-width: 600px) {
+  .presentation-play { font-size: 130%; }
+}
+@media (max-height: 450px) {
+  .presentation-play { font-size: 130%; }
 }
 @media (max-width: 500px) {
   .btn { width: 100%; display: block; }

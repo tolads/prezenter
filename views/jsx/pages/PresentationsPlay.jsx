@@ -141,9 +141,9 @@ export default class PresentationsPlay extends React.Component {
   handleWheel(e) {
     e.preventDefault();
 
-    if (e.deltaY > 100) {
+    if (e.deltaY > 0) {
       this.getSlide(this.state.currentSlide + 1);
-    } else if (e.deltaY < -100) {
+    } else if (e.deltaY < 0) {
       this.getSlide(this.state.currentSlide - 1);
     }
   }
@@ -185,7 +185,7 @@ export default class PresentationsPlay extends React.Component {
     const containerHeight = 600;
 
     this.setState({
-      scale: width > containerWidth
+      scale: width > containerWidth && height > containerHeight
         ? Math.min(width / containerWidth, height / containerHeight) - 0.05
         : Math.min(width / containerWidth, height / containerHeight),
     });
@@ -255,9 +255,6 @@ export default class PresentationsPlay extends React.Component {
     const div2Style = {
       transform: `scale(${this.state.scale})`,
     };
-    if (window.innerWidth < 800) {
-      div2Style.transformOrigin = 'left';
-    }
 
     if (this.state.error !== '') {
       return (

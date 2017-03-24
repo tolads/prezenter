@@ -72,7 +72,7 @@ export default class NewPresentation extends React.Component {
 
         this.props.modal({
           title: 'Lejátszás hozzárendelése csoporthoz',
-          desc: 'A prezentáció vezérlő módban indul számodra. Ha mégegy ablakban megnyitod, a második példány vetítő módban indul.',
+          desc: 'A prezentáció vezérlő módban indul számodra. Ha újabb ablakban megnyitod, a második példány vetítő módban indul.',
           args: { id },
           handleSubmit: this.playPresentation,
           acceptText: 'Indít',
