@@ -16,5 +16,5 @@ module.exports = {
   log: {
     level: 'verbose',
   },
-  hookTimeout: 30000,
+  hookTimeout: 35000,
 };
