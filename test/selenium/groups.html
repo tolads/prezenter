@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://prezenter.herokuapp.com/" />
+<title>groups</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">groups</td></tr>
+</thead><tbody>
+<!--Regisztráció: Sikeres regisztráció _teszt_123_ néven-->
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-user</td>
+	<td>_teszt_123_</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-pwd</td>
+	<td>almafa</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-pwd2</td>
+	<td>almafa</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-name</td>
+	<td>Teszt Elek</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+<!--Csoport létrehozása-->
+<tr>
+	<td>click</td>
+	<td>link=Csoportok</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Létrehoz&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Csoportnév megadása kötelező.&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=newGroupName</td>
+	<td>teszt csoport</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Létrehoz&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Csoport sikeresen létrehozva.&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Létrehoz&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Ilyen nevű csoportod már van.&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=newGroupName</td>
+	<td> 2</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Létrehoz&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Csoport sikeresen létrehozva.&quot;)</td>
+	<td></td>
+</tr>
+<!--Felhasználó hozzáadása csoporthoz-->
+<tr>
+	<td>click</td>
+	<td>//div[@id='main']/div/section[3]/div/form/table/tbody/tr/td/input</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='main']/div/section[3]/div/form/div/div/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Sikeres hozzáadás a csoporthoz.&quot;)</td>
+	<td></td>
+</tr>
+<!--Csoport átnevezése-->
+<tr>
+	<td>click</td>
+	<td>//div[@id='main']/div/section[2]/div/table/tbody/tr[3]/td[2]/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=modalInput</td>
+	<td>teszt csoport</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=modalAccept</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Ezzel a névvel van már csoportod.&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=modalInput</td>
+	<td>teszt csoport 2 új neve</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=modalAccept</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Csoport sikeresen átnevezve.&quot;)</td>
+	<td></td>
+</tr>
+<!--Tag törlése csoportból-->
+<tr>
+	<td>click</td>
+	<td>//div[@id='main']/div/section[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td[5]/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=modalAccept</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Tag törölve.&quot;)</td>
+	<td></td>
+</tr>
+<!--Csoport törlése-->
+<tr>
+	<td>click</td>
+	<td>//div[@id='main']/div/section[2]/div/table/tbody/tr/td[3]/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=modalAccept</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Csoport törölve.&quot;)</td>
+	<td></td>
+</tr>
+<!--Profil törlése-->
+<tr>
+	<td>open</td>
+	<td>/profile</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Profil törlése&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=modalAccept</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
