@@ -1,5 +1,5 @@
 /**
- * Run Browserify and Reactify.
+ * Run Browserify and Babelify.
  *
  * ---------------------------------------------------------------
  *

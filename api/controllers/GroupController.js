@@ -15,8 +15,13 @@ module.exports = {
 
     if (!name) {
       return res.badRequest({
-        success: false,
         errors: 'Csoportnév megadása kötelező.',
+      });
+    }
+
+    if (name.length > 127) {
+      return res.badRequest({
+        errors: 'A csoportnév nem lehet hosszabb 127 karakternél.',
       });
     }
 
@@ -27,7 +32,6 @@ module.exports = {
       .then((group) => {
         if (group !== undefined) {
           return res.badRequest({
-            success: false,
             errors: 'Ilyen nevű csoportod már van.',
           });
         }
@@ -54,7 +58,7 @@ module.exports = {
     const userIDs = typeof paramUserIDs === 'string' ? [paramUserIDs] : paramUserIDs;
 
     if (!addToGroup || !paramUserIDs) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     Groups.findOne({
@@ -63,7 +67,7 @@ module.exports = {
     })
       .then((group) => {
         if (group === undefined) {
-          return res.badRequest({ success: false });
+          return res.badRequest({});
         }
 
         const memberAddings = userIDs.map(userID => (
@@ -95,13 +99,13 @@ module.exports = {
 
   /**
    * Delete group
-   * @event GET /groups/delete/group/:id
+   * @event DELETE /groups/group/:id
    */
   deleteGroup: (req, res) => {
     const groupID = req.param('id');
 
     if (!groupID) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     Groups.findOne({
@@ -110,7 +114,7 @@ module.exports = {
     })
       .then((group) => {
         if (group === undefined) {
-          return res.badRequest({ success: false });
+          return res.badRequest({});
         }
 
         Groups.destroy({
@@ -125,14 +129,14 @@ module.exports = {
 
   /**
    * Delete member from a group
-   * @event GET /groups/delete/group/:gid/member/:uid
+   * @event DELETE /groups/group/:gid/member/:uid
    */
   deleteMember: (req, res) => {
     const gid = req.param('gid');
     const uid = req.param('uid');
 
     if (!gid || !uid) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     Groups.findOne({
@@ -141,7 +145,7 @@ module.exports = {
     })
       .then((group) => {
         if (group === undefined) {
-          return res.badRequest({ success: false });
+          return res.badRequest({});
         }
 
         group.members.remove(uid);
@@ -155,12 +159,13 @@ module.exports = {
 
   /**
    * List groups of current user
-   * @event GET /grouplist
+   * @event GET /groups/list
    */
   list: (req, res) => {
     Groups.find({
       owner: req.session.me,
     }).populate('members')
+      .sort('name ASC')
       .then((groups) => {
         const groupList = groups.map(group => ({
           id: group.id,
@@ -190,7 +195,6 @@ module.exports = {
 
     if (!groupID || !groupName) {
       return res.badRequest({
-        success: false,
         errors: 'Csoport azonosítójának és új nevének megadása kötelező.',
       });
     }
@@ -202,7 +206,6 @@ module.exports = {
       .then((group) => {
         if (group === undefined) {
           return res.badRequest({
-            success: false,
             errors: 'A csoport nem létezik.',
           });
         }
@@ -211,10 +214,9 @@ module.exports = {
           name: groupName,
           owner: req.session.me,
         })
-          .then((group) => {
-            if (group !== undefined && String(group.id) !== groupID) {
+          .then((newGroup) => {
+            if (newGroup !== undefined && String(newGroup.id) !== groupID) {
               return res.badRequest({
-                success: false,
                 errors: 'Ezzel a névvel van már csoportod.',
               });
             }

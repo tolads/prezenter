@@ -8,6 +8,7 @@ module.exports = {
     name: {
       type: 'string',
       required: true,
+      size: 128,
     },
     owner: {
       model: 'Users',

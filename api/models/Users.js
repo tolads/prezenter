@@ -13,10 +13,12 @@ module.exports = {
       type: 'string',
       required: true,
       unique: true,
+      size: 64,
     },
     fullname: {
       type: 'string',
       required: true,
+      size: 128,
     },
     password: {
       type: 'string',

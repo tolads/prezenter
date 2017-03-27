@@ -42,6 +42,13 @@ export default class NewGroup extends React.Component {
       return;
     }
 
+    if (newGroupName.length > 127) {
+      this.setState({
+        error: 'A csoportnév nem lehet hosszabb 127 karakternél.',
+      });
+      return;
+    }
+
     const data = new FormData();
     data.append('newGroupName', newGroupName);
 

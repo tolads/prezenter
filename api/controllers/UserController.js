@@ -6,7 +6,7 @@
 module.exports = {
   /**
    * Determine if visitor is logged in
-   * @event GET /isloggedin
+   * @event GET /users/isloggedin
    */
   isLoggedIn: (req, res) => {
     if (!req.session.me) {
@@ -18,15 +18,13 @@ module.exports = {
     Users.findOne({
       id: req.session.me,
     })
-      .then(user => (
-        res.ok({ loggedin: user ? user.username : false })
-      ))
+      .then(user => res.ok({ loggedin: user ? user.username : false }))
       .catch(res.negotiate);
   },
 
   /**
    * Log in user
-   * @event POST /login
+   * @event POST /users/login
    *   {String} username
    *   {String} password
    */
@@ -36,7 +34,6 @@ module.exports = {
 
     if (!username || !password) {
       return res.badRequest({
-        success: false,
         errors: 'Felhasználónév és jelszó megadása kötelező.',
       });
     }
@@ -46,7 +43,7 @@ module.exports = {
 
   /**
    * Log out user
-   * @event GET /logout
+   * @event GET /users/logout
    */
   logout: (req, res) => {
     // "Forget" the user from the session.
@@ -58,7 +55,7 @@ module.exports = {
 
   /**
    * Sign up user
-   * @event POST /login
+   * @event POST /users/login
    *   {String} username
    *   {String} password
    *   {String} fullname
@@ -100,7 +97,6 @@ module.exports = {
 
     if (hasError) {
       return res.badRequest({
-        success: false,
         errors,
       });
     }
@@ -112,20 +108,19 @@ module.exports = {
         if (user !== undefined) {
           errors.username_error = 'A felhasználónév foglalt.';
           return res.badRequest({
-            success: false,
             errors,
           });
         }
 
         // Attempt to signup a user using the provided parameters
         Users.signup({ username, password, fullname })
-          .then((user) => {
-            req.session.me = user.id;
+          .then((newUser) => {
+            req.session.me = newUser.id;
 
             Presentations.create({
               name: 'Markdown minták',
               desc: 'Példák a markdown jelölések használatára prezentációban.',
-              owner: user.id,
+              owner: newUser.id,
               content: [
                 { html: '# Markdown examples' },
                 { html: '# Headers\n\n# H1\n## H2\n### H3\n#### H4\n##### H5\n###### H6\n\nAlternatively, for H1 and H2, an underline-ish style:\n\nAlt-H1\n======\n\nAlt-H2\n------' },
@@ -153,7 +148,7 @@ module.exports = {
 
   /**
    * List all the users
-   * @event GET /list
+   * @event GET /users/list
    */
   list: (req, res) => {
     Users.find()
@@ -172,7 +167,7 @@ module.exports = {
 
   /**
    * Get details of current user
-   * @event GET /me
+   * @event GET /users/me
    */
   me: (req, res) => {
     Users.findOne({
@@ -192,7 +187,7 @@ module.exports = {
 
   /**
    * Delete current user
-   * @event GET /delete
+   * @event DELETE users/me
    */
   delete: (req, res) => {
     Users.findOne({
@@ -200,7 +195,7 @@ module.exports = {
     })
       .then((user) => {
         if (user === undefined) {
-          return res.badRequest({ success: false });
+          return res.badRequest({});
         }
 
         Users.destroy({
