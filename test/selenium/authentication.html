@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://prezenter.herokuapp.com/" />
+<title>authentication</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">authentication</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<!--Regisztráció: Üres űrlapmezők-->
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Felhasználónév megadása kötelező.&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Jelszó megadása kötelező.&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Teljes név megadása kötelező.&quot;)</td>
+	<td></td>
+</tr>
+<!--Regisztráció: Hibás adatok 1-->
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-user</td>
+	<td>ez egy túl hosszú felhasználónév ez egy túl hosszú felhasználónév</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-pwd</td>
+	<td>almafa</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-pwd2</td>
+	<td>faalma</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-name</td>
+	<td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent posuere mi sit amet est ornare interdum. Pellentesque ullamcorper odio eget vulputate semper.</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;A felhasználónév túl hosszú.&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;A megadott jelszavak nem egyeznek.&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;A név túl hosszú.&quot;)</td>
+	<td></td>
+</tr>
+<!--Regisztráció: Hibás adatok 2-->
+<tr>
+	<td>type</td>
+	<td>id=reg-user</td>
+	<td> </td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-user</td>
+	<td>-teszt-123-</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=reg-name</td>
+	<td> </td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-name</td>
+	<td>nem megengedett karakter!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;A felhasználónév csak az angol ABC kis- és nagybetűit, számokat és aláhúzásjelet tartalmazhat.&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;A név nem megengedett karaktert tartalmaz.&quot;)</td>
+	<td></td>
+</tr>
+<!--Regisztráció: Sikeres regisztráció _teszt_123_ néven-->
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-user</td>
+	<td>_teszt_123_</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-pwd</td>
+	<td>almafa</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-pwd2</td>
+	<td>almafa</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-name</td>
+	<td>Teszt Elek</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+<!--Kijelentkezés-->
+<tr>
+	<td>click</td>
+	<td>link=Bejelentkezve, mint _teszt_123_</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Kijelentkezés</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+<!--Regisztráció: Sikerestelen foglalt felhasználónév miatt-->
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-user</td>
+	<td>_teszt_123_</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-pwd</td>
+	<td>faalma</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-pwd2</td>
+	<td>faalma</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=reg-name</td>
+	<td>Elek Tesztel</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;A felhasználónév foglalt.&quot;)</td>
+	<td></td>
+</tr>
+<!--Bejelentkezés: Nincs megadva a jelszó-->
+<tr>
+	<td>sendKeys</td>
+	<td>id=login-user</td>
+	<td>_teszt_123_</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//section[2]/form/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Felhasználónév és jelszó megadása kötelező.&quot;)</td>
+	<td></td>
+</tr>
+<!--Bejelentkezés: Hibás jelszó-->
+<tr>
+	<td>sendKeys</td>
+	<td>id=login-pwd</td>
+	<td>alma</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//section[2]/form/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Hibás felhasználónév vagy jelszó.&quot;)</td>
+	<td></td>
+</tr>
+<!--Bejelentkezés: Siker-->
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=login-user</td>
+	<td>_teszt_123_</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=login-pwd</td>
+	<td>almafa</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//section[2]/form/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+<!--Profil törlése-->
+<tr>
+	<td>open</td>
+	<td>/profile</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Profil törlése&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=modalAccept</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
+	<td></td>
+</tr>
+<!--Bejelentkezés: Hiba-->
+<tr>
+	<td>sendKeys</td>
+	<td>id=login-user</td>
+	<td>_teszt_123_</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=login-pwd</td>
+	<td>almafa</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//section[2]/form/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Hibás felhasználónév vagy jelszó.&quot;)</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
