@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://prezenter.herokuapp.com/" />
-<title>groups</title>
+<title>presentations</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">groups</td></tr>
+<tr><td rowspan="1" colspan="3">presentations</td></tr>
 </thead><tbody>
 <!--Regisztráció: Sikeres regisztráció _teszt_123_ néven-->
 <tr>
@@ -52,102 +52,15 @@
 	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
 	<td></td>
 </tr>
-<!--Csoport létrehozása-->
+<!--Prezentáció létrehozása-->
 <tr>
 	<td>click</td>
-	<td>link=Csoportok</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>css=button:contains(&quot;Létrehoz&quot;)</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertElementPresent</td>
-	<td>css=span.help-block:contains(&quot;Csoportnév megadása kötelező.&quot;)</td>
-	<td></td>
-</tr>
-<tr>
-	<td>sendKeys</td>
-	<td>id=newGroupName</td>
-	<td>teszt csoport</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>css=button:contains(&quot;Létrehoz&quot;)</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>2000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertElementPresent</td>
-	<td>css=span.help-block:contains(&quot;Csoport sikeresen létrehozva.&quot;)</td>
+	<td>link=Prezentációk</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>css=button:contains(&quot;Létrehoz&quot;)</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>2000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertElementPresent</td>
-	<td>css=span.help-block:contains(&quot;Ilyen nevű csoportod már van.&quot;)</td>
-	<td></td>
-</tr>
-<tr>
-	<td>sendKeys</td>
-	<td>id=newGroupName</td>
-	<td> 2</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>css=button:contains(&quot;Létrehoz&quot;)</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>2000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertElementPresent</td>
-	<td>css=span.help-block:contains(&quot;Csoport sikeresen létrehozva.&quot;)</td>
-	<td></td>
-</tr>
-<!--Felhasználó hozzáadása csoporthoz-->
-<tr>
-	<td>click</td>
-	<td>//div[@id='main']/div/section[3]/div/form/table/tbody/tr/td/input</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@id='main']/div/section[3]/div/form/div/div/button</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>2000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertElementPresent</td>
-	<td>css=span.help-block:contains(&quot;Sikeres hozzáadás a csoporthoz.&quot;)</td>
-	<td></td>
-</tr>
-<!--Csoport átnevezése-->
-<tr>
-	<td>click</td>
-	<td>//div[@id='main']/div/section[2]/div/table/tbody/tr[3]/td[2]/button</td>
+	<td>link=Saját diasorok</td>
 	<td></td>
 </tr>
 <tr>
@@ -156,13 +69,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>sendKeys</td>
-	<td>id=modalInput</td>
-	<td>teszt csoport</td>
-</tr>
-<tr>
 	<td>click</td>
-	<td>id=modalAccept</td>
+	<td>css=button:contains(&quot;Létrehoz&quot;)</td>
 	<td></td>
 </tr>
 <tr>
@@ -172,18 +80,186 @@
 </tr>
 <tr>
 	<td>assertElementPresent</td>
-	<td>css=span.help-block:contains(&quot;Ezzel a névvel van már csoportod.&quot;)</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@id='main']/div/section[2]/div/table/tbody/tr[3]/td[2]/button</td>
+	<td>css=span.help-block:contains(&quot;Prezentáció nevének megadása kötelező.&quot;)</td>
 	<td></td>
 </tr>
 <tr>
 	<td>sendKeys</td>
-	<td>id=modalInput</td>
-	<td> 2 új neve</td>
+	<td>id=newPresentationName</td>
+	<td>_teszt_prezentáció_neve_</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=newPresentationDesc</td>
+	<td>_teszt_prezentáció_leírása_</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button:contains(&quot;Létrehoz&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Prezentáció sikeresen létrehozva.&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=td:contains(&quot;_teszt_prezentáció_neve_&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=td:contains(&quot;_teszt_prezentáció_leírása_&quot;)</td>
+	<td></td>
+</tr>
+<!--Prezentáció szerkesztése-->
+<tr>
+	<td>click</td>
+	<td>//div[@id='main']/div/section[2]/div/table/tbody/tr[3]/td[7]/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=h1:contains(&quot;Prezentáció szerkesztése&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=name</td>
+	<td>módosítva_</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=desc</td>
+	<td>módosítva_</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='main']/div/div/form/div[8]/div/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=span.help-block:contains(&quot;Sikeres mentés.&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=(//a[contains(text(),'Saját diasorok')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=td:contains(&quot;_teszt_prezentáció_neve_módosítva&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=td:contains(&quot;_teszt_prezentáció_leírása_módosítva&quot;)</td>
+	<td></td>
+</tr>
+<!--Prezentáció lejátszása-->
+<tr>
+	<td>click</td>
+	<td>//div[@id='main']/div/section[2]/div/table/tbody/tr[3]/td[5]/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=modalAccept</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>title=Saját diasorok | Prezenter - online prezentációs alkalmazás</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Prezentációk</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Becsatlakozás vetítésbe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=h1:contains(&quot;Futó prezentációk&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=h4:contains(&quot;_teszt_prezentáció_neve_módosítva&quot;)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Prezentációk</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Saját diasorok</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<!--Prezentáció törlése-->
+<tr>
+	<td>click</td>
+	<td>//div[@id='main']/div/section[2]/div/table/tbody/tr[3]/td[8]/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -197,49 +273,7 @@
 </tr>
 <tr>
 	<td>assertElementPresent</td>
-	<td>css=span.help-block:contains(&quot;Csoport sikeresen átnevezve.&quot;)</td>
-	<td></td>
-</tr>
-<!--Tag törlése csoportból-->
-<tr>
-	<td>click</td>
-	<td>//div[@id='main']/div/section[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td[5]/button</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=modalAccept</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>2000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertElementPresent</td>
-	<td>css=span.help-block:contains(&quot;Tag törölve.&quot;)</td>
-	<td></td>
-</tr>
-<!--Csoport törlése-->
-<tr>
-	<td>click</td>
-	<td>//div[@id='main']/div/section[2]/div/table/tbody/tr/td[3]/button</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=modalAccept</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>2000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertElementPresent</td>
-	<td>css=span.help-block:contains(&quot;Csoport törölve.&quot;)</td>
+	<td>css=span.help-block:contains(&quot;Prezentáció törölve.&quot;)</td>
 	<td></td>
 </tr>
 <!--Profil törlése-->
@@ -273,6 +307,7 @@
 	<td>css=button:contains(&quot;Regisztráció&quot;)</td>
 	<td></td>
 </tr>
+
 </tbody></table>
 </body>
 </html>
