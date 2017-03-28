@@ -43,6 +43,13 @@ export default class NewPresentation extends React.Component {
       return;
     }
 
+    if (newPresentationName.length > 127) {
+      this.setState({
+        error: 'A prezentáció neve nem lehet hosszabb 127 karakternél.',
+      });
+      return;
+    }
+
     const data = new FormData();
     data.append('newPresentationName', newPresentationName);
     data.append('newPresentationDesc', this.state.newPresentationDesc);

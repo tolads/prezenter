@@ -47,7 +47,7 @@ export default class Form extends React.Component {
   componentDidUpdate() {
     if (this.props.role === 'head') {
       $('[data-toggle="tooltip"]').tooltip({
-        title: function () {
+        title() {
           return $(this).attr('data-title');
         },
       });

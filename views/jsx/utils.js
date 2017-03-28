@@ -40,9 +40,9 @@ export function request(url, options = {}) {
 
           return resolve(jsonResponse);
         } catch (err) {
-          return reject();
+          return reject({});
         }
       })
-      .catch(() => reject());
+      .catch(() => reject({}));
   });
 }

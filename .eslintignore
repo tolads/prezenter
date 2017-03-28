@@ -1,8 +1,8 @@
 .tmp/*
-api/responses/badRequest.js
-api/responses/created.js
-api/responses/ok.js
+api/responses/*
+!api/responses/login.js
 assets/*
+config/*
 node_modules/*
 tasks/*
 app.js

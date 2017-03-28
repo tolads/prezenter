@@ -24,6 +24,7 @@
     "no-plusplus": "off",
     "consistent-return": "warn",
     "no-undef": "warn",
+    "no-param-reassign": "warn",
     "react/forbid-prop-types": "warn",
     "react/require-default-props": "warn",
     "react/no-array-index-key": "warn",

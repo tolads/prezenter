@@ -16,8 +16,13 @@ module.exports = {
 
     if (!name) {
       return res.badRequest({
-        success: false,
         errors: 'Prezentáció nevének megadása kötelező.',
+      });
+    }
+
+    if (name.length > 127) {
+      return res.badRequest({
+        errors: 'A prezentáció neve nem lehet hosszabb 127 karakternél.',
       });
     }
 
@@ -28,7 +33,6 @@ module.exports = {
       .then((presentation) => {
         if (presentation !== undefined) {
           return res.badRequest({
-            success: false,
             errors: 'Ilyen nevű prezentációd már van.',
           });
         }
@@ -46,13 +50,13 @@ module.exports = {
 
   /**
    * Delete presentation
-   * @event GET /presentations/delete/:id
+   * @event DELETE /presentations/:id
    */
   delete: (req, res) => {
     const id = req.param('id');
 
     if (!id) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     Presentations.findOne({
@@ -61,7 +65,7 @@ module.exports = {
     })
       .then((presentation) => {
         if (presentation === undefined) {
-          return res.badRequest({ success: false });
+          return res.badRequest({});
         }
 
         Presentations.destroy({
@@ -108,7 +112,7 @@ module.exports = {
     const gid = parseInt(req.param('gid'), 10);
 
     if (!req.isSocket || isNaN(pid) || isNaN(gid)) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     Presentations.findOne({
@@ -116,13 +120,12 @@ module.exports = {
     })
       .then((presentation) => {
         if (presentation === undefined) {
-          return res.badRequest({ success: false });
+          return res.badRequest({});
         }
 
         if (gid === -1 || gid === -2) {
           return PresentationService.handleConnect(
-            { req, res, pid, gid, presentation }
-          );
+            { req, res, pid, gid, presentation });
         }
 
         Groups.findOne({
@@ -130,12 +133,11 @@ module.exports = {
         }).populate('members')
           .then((group) => {
             if (group === undefined) {
-              return res.badRequest({ success: false });
+              return res.badRequest({});
             }
 
             return PresentationService.handleConnect(
-              { req, res, pid, gid, presentation, group }
-            );
+              { req, res, pid, gid, presentation, group });
           })
           .catch(res.negotiate);
       })
@@ -150,7 +152,7 @@ module.exports = {
     const id = parseInt(req.param('id'), 10);
 
     if (isNaN(id)) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     Users.find()
@@ -169,7 +171,7 @@ module.exports = {
           .populate('reports')
           .then((presentation) => {
             if (presentation === undefined) {
-              return res.badRequest({ success: false });
+              return res.badRequest({});
             }
 
             return res.ok({
@@ -194,7 +196,7 @@ module.exports = {
     const id = parseInt(req.param('id'), 10);
 
     if (isNaN(pid) || isNaN(id)) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     return PresentationService.getSlide({ req, res, pid, id });
@@ -208,13 +210,13 @@ module.exports = {
     const pid = parseInt(req.param('pid'), 10);
 
     if (isNaN(pid)) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     if (req.param('name') === 'messageboard') {
       const message = req.param('message');
       if (!message) {
-        return res.badRequest({ success: false });
+        return res.badRequest({});
       }
 
       return PresentationService.messageBoard({ req, res, pid, message });
@@ -229,7 +231,7 @@ module.exports = {
       return PresentationService.form({ req, res, pid, data });
     }
 
-    return res.badRequest({ success: false });
+    return res.badRequest({});
   },
 
   /**
@@ -246,7 +248,7 @@ module.exports = {
     const content = req.param('content') || '';
 
     if (!id || !name) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     try {
@@ -254,7 +256,7 @@ module.exports = {
         JSON.parse(content);
       }
     } catch (err) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     Presentations.findOne({
@@ -263,25 +265,24 @@ module.exports = {
     })
       .then((presentation) => {
         if (presentation === undefined) {
-          return res.badRequest({ success: false });
+          return res.badRequest({});
         }
 
         Presentations.findOne({
           name,
           owner: req.session.me,
         })
-          .then((presentation) => {
-            if (presentation !== undefined && String(presentation.id) !== id) {
+          .then((otherPresentation) => {
+            if (otherPresentation !== undefined && String(otherPresentation.id) !== id) {
               return res.badRequest({
-                success: false,
                 errors: 'Ezzel a névvel van már prezentációd.',
               });
             }
 
             Presentations.update(
               { id },
-              { name, desc, content }
-            ).then(() => res.ok({ success: 'Sikeres mentés.' }))
+              { name, desc, content })
+              .then(() => res.ok({ success: 'Sikeres mentés.' }))
               .catch(res.negotiate);
           })
           .catch(res.negotiate);

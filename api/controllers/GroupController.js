@@ -223,8 +223,8 @@ module.exports = {
 
             Groups.update(
               { id: groupID },
-              { name: groupName }
-            ).then(() => res.ok({ success: 'Csoport sikeresen átnevezve.' }))
+              { name: groupName })
+              .then(() => res.ok({ success: 'Csoport sikeresen átnevezve.' }))
               .catch(res.negotiate);
           })
           .catch(res.negotiate);

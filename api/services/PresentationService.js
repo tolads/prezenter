@@ -6,7 +6,7 @@
 /** @type Map {Number} { {Number} group,
  *                       {String} head,
  *                       {Number} currentSlide
- *                       {Date} start } */
+ *                       {Number} start } */
 const currentlyPlayed = new Map();
 
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
     const id = `${pid},${gid}`;
 
     if (!presentation.content || !presentation.content.length) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     // my presentation
@@ -33,7 +33,7 @@ module.exports = {
       // return PROJECTOR role
       if (currentlyPlayed.has(pid)) {
         if (currentlyPlayed.get(pid).group !== gid) {
-          return res.badRequest({ success: false });
+          return res.badRequest({});
         }
 
         sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as PROJECTOR`);
@@ -49,7 +49,7 @@ module.exports = {
       }
 
       if (gid !== -1 && gid !== -2 && group.owner !== req.session.me) {
-        return res.badRequest({ success: false });
+        return res.badRequest({});
       }
 
       currentlyPlayed.set(pid,
@@ -70,14 +70,12 @@ module.exports = {
     // not mine presentation
     if (!currentlyPlayed.has(pid)) {
       return res.badRequest({
-        success: false,
         error: 'A prezentáció jelenleg nem aktív.',
       });
     }
 
-    if (gid === -2 || (gid !== -1 && !group.members.some(({ id }) => id === req.session.me))) {
+    if (gid === -2 || (gid !== -1 && !group.members.some(member => member.id === req.session.me))) {
       return res.badRequest({
-        success: false,
         error: 'A prezenetáció megtekintéséhez nincs jogosultságod.',
       });
     }
@@ -169,19 +167,15 @@ module.exports = {
    */
   getSlide: ({ req, res, pid, id }) => {
     if (!currentlyPlayed.has(pid) || currentlyPlayed.get(pid).head !== req.socket.conn.id) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     Presentations.findOne({
       id: pid,
     })
       .then((presentation) => {
-        if (presentation === undefined) {
-          return res.badRequest({ success: false });
-        }
-
-        if (id < 0 || id >= presentation.content.length) {
-          return res.badRequest({ success: false });
+        if (presentation === undefined || id < 0 || id >= presentation.content.length) {
+          return res.badRequest({});
         }
 
         currentlyPlayed.get(pid).currentSlide = id;
@@ -207,14 +201,14 @@ module.exports = {
    */
   messageBoard: ({ req, res, pid, message }) => {
     if (!currentlyPlayed.has(pid)) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     const gid = currentlyPlayed.get(pid).group;
 
     sails.io.sockets.in(`p${pid},${gid}`).clients((_, clients) => {
       if (!clients.some(id => id === req.socket.conn.id)) {
-        return res.badRequest({ success: false });
+        return res.badRequest({});
       }
 
       Presentations.findOne({
@@ -222,14 +216,14 @@ module.exports = {
       })
         .then((presentation) => {
           if (presentation === undefined) {
-            return res.badRequest({ success: false });
+            return res.badRequest({});
           }
 
           const content = presentation.content;
           if (!content ||
               !content[currentlyPlayed.get(pid).currentSlide] ||
               !(content[currentlyPlayed.get(pid).currentSlide].app === 'messageboard')) {
-            return res.badRequest({ success: false });
+            return res.badRequest({});
           }
 
           Reports.create({
@@ -247,10 +241,16 @@ module.exports = {
                 slide: currentlyPlayed.get(pid).currentSlide,
               })
                 .then((messages) => {
-                  const messageList = messages.map(message => message.content.message);
+                  const messageList = messages.map(msg => msg.content.message);
 
-                  sails.sockets.broadcast(currentlyPlayed.get(pid).head, 'messageboard', { messageList });
-                  sails.sockets.broadcast(`p${pid},${gid}_projectors`, 'messageboard', { messageList });
+                  sails.sockets.broadcast(
+                    currentlyPlayed.get(pid).head,
+                    'messageboard',
+                    { messageList });
+                  sails.sockets.broadcast(
+                    `p${pid},${gid}_projectors`,
+                    'messageboard',
+                    { messageList });
 
                   return res.ok({});
                 })
@@ -273,14 +273,14 @@ module.exports = {
    */
   form: ({ req, res, pid, data }) => {
     if (!currentlyPlayed.has(pid)) {
-      return res.badRequest({ success: false });
+      return res.badRequest({});
     }
 
     const gid = currentlyPlayed.get(pid).group;
 
     sails.io.sockets.in(`p${pid},${gid}`).clients((_, clients) => {
       if (!clients.some(id => id === req.socket.conn.id)) {
-        return res.badRequest({ success: false });
+        return res.badRequest({});
       }
 
       Presentations.findOne({
@@ -288,14 +288,14 @@ module.exports = {
       })
         .then((presentation) => {
           if (presentation === undefined) {
-            return res.badRequest({ success: false });
+            return res.badRequest({});
           }
 
           const pContent = presentation.content;
           if (!pContent ||
               !pContent[currentlyPlayed.get(pid).currentSlide] ||
               !(pContent[currentlyPlayed.get(pid).currentSlide].app === 'form')) {
-            return res.badRequest({ success: false });
+            return res.badRequest({});
           }
 
           const rContent = {
@@ -318,7 +318,7 @@ module.exports = {
           })
             .then((reports) => {
               if (reports.some(report => report.content.user === req.session.me)) {
-                return res.badRequest({ success: false });
+                return res.badRequest({});
               }
 
               // create report
@@ -337,7 +337,7 @@ module.exports = {
                     slide: currentlyPlayed.get(pid).currentSlide,
                   })
                     .then((datas) => {
-                      const dataList = datas.map(data => data.content);
+                      const dataList = datas.map(({ content }) => content);
 
                       sails.sockets.broadcast(currentlyPlayed.get(pid).head, 'form', { dataList });
 
