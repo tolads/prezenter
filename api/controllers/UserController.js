@@ -55,7 +55,7 @@ module.exports = {
 
   /**
    * Sign up user
-   * @event POST /users/login
+   * @event POST /users/signup
    *   {String} username
    *   {String} password
    *   {String} fullname

@@ -19,9 +19,11 @@ module.exports = {
     },
     slide: {
       type: 'integer',
+      required: true,
     },
     content: {
       type: 'json',
+      required: true,
     },
   },
 

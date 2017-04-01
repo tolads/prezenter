@@ -94,52 +94,11 @@ module.exports = {
           desc: presentation.desc,
           date: presentation.createdAt,
           modified: presentation.updatedAt,
-          canBePlayed: presentation.content && presentation.content.length,
-          hasReports: presentation.reports && !!presentation.reports.length,
+          canBePlayed: !!presentation.content && !!presentation.content.length,
+          hasReports: !!presentation.reports && !!presentation.reports.length,
         }));
 
         return res.ok(presentationList);
-      })
-      .catch(res.negotiate);
-  },
-
-  /**
-   * Connect to a projection
-   * @event GET /presentations/connect/:pid/:gid
-   */
-  connect: (req, res) => {
-    const pid = parseInt(req.param('pid'), 10);
-    const gid = parseInt(req.param('gid'), 10);
-
-    if (!req.isSocket || isNaN(pid) || isNaN(gid)) {
-      return res.badRequest({});
-    }
-
-    Presentations.findOne({
-      id: pid,
-    })
-      .then((presentation) => {
-        if (presentation === undefined) {
-          return res.badRequest({});
-        }
-
-        if (gid === -1 || gid === -2) {
-          return PresentationService.handleConnect(
-            { req, res, pid, gid, presentation });
-        }
-
-        Groups.findOne({
-          id: gid,
-        }).populate('members')
-          .then((group) => {
-            if (group === undefined) {
-              return res.badRequest({});
-            }
-
-            return PresentationService.handleConnect(
-              { req, res, pid, gid, presentation, group });
-          })
-          .catch(res.negotiate);
       })
       .catch(res.negotiate);
   },
@@ -185,53 +144,6 @@ module.exports = {
           .catch(res.negotiate);
       })
       .catch(res.negotiate);
-  },
-
-  /**
-   * Get a slide from a presentation
-   * @event GET /presentations/getslide/:pid/:id
-   */
-  getSlide: (req, res) => {
-    const pid = parseInt(req.param('pid'), 10);
-    const id = parseInt(req.param('id'), 10);
-
-    if (isNaN(pid) || isNaN(id)) {
-      return res.badRequest({});
-    }
-
-    return PresentationService.getSlide({ req, res, pid, id });
-  },
-
-  /**
-   * Posts from built in presentation apps
-   * @event GET /presentations/app/:pid/:name
-   */
-  app: (req, res) => {
-    const pid = parseInt(req.param('pid'), 10);
-
-    if (isNaN(pid)) {
-      return res.badRequest({});
-    }
-
-    if (req.param('name') === 'messageboard') {
-      const message = req.param('message');
-      if (!message) {
-        return res.badRequest({});
-      }
-
-      return PresentationService.messageBoard({ req, res, pid, message });
-    } else if (req.param('name') === 'form') {
-      const data = {};
-      let i = 0;
-      while (req.param(`input${i}`) !== undefined) {
-        data[`input${i}`] = parseInt(req.param(`input${i}`), 10);
-        i++;
-      }
-
-      return PresentationService.form({ req, res, pid, data });
-    }
-
-    return res.badRequest({});
   },
 
   /**
@@ -288,6 +200,94 @@ module.exports = {
           .catch(res.negotiate);
       })
       .catch(res.negotiate);
+  },
+
+  /**
+   * Connect to a projection
+   * @event GET /presentations/connect/:pid/:gid
+   */
+  connect: (req, res) => {
+    const pid = parseInt(req.param('pid'), 10);
+    const gid = parseInt(req.param('gid'), 10);
+
+    if (!req.isSocket || isNaN(pid) || isNaN(gid)) {
+      return res.badRequest({});
+    }
+
+    Presentations.findOne({
+      id: pid,
+    })
+      .then((presentation) => {
+        if (presentation === undefined) {
+          return res.badRequest({});
+        }
+
+        if (gid === -1 || gid === -2) {
+          return PresentationService.handleConnect(
+            { req, res, pid, gid, presentation });
+        }
+
+        Groups.findOne({
+          id: gid,
+        }).populate('members')
+          .then((group) => {
+            if (group === undefined) {
+              return res.badRequest({});
+            }
+
+            return PresentationService.handleConnect(
+              { req, res, pid, gid, presentation, group });
+          })
+          .catch(res.negotiate);
+      })
+      .catch(res.negotiate);
+  },
+
+  /**
+   * Get a slide from a presentation
+   * @event GET /presentations/getslide/:pid/:id
+   */
+  getSlide: (req, res) => {
+    const pid = parseInt(req.param('pid'), 10);
+    const id = parseInt(req.param('id'), 10);
+
+    if (isNaN(pid) || isNaN(id)) {
+      return res.badRequest({});
+    }
+
+    return PresentationService.getSlide({ req, res, pid, id });
+  },
+
+  /**
+   * Posts for built in presentation apps
+   * @event POST /presentations/app/:pid/:name
+   */
+  app: (req, res) => {
+    const pid = parseInt(req.param('pid'), 10);
+
+    if (isNaN(pid)) {
+      return res.badRequest({});
+    }
+
+    if (req.param('name') === 'messageboard') {
+      const message = req.param('message');
+      if (!message) {
+        return res.badRequest({});
+      }
+
+      return PresentationService.messageBoard({ req, res, pid, message });
+    } else if (req.param('name') === 'form') {
+      const data = {};
+      let i = 0;
+      while (req.param(`input${i}`) !== undefined) {
+        data[`input${i}`] = parseInt(req.param(`input${i}`), 10);
+        i++;
+      }
+
+      return PresentationService.form({ req, res, pid, data });
+    }
+
+    return res.badRequest({});
   },
 
   /**

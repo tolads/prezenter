@@ -2,7 +2,7 @@
  * res.login([inputs])
  * @param {String} inputs.username
  * @param {String} inputs.password
- * @description Log the requesting user in using a passport strategy
+ * @description Log the requesting user in
  */
 
 module.exports = function login(inputs = {}) {

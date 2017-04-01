@@ -31,7 +31,6 @@ module.exports.policies = {
 
   HomeController: {
     index: true,
-    groups: 'isAuthenticated',
   },
 
   UserController: {
