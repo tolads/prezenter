@@ -1,0 +1,26 @@
+[
+  {
+    "app": "messageboard",
+    "start": "2017-03-15T16:40:12.859Z",
+    "presentation": 1,
+    "slide": 6,
+    "content": {
+      "message": "message 1"
+    },
+    "createdAt": "2017-03-15T16:40:59.893Z",
+    "updatedAt": "2017-03-15T16:40:59.893Z",
+    "id": 1
+  },
+  {
+    "app": "messageboard",
+    "start": "2017-03-15T16:40:12.859Z",
+    "presentation": 1,
+    "slide": 6,
+    "content": {
+      "message": "message 2"
+    },
+    "createdAt": "2017-03-15T16:41:05.045Z",
+    "updatedAt": "2017-03-15T16:41:05.045Z",
+    "id": 2
+  }
+]

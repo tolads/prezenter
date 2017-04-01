@@ -1,0 +1,26 @@
+[
+  {
+    "username": "a",
+    "fullname": "A A",
+    "password": "$2a$10$XaE9D7RKMDzC8z5EHF5Dj.UJcL08HzG.FSDD56ko43PCGhLspD/k2",
+    "createdAt": "2017-02-27T07:55:33.456Z",
+    "updatedAt": "2017-02-27T07:55:33.456Z",
+    "id": 1
+  },
+  {
+    "username": "b",
+    "fullname": "B B",
+    "password": "$2a$10$tbJOpArVNbwBNJxM65LnVe4Qaib16v4aHHAjTGZlxdd0zQhSPDCUe",
+    "createdAt": "2017-03-02T23:10:54.205Z",
+    "updatedAt": "2017-03-02T23:10:54.205Z",
+    "id": 2
+  },
+  {
+    "username": "c",
+    "fullname": "C C",
+    "password": "$2a$10$AfcvBwCquPrg0wjur5gN6OJL9ebjHl6irKlSE75JXmeZkRpyFiuou",
+    "createdAt": "2017-02-26T21:20:47.656Z",
+    "updatedAt": "2017-02-26T21:20:47.656Z",
+    "id": 3
+  }
+]

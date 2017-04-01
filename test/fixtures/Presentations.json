@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Presentation 1",
+    "desc": "Presentation 1 desc",
+    "owner": 1,
+    "createdAt": "2017-03-11T23:31:02.321Z",
+    "updatedAt": "2017-03-11T23:31:13.526Z",
+    "id": 1,
+    "content": [
+      {
+        "html": "<h1> Első dia </h1><p> Lorem ipsum dolor sit amet </p>",
+        "background": "#a00"
+      },
+      {
+        "html": "<h1> Második dia </h1><p> Lorem ipsum dolor sit amet </p>",
+        "background": "#0a0"
+      },
+      {
+        "html": "<h1> Harmadik dia </h1><p> Lorem ipsum dolor sit amet </p>"
+      }
+    ]
+  },
+  {
+    "name": "Presentation 2",
+    "desc": "Presentation 2 desc",
+    "owner": 1,
+    "createdAt": "2017-03-11T23:31:02.321Z",
+    "updatedAt": "2017-03-11T23:31:13.526Z",
+    "id": 2,
+    "content": [
+      {
+        "html": "<h1> Első dia </h1><p> Lorem ipsum dolor sit amet </p>",
+        "background": "#a00"
+      },
+      {
+        "html": "<h1> Második dia </h1><p> Lorem ipsum dolor sit amet </p>",
+        "background": "#0a0"
+      },
+      {
+        "html": "<h1> Harmadik dia </h1><p> Lorem ipsum dolor sit amet </p>"
+      }
+    ]
+  },
+  {
+    "name": "Presentation 3",
+    "desc": "Presentation 3 desc",
+    "owner": 2,
+    "createdAt": "2017-03-11T23:31:02.321Z",
+    "updatedAt": "2017-03-11T23:31:13.526Z",
+    "id": 3,
+    "content": [
+      {
+        "html": "<h1> Első dia </h1><p> Lorem ipsum dolor sit amet </p>",
+        "background": "#a00"
+      },
+      {
+        "html": "<h1> Második dia </h1><p> Lorem ipsum dolor sit amet </p>",
+        "background": "#0a0"
+      },
+      {
+        "html": "<h1> Harmadik dia </h1><p> Lorem ipsum dolor sit amet </p>"
+      }
+    ]
+  }
+]

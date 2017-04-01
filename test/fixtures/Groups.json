@@ -1,0 +1,30 @@
+[
+  {
+    "name": "group 1",
+    "owner": 1,
+    "createdAt": "2017-02-26T21:20:51.913Z",
+    "updatedAt": "2017-02-26T21:20:55.886Z",
+    "id": 1
+  },
+  {
+    "name": "group 2",
+    "owner": 1,
+    "createdAt": "2017-03-01T16:32:55.335Z",
+    "updatedAt": "2017-03-04T09:28:42.197Z",
+    "id": 2
+  },
+  {
+    "name": "group 3",
+    "owner": 2,
+    "createdAt": "2017-03-05T22:07:11.804Z",
+    "updatedAt": "2017-03-05T22:07:37.221Z",
+    "id": 3
+  },
+  {
+    "name": "group 4",
+    "owner": 3,
+    "createdAt": "2017-03-05T22:07:11.804Z",
+    "updatedAt": "2017-03-05T22:07:37.221Z",
+    "id": 4
+  }
+]
