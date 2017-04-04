@@ -11,10 +11,10 @@ module.exports = {
 
   models: {
     // connection: 'localDiskDb',
-    connection: 'herokuPostgresqlServer',
+    connection: 'distantPostgresqlServer',
   },
   log: {
     level: 'verbose',
   },
-  hookTimeout: 35000,
+  hookTimeout: 40000,
 };
