@@ -66,15 +66,30 @@ describe('PresentationController', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .end(() => {
-          Presentations.findOne({
-            owner: userId,
-            id: 2,
-          })
-            .then((presentation) => {
-              assert.isUndefined(presentation, 'Group should have been deleted');
-              Reports.find()TODO
-              done();
-            })
+          Promise.all([
+            new Promise((resolve, reject) => {
+              Presentations.findOne({
+                owner: userId,
+                id: 2,
+              })
+                .then((presentation) => {
+                  assert.isUndefined(presentation, 'Presentation should be deleted');
+                  resolve();
+                })
+                .catch(reject);
+            }),
+            new Promise((resolve, reject) => {
+              Reports.find({
+                presentation: 2,
+              })
+                .then((reports) => {
+                  assert.lengthOf(reports, 0, 'Presentation\'s reports should be deleted');
+                  resolve();
+                })
+                .catch(reject);
+            }),
+          ])
+            .then(() => done())
             .catch(done);
         });
     });
