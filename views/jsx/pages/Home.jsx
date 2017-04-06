@@ -61,7 +61,6 @@ export default class Home extends React.Component {
               <h2>Impresszum</h2>
               <p> Adminisztrátor: László Tamás &lt;tlaszlods [kukac] gmail [pont] com&gt; </p>
               <p> Támogatott böngészők: Google Chrome, Mozilla Firefox, Chrome for Android </p>
-              <p> Tárhelyszolgáltató: <a href="https://www.heroku.com/">Heroku</a> </p>
               <p>
                 A logót <a href="http://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a> készítette a <a href="http://www.flaticon.com" title="Flaticon">flaticon.com</a>-ról <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC 3.0 BY</a> licence alatt.
               </p>

@@ -157,7 +157,9 @@ export default class Form extends React.Component {
         <div className="form-app">
           <h1> {this.props.title || 'Űrlap'} </h1>
           <p> Elküldött válaszok: {this.state.submitted.length}db </p>
-          {form}
+          <div className="form-elements">
+            {form}
+          </div>
         </div>
       );
     }
@@ -169,16 +171,18 @@ export default class Form extends React.Component {
           (<span className="help-block"> {this.state.success}{this.state.error} </span>
         ) : (
           <form className="form-horizontal" onSubmit={this.handleSubmit}>
-            {form}
-            <div className="form-group">
-              <div className="col-sm-offset-4 col-sm-8">
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={this.props.role === 'projector'}
-                >
-                  Elküld
-                </button>
+            <div className="form-elements">
+              {form}
+              <div className="form-group">
+                <div className="col-sm-offset-4 col-sm-8">
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={this.props.role === 'projector'}
+                  >
+                    Elküld
+                  </button>
+                </div>
               </div>
             </div>
           </form>

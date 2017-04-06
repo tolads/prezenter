@@ -138,7 +138,7 @@ module.exports = {
                 { html: '### Source for samples\n\nhttps://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' },
               ],
             })
-              .then(() => res.ok({ success: 'Signup successful!' }))
+              .then(() => res.ok({ success: 'Sikeres regisztráció!' }))
               .catch(res.negotiate);
           })
           .catch(res.negotiate);
