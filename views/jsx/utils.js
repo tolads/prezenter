@@ -34,6 +34,10 @@ export function request(url, options = {}) {
               .then(json => reject({
                 status: response.status,
                 json,
+              }))
+              .catch(() => reject({
+                status: response.status,
+                json: {},
               })),
             );
           }

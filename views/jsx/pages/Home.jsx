@@ -65,7 +65,7 @@ export default class Home extends React.Component {
                 A logót <a href="http://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a> készítette a <a href="http://www.flaticon.com" title="Flaticon">flaticon.com</a>-ról <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC 3.0 BY</a> licence alatt.
               </p>
               <p>
-                A weboldal 2017-ben készült mint szakdolgozat az ELTE IK programtervező informatikus Bsc szakon.
+                A weboldal 2017-ben készült mint szakdolgozat az ELTE IK programtervező informatikus BSc szakon.
               </p>
             </div>
           </section>

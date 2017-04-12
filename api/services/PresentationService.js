@@ -33,7 +33,9 @@ module.exports = {
       // return PROJECTOR role
       if (currentlyPlayed.has(pid)) {
         if (currentlyPlayed.get(pid).group !== gid) {
-          return res.badRequest({});
+          return res.badRequest({
+            error: 'Egy prezentációt egyszerre csak egy csoportnak játszhatsz le!',
+          });
         }
 
         sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as PROJECTOR`);

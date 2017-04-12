@@ -109,7 +109,7 @@ export default class Auth extends React.Component {
       .catch(({ json }) => {
         // error
         this.setState({
-          loginError: json.errors || {},
+          loginError: json.errors || '',
         });
         document.getElementById('login').scrollIntoView();
       });

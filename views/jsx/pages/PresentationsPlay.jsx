@@ -2,8 +2,8 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import marked from 'marked';
 
-import MessageBoard from '../components/MessageBoard';
-import Form from '../components/Form';
+import MessageBoard from '../components/presentations/MessageBoard';
+import Form from '../components/presentations/Form';
 
 /**
  * Play a presentation

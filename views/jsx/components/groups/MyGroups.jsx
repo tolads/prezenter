@@ -126,7 +126,7 @@ export default class MyGroups extends React.Component {
           this.props.auth.logout();
         } else if (status === 400) {
           this.setState({
-            error: json.errors,
+            error: json.errors || '',
             success: '',
           });
         }
