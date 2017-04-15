@@ -13,7 +13,4 @@ module.exports = {
     connection: 'localPostgresqlServer',
     // connection: 'distantPostgresqlServer',
   },
-  log: {
-    level: 'verbose',
-  },
 };

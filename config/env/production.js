@@ -13,8 +13,5 @@ module.exports = {
     // connection: 'localDiskDb',
     connection: 'distantPostgresqlServer',
   },
-  log: {
-    level: 'verbose',
-  },
   hookTimeout: 40000,
 };

@@ -190,22 +190,12 @@ module.exports = {
    * @event DELETE users/me
    */
   delete: (req, res) => {
-    Users.findOne({
+    Users.destroy({
       id: req.session.me,
     })
-      .then((user) => {
-        if (user === undefined) {
-          return res.badRequest({});
-        }
-
-        Users.destroy({
-          id: req.session.me,
-        })
-          .then(() => {
-            req.session.me = null;
-            res.ok({ success: 'Felhasználó törölve.' });
-          })
-          .catch(res.negotiate);
+      .then(() => {
+        req.session.me = null;
+        res.ok({ success: 'Felhasználó törölve.' });
       })
       .catch(res.negotiate);
   },

@@ -33,7 +33,7 @@ module.exports = {
       via: 'members',
     },
     presentations: {
-      collection: 'presentations',
+      collection: 'Presentations',
       via: 'owner',
     },
   },
@@ -79,15 +79,17 @@ module.exports = {
    */
   signup: inputs => (
     new Promise((resolve, reject) => {
-      bcrypt.hash(inputs.password, SALT_WORK_FACTOR, (err, hash) => {
-        Users.create({
-          username: inputs.username,
-          fullname: inputs.fullname,
-          password: hash,
+      bcrypt.hash(inputs.password, SALT_WORK_FACTOR)
+        .then((hash) => {
+          Users.create({
+            username: inputs.username,
+            fullname: inputs.fullname,
+            password: hash,
+          })
+            .then(resolve)
+            .catch(reject);
         })
-          .then(resolve)
-          .catch(reject);
-      });
+        .catch(reject);
     })
   ),
 

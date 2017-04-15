@@ -14,14 +14,14 @@ module.exports = {
       type: 'string',
     },
     owner: {
-      model: 'users',
+      model: 'Users',
       required: true,
     },
     content: {
       type: 'json',
     },
     reports: {
-      collection: 'reports',
+      collection: 'Reports',
       via: 'presentation',
     },
   },
