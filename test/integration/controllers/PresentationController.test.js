@@ -145,7 +145,6 @@ describe('PresentationController', () => {
           assert.typeOf(body, 'object', 'Response should be an object');
           assert.typeOf(body.name, 'string', 'Attribute name should be a string');
           assert.typeOf(body.reports, 'array', 'Attribute reports should be an array');
-          assert.typeOf(body.users, 'array', 'Attribute users should be an array');
 
           done();
         });

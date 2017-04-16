@@ -191,11 +191,17 @@ module.exports = {
    */
   rename: (req, res) => {
     const groupID = req.param('id');
-    const groupName = req.param('name');
+    const groupName = typeof req.param('name') === 'string' ? req.param('name').trim() : '';
 
     if (!groupID || !groupName) {
       return res.badRequest({
         errors: 'Csoport azonosítójának és új nevének megadása kötelező.',
+      });
+    }
+
+    if (groupName.length > 127) {
+      return res.badRequest({
+        errors: 'A csoportnév nem lehet hosszabb 127 karakternél.',
       });
     }
 

@@ -81,6 +81,7 @@ input[type="file"] { display: none; }
 .presentation-play hr { width: 100%; border-color: #999; }
 .presentation-play img { max-width: 700px; max-height: 500px; }
 
+.message-board { width: 100%; }
 .message-board, .form-app { height: 100%; margin-left: auto; margin-right: auto; max-width: 800px; padding: 10px; display: flex; flex-direction: column; }
 .message-board .messages { overflow-x: hidden; text-align: left; background: rgba(255,255,255,0.2); width: auto; margin-left: 10px; margin-right: 10px; margin-top: 10px; padding: 15px; }
 .message-board .messages p:not(:last-child) { border-bottom: 1px solid rgba(0,0,0,0.15); }

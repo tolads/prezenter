@@ -114,34 +114,22 @@ module.exports = {
       return res.badRequest({});
     }
 
-    Users.find()
-      .then((users) => {
-        const userList = users.map(user => ({
-          id: user.id,
-          username: user.username,
-          fullname: user.fullname,
-          date: user.createdAt,
-        }));
+    Presentations.findOne({
+      id,
+      owner: req.session.me,
+    })
+      .populate('reports')
+      .then((presentation) => {
+        if (presentation === undefined) {
+          return res.badRequest({});
+        }
 
-        Presentations.findOne({
-          id,
-          owner: req.session.me,
-        })
-          .populate('reports')
-          .then((presentation) => {
-            if (presentation === undefined) {
-              return res.badRequest({});
-            }
-
-            return res.ok({
-              name: presentation.name,
-              desc: presentation.desc,
-              content: presentation.content,
-              reports: presentation.reports,
-              users: userList,
-            });
-          })
-          .catch(res.negotiate);
+        return res.ok({
+          name: presentation.name,
+          desc: presentation.desc,
+          content: presentation.content,
+          reports: presentation.reports,
+        });
       })
       .catch(res.negotiate);
   },
@@ -159,8 +147,20 @@ module.exports = {
     const desc = req.param('desc') || '';
     const content = req.param('content') || '';
 
-    if (!id || !name) {
+    if (!id) {
       return res.badRequest({});
+    }
+
+    if (!name) {
+      return res.badRequest({
+        errors: 'Prezentáció nevének megadása kötelező.',
+      });
+    }
+
+    if (name.length > 127) {
+      return res.badRequest({
+        errors: 'A prezentáció neve nem lehet hosszabb 127 karakternél.',
+      });
     }
 
     try {
@@ -224,7 +224,7 @@ module.exports = {
 
         if (gid === -1 || gid === -2) {
           return PresentationService.handleConnect(
-            { req, res, pid, gid, presentation });
+            { req, res, gid, presentation });
         }
 
         Groups.findOne({
@@ -236,7 +236,7 @@ module.exports = {
             }
 
             return PresentationService.handleConnect(
-              { req, res, pid, gid, presentation, group });
+              { req, res, gid, presentation, group });
           })
           .catch(res.negotiate);
       })
@@ -261,6 +261,8 @@ module.exports = {
   /**
    * Posts for built in presentation apps
    * @event POST /presentations/app/:pid/:name
+   *   {String} message
+   *   {Number} input${i}
    */
   app: (req, res) => {
     const pid = parseInt(req.param('pid'), 10);
@@ -295,18 +297,17 @@ module.exports = {
    * @event GET /presentations/listactive
    */
   listActive: (req, res) => {
-    Groups.find()
-      .populate('members')
-      .then((groups) => {
+    Users.findOne({
+      id: req.session.me,
+    }).populate('memberof')
+      .populate('groups')
+      .then((user) => {
         const memberships = new Set();
-        groups.forEach((group) => {
-          if (group.owner === req.session.me ||
-              group.members.some(({ id }) => id === req.session.me)) {
-            memberships.add(group.id);
-          }
-        });
 
-        return PresentationService.listActive({ req, res, memberships });
+        user.memberof.forEach(({ id }) => memberships.add(id));
+        user.groups.forEach(({ id }) => memberships.add(id));
+
+        return PresentationService.listActive({ res, memberships });
       })
       .catch(res.negotiate);
   },

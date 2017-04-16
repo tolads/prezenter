@@ -27,6 +27,7 @@ export default class PresentationsReport extends React.Component {
       browserHistory.push('/');
     } else {
       this.getReports();
+      this.getUsers();
     }
   }
 
@@ -56,8 +57,27 @@ export default class PresentationsReport extends React.Component {
         // success
         this.setState({
           name: json.name,
-          users: json.users,
           reports: json.reports,
+        });
+      })
+      .catch(({ status }) => {
+        // error
+        if (status === 401) {
+          this.props.auth.logout();
+        }
+      });
+  }
+
+  /**
+   * Get user list from the server
+   */
+  getUsers() {
+    // Send request to server
+    request('/users/list')
+      .then((json) => {
+        // success
+        this.setState({
+          users: json,
         });
       })
       .catch(({ status }) => {
@@ -102,7 +122,9 @@ export default class PresentationsReport extends React.Component {
                 </tr>
                 <tr>
                   <td> Felhasználó </td>
-                  <td> {user ? `${user.fullname} (${user.username})` : '<i>törölt felhasználó</i>'} </td>
+                  <td>
+                    {user ? `${user.fullname} (${user.username})` : <i>{'törölt felhasználó'}</i>}
+                  </td>
                 </tr>
                 {rows}
               </tbody>

@@ -9,6 +9,75 @@
  *                       {Number} start } */
 const currentlyPlayed = new Map();
 
+/**
+   * Establish connection to a projection
+   * called in handleConnect
+   * @param {Object} options
+   *   {Object} req
+   *   {Object} res
+   *   {String} socketID
+   *   {String} role
+   *   {String} id
+   *   {Object} presentation
+   */
+const establishConnection = ({ req, res, socketID, role, id, presentation }) => {
+  const pid = presentation.id;
+
+  sails.log.verbose(`Socket with id '${socketID}' connected to projection '${id}' as ${role.toUpperCase()}`);
+  sails.sockets.join(req, `p${id}`);
+  if (role !== 'head') sails.sockets.join(req, `p${id}_${role}s`);
+
+  return res.ok({
+    role,
+    name: presentation.name,
+    currentSlide: presentation.content[currentlyPlayed.get(pid).currentSlide],
+    currentSlideID: currentlyPlayed.get(pid).currentSlide,
+  });
+};
+
+/**
+   * Check validity of a post from a built in app
+   * called in form and messageBoard
+   * @param {Object} options
+   *   {Object} req
+   *   {Number} pid
+   *   {String} app
+   */
+const checkPostValidity = ({ req, pid, app }) => (
+  new Promise((resolve, reject) => {
+    if (!currentlyPlayed.has(pid)) {
+      return reject();
+    }
+
+    const gid = currentlyPlayed.get(pid).group;
+
+    sails.io.sockets.in(`p${pid},${gid}`).clients((_, clients) => {
+      if (!clients.some(id => id === req.socket.conn.id)) {
+        return reject();
+      }
+
+      Presentations.findOne({
+        id: pid,
+      })
+        .then((presentation) => {
+          if (presentation === undefined) {
+            return reject();
+          }
+
+          const pContent = presentation.content;
+          if (!pContent ||
+              !pContent[currentlyPlayed.get(pid).currentSlide] ||
+              !(pContent[currentlyPlayed.get(pid).currentSlide].app === app)) {
+            return reject();
+          }
+
+          return resolve(pContent);
+        })
+        .catch(reject);
+    });
+  })
+);
+
 module.exports = {
   /**
    * Handle connection to a projection
@@ -16,13 +85,14 @@ module.exports = {
    * @param {Object} options
    *   {Object} req
    *   {Object} res
-   *   {Number} pid
    *   {Number} gid
    *   {Object} presentation
    *   {Object} group
    */
-  handleConnect: ({ req, res, pid, gid, presentation, group }) => {
+  handleConnect: ({ req, res, gid, presentation, group }) => {
+    const pid = presentation.id;
     const id = `${pid},${gid}`;
+    const socketID = req.socket.conn.id;
 
     if (!presentation.content || !presentation.content.length) {
       return res.badRequest({});
@@ -38,16 +108,7 @@ module.exports = {
           });
         }
 
-        sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as PROJECTOR`);
-        sails.sockets.join(req, `p${id}`);
-        sails.sockets.join(req, `p${id}_projectors`);
-
-        return res.ok({
-          role: 'projector',
-          name: presentation.name,
-          currentSlide: presentation.content[currentlyPlayed.get(pid).currentSlide],
-          currentSlideID: currentlyPlayed.get(pid).currentSlide,
-        });
+        return establishConnection({ req, res, socketID, role: 'projector', id, presentation });
       }
 
       if (gid !== -1 && gid !== -2 && group.owner !== req.session.me) {
@@ -55,18 +116,10 @@ module.exports = {
       }
 
       currentlyPlayed.set(pid,
-        { group: gid, head: req.socket.conn.id, currentSlide: 0, start: new Date().getTime() });
+        { group: gid, head: socketID, currentSlide: 0, start: new Date().getTime() });
 
       // return HEAD role
-      sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as HEAD`);
-      sails.sockets.join(req, `p${id}`);
-
-      return res.ok({
-        role: 'head',
-        name: presentation.name,
-        currentSlide: presentation.content[0],
-        currentSlideID: 0,
-      });
+      return establishConnection({ req, res, socketID, role: 'head', id, presentation });
     }
 
     // not mine presentation
@@ -83,16 +136,7 @@ module.exports = {
     }
 
     // return SPECTATOR role
-    sails.log.verbose(`Socket with id '${req.socket.conn.id}' connected to projection '${id}' as SPECTATOR`);
-    sails.sockets.join(req, `p${id}`);
-    sails.sockets.join(req, `p${id}_spectators`);
-
-    return res.ok({
-      role: 'spectator',
-      name: presentation.name,
-      currentSlide: presentation.content[currentlyPlayed.get(pid).currentSlide],
-      currentSlideID: currentlyPlayed.get(pid).currentSlide,
-    });
+    return establishConnection({ req, res, socketID, role: 'spectator', id, presentation });
   },
 
   /**
@@ -202,66 +246,39 @@ module.exports = {
    *   {String} message
    */
   messageBoard: ({ req, res, pid, message }) => {
-    if (!currentlyPlayed.has(pid)) {
-      return res.badRequest({});
-    }
+    checkPostValidity({ req, pid, app: 'messageboard' })
+      .then(() => {
+        const gid = currentlyPlayed.get(pid).group;
 
-    const gid = currentlyPlayed.get(pid).group;
-
-    sails.io.sockets.in(`p${pid},${gid}`).clients((_, clients) => {
-      if (!clients.some(id => id === req.socket.conn.id)) {
-        return res.badRequest({});
-      }
-
-      Presentations.findOne({
-        id: pid,
-      })
-        .then((presentation) => {
-          if (presentation === undefined) {
-            return res.badRequest({});
-          }
-
-          const content = presentation.content;
-          if (!content ||
-              !content[currentlyPlayed.get(pid).currentSlide] ||
-              !(content[currentlyPlayed.get(pid).currentSlide].app === 'messageboard')) {
-            return res.badRequest({});
-          }
-
-          Reports.create({
-            app: 'messageboard',
-            start: currentlyPlayed.get(pid).start,
-            presentation: pid,
-            slide: currentlyPlayed.get(pid).currentSlide,
-            content: { message },
-          })
-            .then(() => {
-              Reports.find({
-                app: 'messageboard',
-                start: currentlyPlayed.get(pid).start,
-                presentation: pid,
-                slide: currentlyPlayed.get(pid).currentSlide,
-              })
-                .then((messages) => {
-                  const messageList = messages.map(msg => msg.content.message);
-
-                  sails.sockets.broadcast(
-                    currentlyPlayed.get(pid).head,
-                    'messageboard',
-                    { messageList });
-                  sails.sockets.broadcast(
-                    `p${pid},${gid}_projectors`,
-                    'messageboard',
-                    { messageList });
-
-                  return res.ok({});
-                })
-                .catch(res.negotiate);
-            })
-            .catch(res.negotiate);
+        Reports.create({
+          app: 'messageboard',
+          start: currentlyPlayed.get(pid).start,
+          presentation: pid,
+          slide: currentlyPlayed.get(pid).currentSlide,
+          content: { message },
         })
-        .catch(res.negotiate);
-    });
+          .then(() => {
+            Reports.find({
+              app: 'messageboard',
+              start: currentlyPlayed.get(pid).start,
+              presentation: pid,
+              slide: currentlyPlayed.get(pid).currentSlide,
+            })
+              .then((messages) => {
+                const messageList = messages.map(msg => msg.content.message);
+
+                sails.sockets.broadcast(
+                  currentlyPlayed.get(pid).head, 'messageboard', { messageList });
+                sails.sockets.broadcast(
+                  `p${pid},${gid}_projectors`, 'messageboard', { messageList });
+
+                return res.ok({});
+              })
+              .catch(res.negotiate);
+          })
+          .catch(res.negotiate);
+      })
+      .catch(() => res.badRequest({}));
   },
 
    /**
@@ -274,84 +291,59 @@ module.exports = {
    *   {Object} data
    */
   form: ({ req, res, pid, data }) => {
-    if (!currentlyPlayed.has(pid)) {
-      return res.badRequest({});
-    }
+    checkPostValidity({ req, pid, app: 'form' })
+      .then((pContent) => {
+        const rContent = {
+          user: req.session.me,
+          inputs: [],
+        };
 
-    const gid = currentlyPlayed.get(pid).group;
-
-    sails.io.sockets.in(`p${pid},${gid}`).clients((_, clients) => {
-      if (!clients.some(id => id === req.socket.conn.id)) {
-        return res.badRequest({});
-      }
-
-      Presentations.findOne({
-        id: pid,
-      })
-        .then((presentation) => {
-          if (presentation === undefined) {
-            return res.badRequest({});
-          }
-
-          const pContent = presentation.content;
-          if (!pContent ||
-              !pContent[currentlyPlayed.get(pid).currentSlide] ||
-              !(pContent[currentlyPlayed.get(pid).currentSlide].app === 'form')) {
-            return res.badRequest({});
-          }
-
-          const rContent = {
-            user: req.session.me,
-            inputs: [],
-          };
-
-          pContent[currentlyPlayed.get(pid).currentSlide].inputs.forEach((input, ind) => {
-            rContent.inputs.push({
-              question: input.label,
-              answer: input.options[data[`input${ind}`]],
-            });
+        pContent[currentlyPlayed.get(pid).currentSlide].inputs.forEach((input, ind) => {
+          rContent.inputs.push({
+            question: input.label,
+            answer: input.options[data[`input${ind}`]],
           });
+        });
 
-          Reports.find({
-            app: 'form',
-            start: currentlyPlayed.get(pid).start,
-            presentation: pid,
-            slide: currentlyPlayed.get(pid).currentSlide,
-          })
-            .then((reports) => {
-              if (reports.some(report => report.content.user === req.session.me)) {
-                return res.badRequest({});
-              }
-
-              // create report
-              Reports.create({
-                app: 'form',
-                start: currentlyPlayed.get(pid).start,
-                presentation: pid,
-                slide: currentlyPlayed.get(pid).currentSlide,
-                content: rContent,
-              })
-                .then(() => {
-                  Reports.find({
-                    app: 'form',
-                    start: currentlyPlayed.get(pid).start,
-                    presentation: pid,
-                    slide: currentlyPlayed.get(pid).currentSlide,
-                  })
-                    .then((datas) => {
-                      const dataList = datas.map(({ content }) => content);
-
-                      sails.sockets.broadcast(currentlyPlayed.get(pid).head, 'form', { dataList });
-
-                      return res.ok({});
-                    })
-                    .catch(res.negotiate);
-                })
-                .catch(res.negotiate);
-            })
-            .catch(res.negotiate);
+        Reports.find({
+          app: 'form',
+          start: currentlyPlayed.get(pid).start,
+          presentation: pid,
+          slide: currentlyPlayed.get(pid).currentSlide,
         })
-        .catch(res.negotiate);
-    });
+          .then((reports) => {
+            if (reports.some(report => report.content.user === req.session.me)) {
+              return res.badRequest({});
+            }
+
+            // create report
+            Reports.create({
+              app: 'form',
+              start: currentlyPlayed.get(pid).start,
+              presentation: pid,
+              slide: currentlyPlayed.get(pid).currentSlide,
+              content: rContent,
+            })
+              .then(() => {
+                Reports.find({
+                  app: 'form',
+                  start: currentlyPlayed.get(pid).start,
+                  presentation: pid,
+                  slide: currentlyPlayed.get(pid).currentSlide,
+                })
+                  .then((datas) => {
+                    const dataList = datas.map(({ content }) => content);
+
+                    sails.sockets.broadcast(currentlyPlayed.get(pid).head, 'form', { dataList });
+
+                    return res.ok({});
+                  })
+                  .catch(res.negotiate);
+              })
+              .catch(res.negotiate);
+          })
+          .catch(res.negotiate);
+      })
+      .catch(() => res.badRequest({}));
   },
 };
