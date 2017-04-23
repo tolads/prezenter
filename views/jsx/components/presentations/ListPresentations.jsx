@@ -6,11 +6,9 @@ import { formatDate, request } from '../../utils';
 /**
  * List presentations
  */
-export default class NewPresentation extends React.Component {
+export default class ListPresentations extends React.Component {
   constructor(props) {
     super(props);
-
-    this.presentationsPerPage = 5;
 
     this.state = {
       success: '',
@@ -192,7 +190,7 @@ export default class NewPresentation extends React.Component {
   }
 }
 
-NewPresentation.propTypes = {
+ListPresentations.propTypes = {
   auth: React.PropTypes.object.isRequired,
   presentations: React.PropTypes.array.isRequired,
   getPresentations: React.PropTypes.func.isRequired,

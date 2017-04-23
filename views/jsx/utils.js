@@ -18,9 +18,9 @@ export function formatDate(date) {
 
 /**
  * Requests a URL, returns a promise
- * @param  {string} url       The URL we want to request
+ * @param  {string} url     The URL we want to request
  * @param  {object} options The options we want to pass to "fetch"
- * @return {Promise}           The request promise
+ * @return {Promise}        The request promise
  */
 export function request(url, options = {}) {
   return new Promise((resolve, reject) => {

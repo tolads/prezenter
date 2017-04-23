@@ -24,7 +24,6 @@
 module.exports = function (grunt) {
   grunt.registerTask('default', [
     'compileAssets',
-    'browserify',
     'linkAssets',
     'watch'
   ]);

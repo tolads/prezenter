@@ -6,7 +6,7 @@ import { request } from '../utils';
 /**
  * Page for listing active presentations for current user
  */
-export default class PresentationsOwn extends React.Component {
+export default class PresentationsActive extends React.Component {
   constructor(props) {
     super(props);
 
@@ -90,7 +90,7 @@ export default class PresentationsOwn extends React.Component {
   }
 }
 
-PresentationsOwn.propTypes = {
+PresentationsActive.propTypes = {
   auth: React.PropTypes.object,
   route: React.PropTypes.object,
 };

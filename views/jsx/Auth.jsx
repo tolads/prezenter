@@ -12,11 +12,10 @@ export default class Auth extends React.Component {
 
     this.state = {
       username: undefined,
-      loggedin: this.isLoggedIn(),
+      loggedin: false,
       loginError: '',
     };
 
-    this.isLoggedIn = this.isLoggedIn.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.loginSubmit = this.loginSubmit.bind(this);
@@ -45,17 +44,9 @@ export default class Auth extends React.Component {
   }
 
   /**
-   * Check if logged in
-   */
-  isLoggedIn() {
-    return !!localStorage.getItem('loggedin');
-  }
-
-  /**
    * Handle logging in
    */
   handleLogin(username) {
-    localStorage.setItem('loggedin', 'true');
     this.setState({
       loggedin: true,
       username,
@@ -66,7 +57,6 @@ export default class Auth extends React.Component {
    * Handle logging out
    */
   handleLogout() {
-    localStorage.removeItem('loggedin');
     this.setState({
       loggedin: false,
     });
@@ -87,7 +77,9 @@ export default class Auth extends React.Component {
       this.setState({
         loginError: 'Felhasználónév és jelszó megadása kötelező.',
       });
-      document.getElementById('login').scrollIntoView();
+      if (document.getElementById('login') !== null) {
+        document.getElementById('login').scrollIntoView();
+      }
       return;
     }
 
@@ -111,7 +103,9 @@ export default class Auth extends React.Component {
         this.setState({
           loginError: json.errors || '',
         });
-        document.getElementById('login').scrollIntoView();
+        if (document.getElementById('login') !== null) {
+          document.getElementById('login').scrollIntoView();
+        }
       });
   }
 
