@@ -85,8 +85,8 @@ module.exports = {
   list: (req, res) => {
     Presentations.find({
       owner: req.session.me,
-    })
-      .populate('reports')
+    }).populate('reports')
+      .sort('id ASC')
       .then((presentations) => {
         const presentationList = presentations.map(presentation => ({
           id: presentation.id,
