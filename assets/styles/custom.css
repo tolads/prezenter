@@ -36,6 +36,7 @@ input[type="file"] { display: none; }
 .navbar-inverse .navbar-nav > li > a .glyphicon-user { font-size: 1.3em; padding-right: 3px; top: 2px; color: rgba(255,255,255,0.7); }
 .navbar-inverse .navbar-nav > li > a:hover .glyphicon-user { color: #fff; }
 
+.form-group { clear: both; }
 .groups-table { margin-bottom: 0; }
 .groups-table thead > tr > th:last-child { width: 100px; }
 .groups-table > tbody > tr:nth-child(2n) > td  { padding: 0 15px 0 15px; }
@@ -79,7 +80,7 @@ input[type="file"] { display: none; }
 .presentation-play th, .presentation-play td { line-height: 1.4; padding: 8px; vertical-align: middle; }
 .presentation-play blockquote { border-left: 5px solid #6f6f6f; }
 .presentation-play hr { width: 100%; border-color: #999; }
-.presentation-play img { max-width: 700px; max-height: 500px; }
+.presentation-play img { max-width: 700px; max-height: 500px; padding: 5px; }
 
 .message-board { width: 100%; }
 .message-board, .form-app { height: 100%; margin-left: auto; margin-right: auto; max-width: 800px; padding: 10px; display: flex; flex-direction: column; }
