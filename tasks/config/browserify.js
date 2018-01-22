@@ -8,7 +8,7 @@ module.exports = function(grunt) {
 
   grunt.config.set('browserify', {
     options: {
-      transform: [['babelify', { presets: ['es2015', 'react'] }]],
+      transform: [['babelify', { presets: ['env', 'react'] }]],
       browserifyOptions: {
         extensions: [".jsx"],
       }
