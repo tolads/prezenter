@@ -38,6 +38,7 @@
   "scripts": {
     "debug": "node debug app.js",
     "start": "node app.js",
+    "postinstall": "grunt prod",
     "browserify": "browserify --extension=.jsx views/jsx/Renderer.jsx > .tmp/public/js/bundle.js",
     "test": "set PORT=9999 && set NODE_ENV=test && node ./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/bootstrap.test.js test/integration/**/*.test.js",
     "lint": "node ./node_modules/eslint/bin/eslint.js --ext .jsx,.js . || exit 0"
